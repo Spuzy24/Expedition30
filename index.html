@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0e0d12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Expedition 33" />
+  <meta name="description" content="Expedition 33 — interactive trip planner for Basel, Freiburg, Nancy & Strasbourg, June 2026." />
+  <title>Expedition 33 · Trip Planner</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" aria-live="polite">
+    <!-- Header -->
+    <header class="app-header" id="appHeader">
+      <div class="app-header__inner">
+        <div class="app-header__titles">
+          <h1 class="app-header__title" id="tripTitle">Expedition 33</h1>
+          <p class="app-header__subtitle" id="tripSubtitle"></p>
+        </div>
+        <button class="countdown" id="countdown" type="button" aria-label="Countdown">
+          <span class="countdown__num" id="countdownNum">—</span>
+          <span class="countdown__label" id="countdownLabel">days</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Date strip (Plan view only) -->
+    <nav class="datestrip" id="datestrip" aria-label="Jump to day"></nav>
+
+    <!-- Main scroll area -->
+    <main class="screen" id="screen"></main>
+
+    <!-- Floating add button -->
+    <button class="fab" id="fab" type="button" aria-label="Add item">+</button>
+
+    <!-- Bottom tab bar -->
+    <nav class="tabbar" id="tabbar" aria-label="Sections">
+      <button class="tabbar__btn is-active" data-tab="plan" type="button">
+        <span class="tabbar__icon">🗓️</span><span class="tabbar__txt">Plan</span>
+      </button>
+      <button class="tabbar__btn" data-tab="bookings" type="button">
+        <span class="tabbar__icon">🎫</span><span class="tabbar__txt">Bookings</span>
+      </button>
+      <button class="tabbar__btn" data-tab="info" type="button">
+        <span class="tabbar__icon">ℹ️</span><span class="tabbar__txt">Info</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Detail / edit sheet -->
+  <div class="sheet-scrim" id="scrim" hidden></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Details" hidden></section>
+
+  <!-- Tiny toast -->
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
