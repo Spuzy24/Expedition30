@@ -1,6 +1,6 @@
 /* Expedition 33 — offline-first service worker.
    Bump CACHE when you change app files so phones pick up the update. */
-const CACHE = "exp33-v3";
+const CACHE = "exp33-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -12,6 +12,12 @@ const ASSETS = [
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
+  // boarding passes & tickets — cached so the QR codes open offline at the gate
+  "./tickets/flix-basel-freiburg-roundtrip.pdf",
+  "./tickets/flix-basel-nancy-roundtrip.pdf",
+  "./tickets/flix-nancy-strasbourg.pdf",
+  "./tickets/flix-strasbourg-basel-eap.pdf",
+  "./tickets/clair-obscur-concert.pdf",
 ];
 
 self.addEventListener("install", (e) => {

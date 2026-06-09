@@ -60,6 +60,12 @@
 - [x] Generate app icons (192/512/maskable/apple-touch)
 - [x] Register SW + install prompt handling
 
+## 5b. Tickets / QR (added)
+- [x] Bundle the 5 boarding-pass / concert PDFs into /tickets
+- [x] "Open ticket — scan QR" button on each bus + the concert (jumps to right page)
+- [x] Editable ticket field in the add/edit form
+- [x] Cache PDFs in the service worker for offline scanning at the gate
+
 ## 6. Docs & ship
 - [x] README.md (what it is, how to install on phone, how to host, how to edit)
 - [x] Commit & push to claude/trip-planner-mobile-app-9k9tiq

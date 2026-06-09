@@ -79,6 +79,7 @@ const SEED_ITEMS = [
     endDay: "2026-06-10",
     title: "Basel → Freiburg",
     subtitle: "FlixBus N11 · dir. Duisburg",
+    ticketPdf: "tickets/flix-basel-freiburg-roundtrip.pdf#page=1",
     from: {
       name: "Basel SBB (Meret-Oppenheim-Strasse)",
       address: "Meret-Oppenheim-Strasse 80, 4053 Basel, Switzerland",
@@ -147,6 +148,7 @@ const SEED_ITEMS = [
     end: "23:20",
     title: "Freiburg → Basel",
     subtitle: "FlixBus N401 · dir. Venezia Mestre",
+    ticketPdf: "tickets/flix-basel-freiburg-roundtrip.pdf#page=2",
     from: {
       name: "Freiburg (im Breisgau) Hauptbahnhof",
       address: "Bismarckallee 1A, 79098 Freiburg im Breisgau, Germany",
@@ -181,6 +183,7 @@ const SEED_ITEMS = [
     end: "03:35",
     title: "Basel → Nancy",
     subtitle: "FlixBus N836 · dir. Amsterdam Sloterdijk",
+    ticketPdf: "tickets/flix-basel-nancy-roundtrip.pdf#page=1",
     from: {
       name: "Basel SBB (Meret-Oppenheim-Strasse)",
       address: "Meret-Oppenheim-Strasse, 4053 Basel, Switzerland",
@@ -243,6 +246,7 @@ const SEED_ITEMS = [
     start: "21:00",
     title: "Clair Obscur: Expedition 33",
     subtitle: '"A Painted Symphony" — live concert',
+    ticketPdf: "tickets/clair-obscur-concert.pdf",
     place: {
       name: "Zénith de Nancy — Amphithéâtre Plein Air",
       address: "Rue du Zénith, 54320 Maxéville (Zénith de Nancy), France",
@@ -271,6 +275,7 @@ const SEED_ITEMS = [
     end: "20:00",
     title: "Nancy → Strasbourg",
     subtitle: "FlixBus 834 · dir. Strasbourg",
+    ticketPdf: "tickets/flix-nancy-strasbourg.pdf",
     from: {
       name: "Nancy (Quai Sainte-Catherine)",
       address: "4710 Quai Sainte-Catherine, 54000 Nancy, France",
@@ -303,6 +308,7 @@ const SEED_ITEMS = [
     endDay: "2026-06-14",
     title: "Nancy → Basel (backup)",
     subtitle: "FlixBus N836 · unused return leg",
+    ticketPdf: "tickets/flix-basel-nancy-roundtrip.pdf#page=2",
     from: {
       name: "Nancy (Quai Sainte-Catherine)",
       address: "4710 Quai Sainte-Catherine, 54000 Nancy, France",
@@ -365,6 +371,7 @@ const SEED_ITEMS = [
     end: "17:25",
     title: "Strasbourg → Basel Airport",
     subtitle: "FlixBus 108 · dir. Zürich",
+    ticketPdf: "tickets/flix-strasbourg-basel-eap.pdf",
     from: {
       name: "Strasbourg (Place de l'Étoile)",
       address: "Place de l'Étoile, 67076 Strasbourg, France",

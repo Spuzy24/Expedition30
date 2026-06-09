@@ -16,7 +16,7 @@
     note:     { icon: "📝", color: "#b3a6d6", label: "Note" },
   };
   const TRANSPORT = new Set(["flight", "bus"]);
-  const STORE_KEY = "exp33.state.v3";
+  const STORE_KEY = "exp33.state.v4";
 
   const DEFAULT_CHECKLIST = [
     "Passports / ID cards",
@@ -390,6 +390,12 @@
     if (it.badges && it.badges.length)
       html += `<div class="badges" style="${styleVars};margin-bottom:4px">${it.badges.map(badgeHTML).join("")}</div>`;
 
+    // ticket / boarding pass — prominent, for quick QR scan at the gate
+    if (it.ticketPdf) {
+      const label = it.type === "event" ? "Open tickets — scan QR" : "Open ticket — scan QR";
+      html += `<a class="btn btn--gold ticket-btn" href="${esc(it.ticketPdf)}" target="_blank" rel="noopener">🎫 ${label}</a>`;
+    }
+
     // route (transport) or place (single)
     if (TRANSPORT.has(it.type) && (it.from || it.to)) {
       html += `<div class="sheet__section-label">Route</div><div class="routebox">`;
@@ -507,6 +513,8 @@
         <button type="button" class="add-mini" data-add="link">+ Add link</button>
       </div>
 
+      <div class="field"><label>🎫 Ticket PDF / link (optional)</label><input id="f_ticket" value="${esc(it.ticketPdf || "")}" placeholder="tickets/…  or  https://… (opens for QR scan)" /></div>
+
       <div class="field"><label>Notes</label><textarea id="f_notes" placeholder="Anything to remember…">${esc(it.notes || "")}</textarea></div>
 
       <div class="sheet__foot">
@@ -578,6 +586,8 @@
     }
     const price = val("f_price");
     if (price !== "") item.price = parseFloat(price);
+    const ticket = val("f_ticket");
+    if (ticket) item.ticketPdf = ticket;
     const badges = val("f_badges");
     if (badges) item.badges = badges.split(",").map((s) => s.trim()).filter(Boolean);
 

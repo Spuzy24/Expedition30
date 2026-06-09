@@ -423,6 +423,8 @@ a { color: var(--gold-soft); text-decoration: none; }
 .action--full { grid-column: 1 / -1; }
 .action__i { font-size: 16px; }
 
+.ticket-btn { width: 100%; margin: 14px 0 2px; font-size: 15.5px; padding: 14px; box-shadow: 0 6px 18px rgba(217, 179, 90, 0.28); }
+
 .notes-display { white-space: pre-wrap; font-size: 14px; line-height: 1.55; color: #d8d2e0; background: rgba(179, 166, 214, 0.07); border: 1px solid rgba(179, 166, 214, 0.2); border-radius: 12px; padding: 13px 15px; }
 .notes-empty { color: var(--muted-2); font-style: italic; }
 

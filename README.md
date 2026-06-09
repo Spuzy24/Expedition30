@@ -16,7 +16,9 @@ addresses, maps, tickets and notes in one place. No app store, no accounts.
 
 - **Plan** — a day-by-day timeline (9–16 June). Tap any item for a detail sheet with:
   - 📍 one-tap **Google Maps** links for every address (incl. the exact **bus stop**),
-  - 🎫 booking numbers, PINs, seats, prices, routes,
+  - 🎫 a big **Open ticket — scan QR** button that opens the actual boarding-pass
+    PDF (jumps to the right page on round-trip tickets) — cached offline for the gate,
+  - booking numbers, PINs, seats, prices, routes,
   - 📞 tap-to-call the hotel, ⧉ tap-to-copy confirmation numbers,
   - 🔗 deep links to FlixBus tracking / rebooking and Booking.com,
   - 📝 free-text **notes** on every item.
