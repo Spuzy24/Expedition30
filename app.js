@@ -17,6 +17,16 @@
   };
   const TRANSPORT = new Set(["flight", "bus"]);
   const STORE_KEY = "exp33.state.v4";
+  const WEATHER_KEY = "exp33.weather.v1";
+
+  // Known trip cities → coords for the weather forecast.
+  const CITY_COORDS = {
+    Zagreb: [45.813, 15.977],
+    Basel: [47.5596, 7.5886],
+    Freiburg: [47.999, 7.8421],
+    Nancy: [48.6921, 6.1844],
+    Strasbourg: [48.5734, 7.7521],
+  };
 
   const DEFAULT_CHECKLIST = [
     "Passports / ID cards",
@@ -33,6 +43,9 @@
   /* ---------- state ---------- */
   let state = null;          // { trip, dayMeta, items, checklist }
   let currentTab = "plan";
+  let searchQ = "";          // bookings search query
+  let weather = null;        // { [city]: { [date]: { code, tmax, tmin } } }
+  let didAutoScroll = false; // scroll-to-today only once per session
 
   /* ---------- tiny utils ---------- */
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -45,16 +58,19 @@
   const soft = (hex) => hex + "22";
   const line = (hex) => hex + "55";
 
-  function toast(msg) {
+  function toast(msg, opts) {
     const t = el("toast");
     t.textContent = msg;
+    t.classList.toggle("tappable", !!(opts && opts.onTap));
+    t.onclick = opts && opts.onTap ? opts.onTap : null;
     t.hidden = false;
     requestAnimationFrame(() => t.classList.add("show"));
+    if (navigator.vibrate) navigator.vibrate(10);
     clearTimeout(toast._t);
     toast._t = setTimeout(() => {
       t.classList.remove("show");
       setTimeout(() => (t.hidden = true), 220);
-    }, 1700);
+    }, (opts && opts.duration) || 1700);
   }
 
   /* ---------- date helpers (parse YYYY-MM-DD without TZ surprises) ---------- */
@@ -80,6 +96,56 @@
     const n = new Date();
     return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
   };
+  // 'YYYY-MM-DD' + 'HH:MM' → Date (local time)
+  function dt(day, time) {
+    const [y, m, d] = day.split("-").map(Number);
+    const [h, mi] = (time || "00:00").split(":").map(Number);
+    return new Date(y, m - 1, d, h, mi);
+  }
+  function relDayLabel(day) {
+    const t = todayStr();
+    if (day === t) return "Today";
+    const diff = Math.round((ymd(day) - ymd(t)) / 86400000);
+    if (diff === 1) return "Tomorrow";
+    return `${dow(day)} ${dayNum(day)} ${monName(day)}`;
+  }
+  // "in 25 min" / "in 3 h 10 min" / "in 2 d 4 h"
+  function fmtRel(ms) {
+    const m = Math.max(1, Math.round(ms / 60000));
+    if (m < 60) return `${m} min`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h} h${m % 60 ? ` ${m % 60} min` : ""}`;
+    const d = Math.floor(h / 24);
+    return `${d} d${h % 24 ? ` ${h % 24} h` : ""}`;
+  }
+  function itemEnd(it) {
+    if (it.type === "stay" && it.checkOut)
+      return dt(it.checkOut.slice(0, 10), it.checkOut.slice(11) || "12:00");
+    if (it.end) return dt(it.endDay || it.day, it.end);
+    if (it.start) return new Date(dt(it.day, it.start).getTime() + 90 * 60000); // 1.5 h grace
+    return new Date(ymd(it.day).getTime() + 86400000);
+  }
+  const isBackup = (it) => (it.badges || []).some((b) => /backup|not used/i.test(b));
+  function itemPast(it, now) { return itemEnd(it) < now; }
+  function itemNow(it, now) {
+    if (!it.start || it.type === "stay" || isBackup(it)) return false;
+    return dt(it.day, it.start) <= now && now < itemEnd(it);
+  }
+  // What's happening right now / coming up next (transport, events, activities).
+  function nowNext() {
+    const now = new Date();
+    let current = null, next = null;
+    state.items.forEach((it) => {
+      if (!it.start || it.type === "stay" || it.type === "note" || isBackup(it)) return;
+      const s = dt(it.day, it.start);
+      if (itemNow(it, now)) {
+        if (!current || s > dt(current.day, current.start)) current = it;
+      } else if (s > now) {
+        if (!next || s < dt(next.day, next.start)) next = it;
+      }
+    });
+    return { current, next };
+  }
 
   function mapsUrl(loc) {
     if (!loc) return "";
@@ -87,6 +153,77 @@
       return `https://www.google.com/maps/search/?api=1&query=${loc.coords[0]},${loc.coords[1]}`;
     const q = [loc.name, loc.address].filter(Boolean).join(" ");
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+  }
+
+  /* ---------- weather (Open-Meteo, free, no key; cached for offline) ---------- */
+  function cityForDay(day) {
+    const meta = state.dayMeta[day];
+    if (!meta || !meta.city) return null;
+    // the LAST city mentioned is where the evening/night happens
+    let best = null, pos = -1;
+    Object.keys(CITY_COORDS).forEach((k) => {
+      const i = meta.city.lastIndexOf(k);
+      if (i > pos) { pos = i; best = k; }
+    });
+    return best;
+  }
+  function wxEmoji(c) {
+    if (c === 0) return "☀️";
+    if (c === 1) return "🌤️";
+    if (c === 2) return "⛅";
+    if (c === 3) return "☁️";
+    if (c === 45 || c === 48) return "🌫️";
+    if (c >= 51 && c <= 57) return "🌦️";
+    if ((c >= 61 && c <= 67) || (c >= 80 && c <= 82)) return "🌧️";
+    if ((c >= 71 && c <= 77) || c === 85 || c === 86) return "🌨️";
+    if (c >= 95) return "⛈️";
+    return "🌡️";
+  }
+  function wxForDay(day) {
+    const city = cityForDay(day);
+    if (!weather || !city || !weather[city] || !weather[city][day]) return null;
+    return { city, ...weather[city][day] };
+  }
+  async function refreshWeather() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(WEATHER_KEY) || "null");
+      if (cached && cached.data) weather = cached.data;
+      if (cached && Date.now() - cached.ts < 3 * 3600000) return; // fresh enough
+      if (!navigator.onLine) return;
+
+      const today = todayStr();
+      const start = state.trip.startDate > today ? state.trip.startDate : today;
+      if (start > state.trip.endDate) return; // trip is over
+
+      const days = dateRange(state.trip.startDate, state.trip.endDate);
+      const cities = [...new Set(days.map(cityForDay).filter(Boolean))];
+      if (!cities.length) return;
+      const lat = cities.map((c) => CITY_COORDS[c][0]).join(",");
+      const lon = cities.map((c) => CITY_COORDS[c][1]).join(",");
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+        `&timezone=Europe%2FBerlin&start_date=${start}&end_date=${state.trip.endDate}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const json = await res.json();
+      const list = Array.isArray(json) ? json : [json];
+      const data = {};
+      list.forEach((loc, i) => {
+        const city = cities[i];
+        if (!city || !loc.daily) return;
+        data[city] = {};
+        loc.daily.time.forEach((d, j) => {
+          data[city][d] = {
+            code: loc.daily.weather_code[j],
+            tmax: Math.round(loc.daily.temperature_2m_max[j]),
+            tmin: Math.round(loc.daily.temperature_2m_min[j]),
+          };
+        });
+      });
+      weather = data;
+      localStorage.setItem(WEATHER_KEY, JSON.stringify({ ts: Date.now(), data }));
+      if (currentTab === "plan") renderPlan();
+    } catch (e) { /* offline / blocked — day headers just skip the forecast */ }
   }
 
   /* ---------- store ---------- */
@@ -164,25 +301,37 @@
   function renderPlan() {
     const days = dateRange(state.trip.startDate, state.trip.endDate);
     const today = todayStr();
+    const now = new Date();
+    // the hero card lives at the top of today's section (where auto-scroll lands)
+    const heroDay = today < state.trip.startDate ? state.trip.startDate : today;
     let html = "";
     days.forEach((day) => {
       const meta = state.dayMeta[day] || {};
       const items = itemsForDay(day);
       const overnight = overnightFor(day);
       const isToday = day === today;
+      const isPastDay = day < today;
+      const wx = !isPastDay ? wxForDay(day) : null;
       html += `<section class="day-section" id="day-${day}" data-day="${day}">
-        <div class="day-head">
+        <div class="day-head${isToday ? " is-today" : ""}${isPastDay ? " is-past" : ""}">
           <span class="day-head__date">${dayNum(day)} ${monName(day)}</span>
-          <span class="day-head__dow">${dow(day)}${isToday ? " · today" : ""}</span>
+          <span class="day-head__dow">${dow(day)}</span>
+          ${isToday ? `<span class="day-head__today">Today</span>` : ""}
+          ${wx ? `<span class="day-head__wx" title="${esc(wx.city)}">${wxEmoji(wx.code)} ${wx.tmax}°</span>` : ""}
           ${meta.city ? `<span class="day-head__city">${esc(meta.city)}</span>` : ""}
         </div>
+        ${day === heroDay ? `<div id="nowCard">${nowCardHTML()}</div>` : ""}
         <div class="timeline">`;
 
       if (items.length === 0) {
-        html += `<div class="overnight" style="border-style:solid;background:rgba(255,255,255,.03);border-color:var(--line)">
-          <span>🌤️</span><span>Free day${meta.city ? " in " + esc(meta.city.split("→").pop().trim()) : ""}</span></div>`;
+        const city = meta.city ? meta.city.split("→").pop().trim() : "";
+        const exploreUrl = city
+          ? `https://www.google.com/maps/search/${encodeURIComponent("things to do near " + city)}`
+          : "";
+        html += `<div class="freeday"><span>🌤️</span><span>Free day${city ? " in " + esc(city) : ""}</span>
+          ${exploreUrl ? `<a href="${esc(exploreUrl)}" target="_blank" rel="noopener">✨ Explore</a>` : ""}</div>`;
       }
-      items.forEach((it) => (html += itemCardHTML(it)));
+      items.forEach((it) => (html += itemCardHTML(it, now)));
 
       if (overnight) {
         html += `<div class="overnight"><span>🌙</span><span>Overnight · <b>${esc(overnight.place ? overnight.place.name : overnight.title)}</b></span></div>`;
@@ -191,14 +340,60 @@
     });
     el("screen").innerHTML = html;
     observeDays();
+    autoScrollToToday(today);
   }
 
-  function itemCardHTML(it) {
+  function autoScrollToToday(today) {
+    if (didAutoScroll) return;
+    didAutoScroll = true;
+    if (today <= state.trip.startDate || today > state.trip.endDate) return;
+    const sec = el("day-" + today);
+    if (sec) requestAnimationFrame(() => sec.scrollIntoView({ block: "start" }));
+  }
+
+  function nowCardHTML() {
+    const today = todayStr();
+    if (today > state.trip.endDate) return "";
+    const { current, next } = nowNext();
+    const it = current || next;
+    if (!it) return "";
+    const t = TYPES[it.type] || TYPES.note;
+    const styleVars = `--accent:${t.color};--accent-soft:${soft(t.color)};--accent-line:${line(t.color)}`;
+    let when;
+    if (current) {
+      when = it.end
+        ? `until <b>${esc(it.end)}</b>${it.endDay && it.endDay !== it.day ? " (+1)" : ""}`
+        : "happening now";
+    } else {
+      const ms = dt(it.day, it.start) - Date.now();
+      when = `${esc(relDayLabel(it.day))} · <b>${esc(it.start)}</b> · in <b>${esc(fmtRel(ms))}</b>`;
+    }
+    let sub = "";
+    if (TRANSPORT.has(it.type) && it.from && it.to)
+      sub = `${esc(shortName(it.from.name))} → ${esc(shortName(it.to.name))}`;
+    else if (it.place) sub = `📍 ${esc(shortName(it.place.name))}`;
+    return `<article class="now-card" data-open="${it.id}" style="${styleVars}">
+      <div class="now-card__icon">${t.icon}</div>
+      <div class="now-card__body">
+        <div class="now-card__label">${current ? `<span class="dot"></span>Happening now` : "Up next"}</div>
+        <div class="now-card__title">${esc(it.title)}</div>
+        <div class="now-card__when">${when}${sub ? ` · ${sub}` : ""}</div>
+      </div>
+      <span class="item__chev">›</span>
+    </article>`;
+  }
+
+  function itemCardHTML(it, now) {
     const t = TYPES[it.type] || TYPES.note;
     const badges = (it.badges || []);
     let cls = "item";
     if (badges.some((b) => /backup|not used/i.test(b))) cls += " is-backup";
     if (badges.some((b) => /book/i.test(b))) cls += " is-todo";
+    let done = false;
+    if (now) {
+      if (itemNow(it, now)) cls += " is-now";
+      else if (itemPast(it, now)) { cls += " is-past"; done = true; }
+    }
     const styleVars = `--accent:${t.color};--accent-soft:${soft(t.color)};--accent-line:${line(t.color)}`;
     const sub = it.type === "stay" && it.nights
       ? `${esc(it.subtitle || "")}`
@@ -221,7 +416,7 @@
         ${routeLine}
         ${badges.length ? `<div class="badges">${badges.map(badgeHTML).join("")}</div>` : ""}
       </div>
-      <span class="item__chev">›</span>
+      <span class="item__chev${done ? " item__chev--done" : ""}">${done ? "✓" : "›"}</span>
     </article>`;
   }
   function shortName(n) { return n ? n.split("(")[0].split(",")[0].trim() : ""; }
@@ -233,10 +428,15 @@
     strip.hidden = false;
     const today = todayStr();
     strip.innerHTML = dateRange(state.trip.startDate, state.trip.endDate)
-      .map((day) => `<button class="datepill${day === today ? " is-active" : ""}" data-jump="${day}">
+      .map((day) => {
+        let cls = "datepill";
+        if (day === today) cls += " is-active is-today";
+        else if (day < today) cls += " is-past";
+        return `<button class="${cls}" data-jump="${day}">
         <span class="datepill__dow">${dow(day)}</span>
         <span class="datepill__day">${dayNum(day)}</span>
-      </button>`).join("");
+      </button>`;
+      }).join("");
   }
   let dayObserver = null;
   function observeDays() {
@@ -257,23 +457,55 @@
   /* ============================================================
      BOOKINGS TAB
      ============================================================ */
+  function itemMatches(it, q) {
+    const hay = [
+      it.title, it.subtitle, it.notes,
+      (it.badges || []).join(" "),
+      ...(it.info || []).flatMap((f) => [f.label, f.value]),
+      ...["from", "to", "place"].map((k) => it[k] && `${it[k].name || ""} ${it[k].address || ""}`),
+    ].filter(Boolean).join(" ").toLowerCase();
+    return hay.includes(q);
+  }
+
   function renderBookings() {
+    const ticketed = state.items
+      .filter((i) => i.ticketPdf)
+      .sort((a, b) => (a.day + (a.start || "")).localeCompare(b.day + (b.start || "")));
+    const strip = ticketed.length
+      ? `<div class="tickets-strip">${ticketed.map((it) =>
+          `<a class="tchip" href="${esc(it.ticketPdf)}" target="_blank" rel="noopener">🎫 ${esc(shortName(it.title))}</a>`
+        ).join("")}</div>`
+      : "";
+    el("screen").innerHTML = `<div class="fade-in">
+      ${strip}
+      <div class="searchwrap"><input id="searchInput" type="search" placeholder="Search bookings, seats, numbers…" value="${esc(searchQ)}" autocomplete="off" /></div>
+      <div id="bkResults"></div>
+    </div>`;
+    renderBookingResults();
+  }
+
+  function renderBookingResults() {
     const groups = [
       { key: "stay", title: "🏨 Stays", types: ["stay"] },
       { key: "transport", title: "🚌 Transport", types: ["flight", "bus"] },
       { key: "tickets", title: "🎟️ Tickets & Events", types: ["event"] },
       { key: "other", title: "📝 Other", types: ["activity", "note"] },
     ];
-    let html = `<p class="intro" style="margin-top:14px">Every booking in one place. Tap any card for addresses, maps, seats, confirmation numbers and notes.</p>`;
+    const q = searchQ.trim().toLowerCase();
+    let html = q ? "" : `<p class="intro" style="margin-top:12px">Every booking in one place. Tap any card for addresses, maps, seats, confirmation numbers and notes.</p>`;
+    let found = 0;
     groups.forEach((g) => {
       const items = state.items
-        .filter((i) => g.types.includes(i.type))
+        .filter((i) => g.types.includes(i.type) && (!q || itemMatches(i, q)))
         .sort((a, b) => (a.day + (a.start || "")).localeCompare(b.day + (b.start || "")));
       if (!items.length) return;
+      found += items.length;
       html += `<h2 class="group-title">${g.title}<span class="count">${items.length}</span></h2>`;
       items.forEach((it) => (html += itemCardHTML(it)));
     });
-    el("screen").innerHTML = `<div class="fade-in">${html}</div>`;
+    if (q && !found) html += `<div class="empty"><div class="big">🔍</div>Nothing matches “${esc(searchQ)}”.</div>`;
+    const box = el("bkResults");
+    if (box) box.innerHTML = html;
   }
 
   /* ============================================================
@@ -284,14 +516,15 @@
     const t = state.trip;
     const days = dateRange(t.startDate, t.endDate).length;
     // cost buckets
-    let stays = 0, transport = 0, tickets = 0;
+    let stays = 0, transport = 0, tickets = 0, other = 0;
     state.items.forEach((i) => {
       if (!i.price) return;
       if (i.type === "stay") stays += i.price;
       else if (TRANSPORT.has(i.type)) transport += i.price;
       else if (i.type === "event") tickets += i.price;
+      else other += i.price;
     });
-    const total = stays + transport + tickets;
+    const total = stays + transport + tickets + other;
     const per = state.trip.travelers.length || 1;
 
     const travelersHTML = t.travelers.map((name) => {
@@ -321,6 +554,7 @@
         <div class="kv"><span class="k">🏨 Stays</span><span class="v">${money(stays)}</span></div>
         <div class="kv"><span class="k">🚌 Transport (buses)</span><span class="v">${money(transport)}</span></div>
         <div class="kv"><span class="k">🎟️ Concert tickets</span><span class="v">${money(tickets)}</span></div>
+        ${other ? `<div class="kv"><span class="k">📍 Other</span><span class="v">${money(other)}</span></div>` : ""}
         <div class="cost-total"><span>Total</span><span>${money(total)}</span></div>
         <div class="kv" style="margin-top:6px"><span class="k">Per person</span><span class="v">${money(total / per)}</span></div>
         <p class="form-hint">Flights aren't priced yet — add the fares on each flight to include them. The Nancy→Basel backup bus isn't double-counted.</p>
@@ -328,6 +562,10 @@
 
       <div class="card">
         <h3>✅ Checklist</h3>
+        ${state.checklist.length ? `<div class="progress-row">
+          <div class="progress"><div class="progress__bar" style="width:${Math.round(100 * state.checklist.filter((c) => c.done).length / state.checklist.length)}%"></div></div>
+          <span>${state.checklist.filter((c) => c.done).length}/${state.checklist.length} done</span>
+        </div>` : ""}
         ${checklistHTML || '<p class="form-hint">Nothing yet.</p>'}
         <div class="mini-row" style="margin-top:12px">
           <input id="newCheck" placeholder="Add a checklist item…" />
@@ -354,18 +592,53 @@
      DETAIL SHEET
      ============================================================ */
   let sheetMode = null; // 'detail' | 'form'
+  function sheetOpen() { return !el("sheet").hidden; }
   function openSheet(html) {
     const sheet = el("sheet"), scrim = el("scrim");
+    const wasOpen = sheetOpen();
     sheet.innerHTML = `<div class="sheet__grab"></div><div class="sheet__scroll">${html}</div>`;
     sheet.hidden = false; scrim.hidden = false;
     requestAnimationFrame(() => { sheet.classList.add("show"); scrim.classList.add("show"); });
     document.body.style.overflow = "hidden";
+    // Android back button (and browser back) closes the sheet instead of the app.
+    if (!wasOpen) history.pushState({ sheet: true }, "");
   }
-  function closeSheet() {
+  function closeSheet(fromPop) {
     const sheet = el("sheet"), scrim = el("scrim");
+    if (sheet.hidden) return;
     sheet.classList.remove("show"); scrim.classList.remove("show");
     document.body.style.overflow = "";
     setTimeout(() => { sheet.hidden = true; scrim.hidden = true; sheet.innerHTML = ""; sheetMode = null; }, 320);
+    if (!fromPop && history.state && history.state.sheet) history.back();
+  }
+
+  /* swipe-down on the sheet to dismiss */
+  function wireSheetDrag() {
+    const sheet = el("sheet");
+    let startY = null, dragging = false;
+    sheet.addEventListener("touchstart", (e) => {
+      const sc = sheet.querySelector(".sheet__scroll");
+      if (sc && sc.scrollTop > 4) { startY = null; return; }
+      startY = e.touches[0].clientY;
+      dragging = false;
+    }, { passive: true });
+    sheet.addEventListener("touchmove", (e) => {
+      if (startY == null) return;
+      const dy = e.touches[0].clientY - startY;
+      if (dy > 8) {
+        dragging = true;
+        sheet.style.transition = "none";
+        sheet.style.transform = `translateY(${dy}px)`;
+      }
+    }, { passive: true });
+    sheet.addEventListener("touchend", (e) => {
+      if (startY == null) return;
+      const dy = e.changedTouches[0].clientY - startY;
+      sheet.style.transition = "";
+      sheet.style.transform = "";
+      if (dragging && dy > 90) closeSheet();
+      startY = null; dragging = false;
+    });
   }
 
   function showDetail(id) {
@@ -428,11 +701,11 @@
     });
     if (acts.length) html += `<div class="sheet__section-label">Open</div><div class="actions">${acts.join("")}</div>`;
 
-    // notes
-    html += `<div class="sheet__section-label">Notes</div>`;
+    // notes — tap to edit in place
+    html += `<div class="sheet__section-label">Notes <span class="label-hint">· tap to edit</span></div>`;
     html += it.notes
-      ? `<div class="notes-display">${esc(it.notes)}</div>`
-      : `<div class="notes-display notes-empty">No notes yet — tap Edit to add some.</div>`;
+      ? `<div class="notes-display" data-editnotes="${it.id}">${esc(it.notes)}</div>`
+      : `<div class="notes-display notes-empty" data-editnotes="${it.id}">No notes yet — tap to add some.</div>`;
 
     // footer
     html += `<div class="sheet__foot">
@@ -455,6 +728,22 @@
     </div>`;
   }
 
+  function openNotesEditor(id) {
+    const it = getItem(id);
+    const disp = el("sheet").querySelector("[data-editnotes]");
+    if (!it || !disp) return;
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<textarea class="notes-ta" placeholder="Anything to remember…">${esc(it.notes || "")}</textarea>
+      <div class="btn-row" style="margin-top:8px">
+        <button class="btn btn--ghost" data-notescancel="${it.id}">Cancel</button>
+        <button class="btn btn--gold" data-notessave="${it.id}">Save notes</button>
+      </div>`;
+    disp.replaceWith(wrap);
+    const ta = wrap.querySelector("textarea");
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
+
   /* ============================================================
      ADD / EDIT FORM
      ============================================================ */
@@ -474,6 +763,10 @@
 
     const loc = (l) => l || { name: "", address: "" };
     const from = loc(it.from), to = loc(it.to), place = loc(it.place);
+    const stayVals = () => ({
+      checkIn: val("f_checkin") || (it.checkIn || "").replace(" ", "T"),
+      checkOut: val("f_checkout") || (it.checkOut || "").replace(" ", "T"),
+    });
 
     const infoRows = it.info.map((f, i) => miniPair("info", i, f.label, f.value)).join("");
     const linkRows = it.links.map((l, i) => miniPair("link", i, l.label, l.url)).join("");
@@ -496,7 +789,7 @@
         <div class="field"><label>End</label><input type="time" id="f_end" value="${esc(it.end || "")}" /></div>
       </div>
 
-      <div id="locFields">${locFieldsHTML(isTransport, from, to, place)}</div>
+      <div id="locFields">${locFieldsHTML(it.type, from, to, place, stayVals())}</div>
 
       <div class="field-2">
         <div class="field"><label>Price €</label><input type="number" inputmode="decimal" step="0.01" id="f_price" value="${it.price != null ? it.price : ""}" placeholder="0.00" /></div>
@@ -529,7 +822,7 @@
       const type = b.dataset.type;
       $$(".type-opt").forEach((o) => o.classList.toggle("sel", o.dataset.type === type));
       el("sheet").querySelector(".sheet__icon").textContent = TYPES[type].icon;
-      $("#locFields").innerHTML = locFieldsHTML(TRANSPORT.has(type), readLoc("from"), readLoc("to"), readLoc("place"));
+      $("#locFields").innerHTML = locFieldsHTML(type, readLoc("from"), readLoc("to"), readLoc("place"), stayVals());
     });
   }
 
@@ -547,19 +840,26 @@
     const sel = $(".type-opt.sel"); return sel ? sel.dataset.type : "activity";
   }
 
-  function locFieldsHTML(isTransport, from, to, place) {
-    if (isTransport) {
+  function locFieldsHTML(type, from, to, place, stay) {
+    if (TRANSPORT.has(type)) {
       return `<div class="field"><label>From — name</label><input id="f_from_name" value="${esc(from.name)}" placeholder="Origin station / airport" /></div>
         <div class="field"><label>From — address</label><input id="f_from_addr" value="${esc(from.address || "")}" placeholder="Street, city" /></div>
         <div class="field"><label>To — name</label><input id="f_to_name" value="${esc(to.name)}" placeholder="Destination" /></div>
         <div class="field"><label>To — address</label><input id="f_to_addr" value="${esc(to.address || "")}" placeholder="Street, city" /></div>`;
     }
-    return `<div class="field"><label>Place — name</label><input id="f_place_name" value="${esc(place.name)}" placeholder="Hotel / venue / spot" /></div>
+    let html = `<div class="field"><label>Place — name</label><input id="f_place_name" value="${esc(place.name)}" placeholder="Hotel / venue / spot" /></div>
       <div class="field"><label>Place — address</label><input id="f_place_addr" value="${esc(place.address || "")}" placeholder="Street, city (used for the map pin)" /></div>`;
+    if (type === "stay") {
+      html += `<div class="field-2">
+        <div class="field"><label>Check-in</label><input type="datetime-local" id="f_checkin" value="${esc((stay && stay.checkIn) || "")}" /></div>
+        <div class="field"><label>Check-out</label><input type="datetime-local" id="f_checkout" value="${esc((stay && stay.checkOut) || "")}" /></div>
+      </div>`;
+    }
+    return html;
   }
   function miniPair(kind, i, a, b) {
     return `<div class="mini-row" data-kind="${kind}">
-      <input class="mp-a" value="${esc(a || "")}" placeholder="${kind === "link" ? "Label" : "Label"}" />
+      <input class="mp-a" value="${esc(a || "")}" placeholder="Label" />
       <input class="mp-b" value="${esc(b || "")}" placeholder="${kind === "link" ? "https://…" : "Value"}" />
       <button type="button" class="rm" data-rm="1">×</button>
     </div>`;
@@ -604,9 +904,16 @@
       item.to = buildLoc("to", prev.to);
     } else {
       item.place = buildLoc("place", prev.place);
-      // carry stay metadata if it was a stay
       if (type === "stay") {
-        ["checkIn", "checkOut", "nights", "endDay"].forEach((k) => { if (prev[k] != null) item[k] = prev[k]; });
+        const ci = val("f_checkin"), co = val("f_checkout");
+        item.checkIn = ci ? ci.replace("T", " ") : prev.checkIn;
+        item.checkOut = co ? co.replace("T", " ") : prev.checkOut;
+        if (item.checkOut) item.endDay = item.checkOut.slice(0, 10);
+        else if (prev.endDay != null) item.endDay = prev.endDay;
+        if (item.checkIn && item.checkOut) {
+          const n = Math.round((ymd(item.checkOut.slice(0, 10)) - ymd(item.checkIn.slice(0, 10))) / 86400000);
+          item.nights = Math.max(1, n);
+        } else if (prev.nights != null) item.nights = prev.nights;
       }
     }
 
@@ -634,8 +941,20 @@
   /* ============================================================
      EXPORT / IMPORT / RESET
      ============================================================ */
-  function exportData() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  async function exportData() {
+    const json = JSON.stringify(state, null, 2);
+    // native share sheet first — easiest way to AirDrop/WhatsApp it to the other phone
+    try {
+      const file = new File([json], "expedition33-plan.json", { type: "application/json" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "Expedition 33 plan" });
+        toast("Shared ✓");
+        return;
+      }
+    } catch (e) {
+      if (e && e.name === "AbortError") return; // user cancelled the share sheet
+    }
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = "expedition33-plan.json";
@@ -723,7 +1042,19 @@
     // FAB
     el("fab").addEventListener("click", () => showForm(null));
     // scrim closes sheet
-    el("scrim").addEventListener("click", closeSheet);
+    el("scrim").addEventListener("click", () => closeSheet());
+    // countdown chip → open the concert details
+    el("countdown").addEventListener("click", () => {
+      const ev = state.items.find((i) => i.type === "event") || getItem("concert");
+      if (ev) showDetail(ev.id);
+    });
+    // back button / swipe-back closes the sheet instead of leaving the app
+    window.addEventListener("popstate", () => { if (sheetOpen()) closeSheet(true); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && sheetOpen()) closeSheet(); });
+    wireSheetDrag();
+    // connectivity heads-up
+    window.addEventListener("offline", () => toast("📴 Offline — everything still works"));
+    window.addEventListener("online", () => { toast("📶 Back online"); refreshWeather(); });
 
     // global click delegation (cards, sheet buttons, info actions)
     document.addEventListener("click", (e) => {
@@ -735,6 +1066,19 @@
 
       const edit = e.target.closest("[data-edit]");
       if (edit) { showForm(edit.dataset.edit); return; }
+
+      // inline notes editing in the detail sheet
+      const editNotes = e.target.closest("[data-editnotes]");
+      if (editNotes) { openNotesEditor(editNotes.dataset.editnotes); return; }
+      const notesSave = e.target.closest("[data-notessave]");
+      if (notesSave) {
+        const it = getItem(notesSave.dataset.notessave);
+        const ta = el("sheet").querySelector(".notes-ta");
+        if (it && ta) { it.notes = ta.value.trim(); save(); toast("Notes saved ✓"); showDetail(it.id); }
+        return;
+      }
+      const notesCancel = e.target.closest("[data-notescancel]");
+      if (notesCancel) { showDetail(notesCancel.dataset.notescancel); return; }
 
       const del = e.target.closest("[data-del]");
       if (del) {
@@ -787,6 +1131,13 @@
     el("screen").addEventListener("change", (e) => {
       if (e.target.id === "importFile" && e.target.files[0]) importData(e.target.files[0]);
     });
+    // bookings search (re-renders results only, keeps the input focused)
+    el("screen").addEventListener("input", (e) => {
+      if (e.target.id !== "searchInput") return;
+      searchQ = e.target.value;
+      clearTimeout(wireEvents._sq);
+      wireEvents._sq = setTimeout(renderBookingResults, 120);
+    });
     // enter key on new checklist
     el("screen").addEventListener("keydown", (e) => {
       if (e.target.id === "newCheck" && e.key === "Enter") { e.preventDefault(); addCheckItem(); }
@@ -820,11 +1171,28 @@
     state = load();
     wireEvents();
     render();
-    setInterval(updateCountdown, 60000);
-    // service worker
+    refreshWeather();
+    // keep the countdown + "up next" card live
+    setInterval(() => {
+      updateCountdown();
+      if (currentTab === "plan") {
+        const nc = el("nowCard");
+        if (nc) nc.innerHTML = nowCardHTML();
+      }
+    }, 30000);
+    // service worker (+ "update ready" prompt)
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () =>
-        navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+        navigator.serviceWorker.register("service-worker.js").then((reg) => {
+          reg.addEventListener("updatefound", () => {
+            const w = reg.installing;
+            if (!w) return;
+            w.addEventListener("statechange", () => {
+              if (w.state === "installed" && navigator.serviceWorker.controller)
+                toast("✨ Update ready — tap to refresh", { duration: 8000, onTap: () => location.reload() });
+            });
+          });
+        }).catch(() => {}));
     }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

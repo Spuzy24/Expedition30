@@ -70,6 +70,22 @@
 - [x] README.md (what it is, how to install on phone, how to host, how to edit)
 - [x] Commit & push to claude/trip-planner-mobile-app-9k9tiq
 
+## 7. Round 2 — live-trip & QoL upgrade (June 2026)
+- [x] "Happening now / Up next" hero card at the top of today, live countdown, refreshes every 30 s
+- [x] Auto-scroll to today; past days & items dimmed with ✓; today highlighted in date strip + header
+- [x] Per-day weather forecast (Open-Meteo, no key, cached 3 h in localStorage, offline-safe)
+- [x] Tap the countdown chip → opens the concert detail sheet
+- [x] Android back button / swipe-down / Escape all close the detail sheet (history API + touch drag)
+- [x] Bookings: search box (titles, seats, confirmation numbers, addresses, notes…)
+- [x] Bookings: gold quick-access ticket-PDF chips strip
+- [x] Inline notes editing straight from the detail sheet
+- [x] Stays: editable check-in / check-out (datetime) in the form; nights auto-calculated
+- [x] Export via native share sheet (falls back to file download)
+- [x] Checklist progress bar; "Explore city" link on free days
+- [x] Service-worker update toast ("tap to refresh"); offline/online toasts; light haptics
+- [x] Fixes: activity prices now counted in budget ("Other" bucket); invalid `--line-soft` CSS removed
+- [x] Smoke-tested headless (Plan/Bookings/Info, sheet, search, notes, back button, weather mock)
+
 ## Open questions / follow-ups for the user
 - Basel apartment (15–16 Jun): add name/address/booking when known (placeholder is in the app)
 - Flights have no PDFs — times are from the sheet; add airline/booking refs when known

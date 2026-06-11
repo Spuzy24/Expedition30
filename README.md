@@ -14,6 +14,10 @@ addresses, maps, tickets and notes in one place. No app store, no accounts.
 
 ## ✨ What it does
 
+- **Live trip mode** — during the trip the Plan tab opens **on today**, shows a
+  **"Happening now / Up next"** card with a live countdown to your next bus,
+  flight or event, dims what's already done (✓), and shows the **weather
+  forecast** for each day's city (handy for the open-air concert!).
 - **Plan** — a day-by-day timeline (9–16 June). Tap any item for a detail sheet with:
   - 📍 one-tap **Google Maps** links for every address (incl. the exact **bus stop**),
   - 🎫 a big **Open ticket — scan QR** button that opens the actual boarding-pass
@@ -22,9 +26,16 @@ addresses, maps, tickets and notes in one place. No app store, no accounts.
   - 📞 tap-to-call the hotel, ⧉ tap-to-copy confirmation numbers,
   - 🔗 deep links to FlixBus tracking / rebooking and Booking.com,
   - 📝 free-text **notes** on every item.
-- **Bookings** — all stays, transport and tickets grouped for quick reference.
-- **Info** — live **countdown** to the concert, traveller list, a running **budget**,
-  an editable **packing/documents checklist**, and **Export / Import / Reset**.
+- **Bookings** — all stays, transport and tickets grouped for quick reference,
+  with a **search box** (find anything by seat, confirmation number, hotel…) and a
+  **quick-access ticket strip** so every QR PDF is one tap away at the gate.
+- **Info** — live **countdown** to the concert (tap it to open the concert details),
+  traveller list, a running **budget**, an editable **packing/documents checklist**
+  with a progress bar, and **Export / Import / Reset** (export uses the native
+  share sheet where available — easiest way to send the plan to the other phone).
+- **Feels like an app** — the Android back button and a swipe-down both close the
+  detail sheet, notes are editable inline with one tap, and you get a toast when a
+  new version of the app is ready.
 - **Add & edit anything** — the `+` button adds new plans as you decide them;
   every item is editable so you can drop in info as bookings firm up.
 - **Saves on your phone** — all edits persist locally (offline-first). Use
