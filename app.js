@@ -37,8 +37,30 @@
     "EUR cash + bank cards",
     "Phone chargers + power bank",
     "Check Nancy concert weather (open-air!)",
-    "Book Basel accommodation (15–16 Jun)",
   ];
+
+  // One-time, non-destructive upgrades for already-installed phones.
+  // Each runs once (tracked by state._mv); never clobbers user edits.
+  const MIGRATIONS = [
+    function fillBaselBooking(s) {
+      const it = (s.items || []).find((i) => i.id === "stay-basel");
+      // only replace if it's still the original "not booked" placeholder
+      if (it && it.place && it.place.name === "Basel accommodation") {
+        const seed = (window.EXP33_SEED.items || []).find((i) => i.id === "stay-basel");
+        if (seed) Object.assign(it, clone(seed));
+      }
+      // tick off the now-satisfied checklist item, if it's still there
+      (s.checklist || []).forEach((c) => {
+        if (/book basel accommodation/i.test(c.label)) c.done = true;
+      });
+    },
+  ];
+  function migrate(s) {
+    const from = s._mv || 0;
+    for (let i = from; i < MIGRATIONS.length; i++) MIGRATIONS[i](s);
+    s._mv = MIGRATIONS.length;
+    return s;
+  }
 
   /* ---------- state ---------- */
   let state = null;          // { trip, dayMeta, items, checklist }
@@ -241,10 +263,10 @@
       const raw = localStorage.getItem(STORE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed && parsed.items) return parsed;
+        if (parsed && parsed.items) return migrate(parsed);
       }
     } catch (e) { /* ignore */ }
-    return freshFromSeed();
+    return migrate(freshFromSeed());
   }
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
@@ -1169,6 +1191,7 @@
   /* ---------- boot ---------- */
   function init() {
     state = load();
+    save(); // persist any one-time migrations applied during load
     wireEvents();
     render();
     refreshWeather();

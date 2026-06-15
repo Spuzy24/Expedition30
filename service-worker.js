@@ -1,6 +1,6 @@
 /* Expedition 33 — offline-first service worker.
    Bump CACHE when you change app files so phones pick up the update. */
-const CACHE = "exp33-v5";
+const CACHE = "exp33-v6";
 const ASSETS = [
   "./",
   "./index.html",
