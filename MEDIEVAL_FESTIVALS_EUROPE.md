@@ -173,6 +173,7 @@ Croatia's scene is smaller than Germany's but genuinely excellent — and it has
 Austria runs a full medieval calendar from January to December. Full 2026 list:
 
 ### Winter / Spring
+
 | Date | Event | Where |
 |:--|:--|:--|
 | 5 Jan | Raunacht auf Burg Kaprun | Kaprun |
@@ -185,6 +186,7 @@ Austria runs a full medieval calendar from January to December. Full 2026 list:
 | 30 Apr | Walpurgisnacht Burg Kaprun | Kaprun |
 
 ### May–June
+
 | Date | Event | Where |
 |:--|:--|:--|
 | 1–3 May | **Mittelalterspektakel zu Rattenberg** ⭐ | Rattenberg, Tirol |
@@ -210,6 +212,7 @@ Austria runs a full medieval calendar from January to December. Full 2026 list:
 | 27–28 Jun | Kinderfest Schloss Katzenberg | Kirchdorf am Inn |
 
 ### July–August
+
 | Date | Event | Where |
 |:--|:--|:--|
 | 4–5 Jul | Zauber der Montur — Quer durch die Epochen | Schloss Greillenstein, Röhrenbach |
@@ -229,6 +232,7 @@ Austria runs a full medieval calendar from January to December. Full 2026 list:
 | 29–30 Aug | Hunnenfest (Huns) | Asparn an der Zaya |
 
 ### September–December
+
 | Date | Event | Where |
 |:--|:--|:--|
 | 5–6 Sep | **Römerfest Carnuntum** ⭐ 🎟️ | Petronell-Carnuntum — ~200 Roman reenactors, legionaries, artisans, traders in the Archaeological Park |
@@ -297,6 +301,7 @@ Austria runs a full medieval calendar from January to December. Full 2026 list:
 Germany alone has **1,000+ historical markets and festivals a year.** Below are the flagships plus a full 2026 market calendar to use as a 2027 template.
 
 ### The big names
+
 | Event | Where | 2026 date | Notes |
 |:--|:--|:--|:--|
 | **Kaltenberger Ritterturnier** ⭐⭐ 🎟️ | Schloss Kaltenberg, Geltendorf (near Munich) | 10–26 Jul (3 weekends) | **Arguably the biggest knight tournament in the world.** Full-armour jousting in a huge arena, 200+ market stalls, 5 stages, jester's night. ⚠️ 2027 dates not yet published — expect mid-July |
@@ -314,6 +319,7 @@ Germany alone has **1,000+ historical markets and festivals a year.** Below are 
 ### Full German market calendar 2026 (use as 2027 template)
 
 **Feb–Apr**
+
 | Date | Event | Town |
 |:--|:--|:--|
 | 26 Feb – 1 Mar | Kieler Umschlag | Kiel |
@@ -340,6 +346,7 @@ Germany alone has **1,000+ historical markets and festivals a year.** Below are 
 | 25–26 Apr | Mittelaltermarkt Schlosspark Geislautern | Völklingen |
 
 **May–Jun**
+
 | Date | Event | Town |
 |:--|:--|:--|
 | 30 Apr – 3 May | 2. Mittelalterfest Drachenmoor | Müncheberg |
@@ -393,6 +400,7 @@ Germany alone has **1,000+ historical markets and festivals a year.** Below are 
 | 27–28 Jun | 18. Mittelalter-Sommerspectaculum Burg Lichtenberg | Thallichtenberg |
 
 **Jul–Aug**
+
 | Date | Event | Town |
 |:--|:--|:--|
 | 2–5 Jul | Piraten- & Mittelaltermarkt | Wilhelmshaven |
@@ -432,6 +440,7 @@ Germany alone has **1,000+ historical markets and festivals a year.** Below are 
 | 29–30 Aug | Mittelaltermarkt Hannover-Misburg | Hannover |
 
 **Sep–Dec**
+
 | Date | Event | Town |
 |:--|:--|:--|
 | 4–6 Sep | **MPS Luhmühlen** | Luhmühlen |
@@ -627,6 +636,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 ## 🇳🇱🇧🇪🇱🇺 3.9 Benelux
 
 **Netherlands**
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 8–10 May | **Elfia Vorden** ⭐ 🎟️ (fantasy — see Extras) | Vorden |
@@ -646,6 +656,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 | 31 Oct – 1 Nov | Magisch Samhain | Bourtange |
 
 **Belgium**
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 14–15 Mar | Vlaendria — Medieval Fair | Wieze |
@@ -658,6 +669,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 | 🗓️ | Herbeleef de Middeleeuwen | Maldegem |
 
 **Luxembourg** — punches far above its weight
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 13–14 Jun | XIX. Useldinger Mëttelalterfest | Useldange |
@@ -670,6 +682,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 ## 🇩🇰🇸🇪🇳🇴🇮🇸🇫🇮 3.10 The Nordic / Viking belt
 
 **Denmark** — the densest Viking calendar in Europe
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | **27 Apr – 3 May** | **Ribe International Viking Market** ⭐⭐ | Ribe |
@@ -688,6 +701,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 | 🗓️ | Middelaldercentret | Nykøbing Falster (year-round living museum) |
 
 **Sweden**
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 30 Apr – 1 May | Alsnu Vikingadagar | Alsnu Gård |
@@ -706,6 +720,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 > ⭐⭐⭐ **Medeltidsveckan is the single best medieval festival in Europe if you want scale.** Sweden's largest historical festival since 1984, in a UNESCO-listed walled town. **40,000+ visitors, 800+ events across 40 stages over 8 days.** Ten historical camps from Vikings to pirates. Jousting, craft markets, concerts, lectures, theatre, fire shows. **100+ events are free**, including the parades and the Nordergravar fire show; jousting is ticketed. 2026 theme was Love.
 
 **Norway** — a Viking market almost every weekend, May–September
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 22–24 May | Bjørnevåk — Iron Age Thing | Tingvatn |
@@ -727,11 +742,15 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 | year-round | **Lofotr Viking Museum** ⭐ | Borg, Lofoten — reconstructed 83m chieftain's hall |
 
 **Iceland**
+
+| Date 2026 | Event | Town |
+|:--|:--|:--|
 | **16–21 Jun** | **Hafnarfjörður Viking Festival** ⭐ | Víðistaðatún, Hafnarfjörður — oldest and largest in Iceland, run by the Rimmugýgur group |
 
 **Faroe Islands** — Festívalhöll Viking Festival, Tórshavn, 3–5 Jul
 
 **Finland**
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | **25–28 Jun** | **Medieval Market Turku** ⭐ | Turku |
@@ -761,6 +780,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 ## 🇪🇸🇵🇹 3.13 Iberia — the biggest medieval markets in Europe by footfall
 
 **Portugal**
+
 | Event | Where | 2026 date | Notes |
 |:--|:--|:--|:--|
 | **Viagem Medieval em Terra de Santa Maria** ⭐⭐⭐ | Santa Maria da Feira | 29 Jul – 9 Aug 🔁 | **Europe's largest medieval recreation event.** 12 days, **1,600+ performers**, 30th anniversary in 2026 |
@@ -770,6 +790,7 @@ Italy's historical festivals are **civic pageants** with centuries of unbroken t
 | **Festa dos Tabuleiros** ⭐ | Tomar | **every 4 years**, July 🗓️ | Extraordinary — check next edition |
 
 **Spain**
+
 | Event | Where | 2026 date | Notes |
 |:--|:--|:--|:--|
 | **Tarraco Viva** ⭐⭐ | Tarragona | 11–24 May 🔁 | **The best Roman festival in Europe.** 28th edition 2026, theme "¿Por qué Roma?" — reenactments, lectures, exhibitions in a UNESCO Roman city |

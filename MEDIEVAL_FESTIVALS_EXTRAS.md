@@ -58,6 +58,7 @@ These are where the medieval market crowd, the fantasy crowd and the cosplay cro
 Croatia has essentially no Viking scene, so this is a "go north" category. Denmark, Norway and Sweden have a Viking market almost every weekend from April to September.
 
 ### 🇩🇰 Denmark
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | **27 Apr – 3 May** | **Ribe International Viking Market** ⭐⭐ | Ribe |
@@ -77,6 +78,7 @@ Croatia has essentially no Viking scene, so this is a "go north" category. Denma
 | 3–5 Jul | Festívalhöll Viking Festival | Tórshavn, Faroe Islands |
 
 ### 🇳🇴 Norway
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 22–24 May | Bjørnevåk — Iron Age Thing | Tingvatn |
@@ -98,6 +100,7 @@ Croatia has essentially no Viking scene, so this is a "go north" category. Denma
 | year-round | **Lofotr Viking Museum** ⭐ | Borg, Lofoten — reconstructed 83m chieftain's hall, the largest ever found |
 
 ### 🇸🇪 Sweden
+
 | Date 2026 | Event | Town |
 |:--|:--|:--|
 | 30 Apr – 1 May | Alsnu Vikingadagar | Alsnu Gård |
@@ -116,6 +119,7 @@ Croatia has essentially no Viking scene, so this is a "go north" category. Denma
 | 19 Sep | Gudahagen Viking Market | Äskekärra |
 
 ### Rest of Europe
+
 | Date 2026 | Event | Where |
 |:--|:--|:--|
 | **16–22 Feb** | **JORVIK Viking Festival** ⭐⭐ | York 🇬🇧 — largest Viking festival in the world |
