@@ -37,7 +37,20 @@ Examples
   python matrix.py search --from ARN --to TYO --date 2027-02-09 --return 2027-02-23 --route "CA+" --route-ret "CA+" --sales-city STO --no-avail
   python matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-31 --stay 14
   python matrix.py search --slice ZAG:NRT:2027-03-10 --slice KIX:ZAG:2027-03-24
+  python matrix.py search --slice BUD:TYO:2027-05-12 --slice OSA:BUD:2027-05-26 --carriers MU   # open-jaw, MU both ways
+  python matrix.py search --slice "BUD:TYO:2027-05-12:C:MU X:PVG C:MU" --slice "OSA:BUD:2027-05-26:CA+"
   python matrix.py search --from VIE --to TYO --date 2027-03-10 --carriers QR,EK,TK,CA,LO,AY,KE   # beat pruning
+  python matrix.py calendar --from BUD --to TYO --start 2027-05-01 --end 2027-05-31 --stay 14 --route "MU+" --route-ret "MU+"
+
+Multi-city / open-jaw (--slice ORIG:DEST:DATE[:ROUTE], repeat): slice 1 gets --route/--ext; later
+slices get --route-ret/--ext-ret, or, when those are not given, the SAME --route/--ext; --carriers XX
+forces "XX+" on every slice. A ROUTE in the slice spec (everything after the 3rd ':') wins for that
+slice. (Before 2026-10-04 only slice 1 was forced: an MU open-jaw priced EUR 4,241 on NH+TK; now
+EUR 818.99 MU both ways.) Round trips (--return) keep --route = outbound only, --route-ret = return.
+
+Passengers (--adults N, verified 2026-10-04): search rows = PARTY TOTAL (displayTotal; the table
+header says "EUR total (N pax)" and adds EUR/pp); the "min/pp" and "carriers (min/pp)" lines and
+the calendar are PER PERSON. JSON solutions carry price (total), price_pp, pax, price_basis.
 
 Notes
   * A Matrix query takes 20-60 s server-side. Be patient; default pacing is 5 s between calls.
@@ -64,6 +77,9 @@ try:
     import requests
 except ImportError:  # pragma: no cover
     sys.exit("pip install requests  (see flights/scripts/requirements.txt)")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _common import price_header  # noqa: E402
 
 API_KEY = os.environ.get("MATRIX_API_KEY", "AIzaSyBH1mte6BdKzvf0c2mYprkyvfHCRWmfX7g")  # public web key
 API = "https://content-alkalimatrix-pa.googleapis.com/v1/search"
@@ -214,8 +230,16 @@ def parse_solutions(d: dict) -> list[dict]:
                 "flights": x.get("flights", []), "stops": [st["code"] for st in x.get("stops", [])],
                 "duration_min": x.get("duration"), "cabins": x.get("cabins"),
             })
+        pax = s.get("passengerCount") or 1
+        total = price_num(s.get("displayTotal"))
+        # displayTotal = ALL passengers (verified 2026-10-04: 1 adult EUR423.01, 2 adults EUR846.02);
+        # pricings[].displayPrice = per passenger of that type
+        pp = [price_num(x.get("displayPrice")) for x in s.get("pricings") or []]
         out.append({
-            "price": price_num(s.get("displayTotal")), "display_total": s.get("displayTotal"),
+            "price": total, "display_total": s.get("displayTotal"),
+            "pax": pax, "price_basis": "total",
+            "price_pp": (pp[0] if len(pp) == 1 and pp[0] is not None
+                         else round(total / pax, 2) if total is not None else None),
             "carriers": [c["code"] for c in it.get("carriers", [])],
             "dominant_carrier": (it.get("ext", {}).get("dominantCarrier") or {}).get("code"),
             "slices": slices, "id": s.get("id"),
@@ -362,6 +386,17 @@ def run(a, body: dict, url: str) -> dict:
     return browser_search(body)
 
 
+def print_solutions(sols: list[dict], a) -> None:
+    pp = a.adults > 1
+    print(f"{'#':>3} {price_header(a.adults, 'total'):>17}  " + (f"{'EUR/pp':>9}  " if pp else "")
+          + f"{'carriers':10} slices (|| between slices)")
+    for i, s in enumerate(sols[: a.top], 1):
+        segs = " || ".join(f"{x['from']}-{'-'.join(x['stops'])+'-' if x['stops'] else ''}{x['to']} "
+                           f"{(x['departure'] or '')[:16]} {' '.join(x['flights'])}" for x in s["slices"])
+        ppx = f"{s['price_pp'] if s.get('price_pp') is not None else '-':>9}  " if pp else ""
+        print(f"{i:>3} {s['display_total']:>17}  {ppx}{','.join(s['carriers']):10} {segs}")
+
+
 def cmd_search(a):
     if getattr(a, "carriers", None):
         return cmd_search_carriers(a)
@@ -406,11 +441,9 @@ def cmd_search_carriers(a):
             uniq[k] = sol
     allsol = sorted(uniq.values(), key=lambda x: (x["price"] is None, x["price"]))
     if not a.json_only:
-        print("per carrier: " + ", ".join(f"{p['carrier']} {p.get('min') or p.get('error', '-')}" for p in per))
-        for i, sol in enumerate(allsol[: a.top], 1):
-            segs = " || ".join(f"{x['from']}-{'-'.join(x['stops'])+'-' if x['stops'] else ''}{x['to']} "
-                               f"{(x['departure'] or '')[:16]} {' '.join(x['flights'])}" for x in sol["slices"])
-            print(f"{i:>3} {sol['display_total']:>13}  {','.join(sol['carriers']):10} {segs}")
+        print(f"per carrier ({price_header(a.adults, 'total')}): "
+              + ", ".join(f"{p['carrier']} {p.get('min') or p.get('error', '-')}" for p in per))
+        print_solutions(allsol, a)
     if a.out or a.json_only:
         dump({"query": {k: v for k, v in vars(a).items() if k != "func"}, "per_carrier": per,
               "solutions": allsol}, a.out or "-")
@@ -459,6 +492,9 @@ def _cmd_search(a, quiet=False):
         if a.ret:
             slices.append(slice_obj(d, o, a.ret, a.route_ret, a.ext_ret, a.minus, a.plus))
             kind = "round-trip"
+            if (a.route and not a.route_ret) and not quiet:
+                log("  note: --route applies to the OUTBOUND only; add --route-ret to force the return too "
+                    "(or use --carriers)")
     inputs = base_inputs(a, slices)
     inputs["page"] = {"current": 1, "size": a.page_size}
     body = {"summarizers": SEARCH_SUMMARIZERS, "inputs": inputs, "summarizerSet": "wholeTrip",
@@ -481,12 +517,10 @@ def _cmd_search(a, quiet=False):
     if quiet:
         return out
     if not a.json_only:
-        print(f"solutions: {d.get('solutionCount')}  min: {out['min_price']}  ({out['elapsed_s']} s)")
-        print("carriers: " + ", ".join(f"{c} {p}" for c, p in carriers))
-        for i, s in enumerate(sols[: a.top], 1):
-            segs = " || ".join(f"{x['from']}-{'-'.join(x['stops'])+'-' if x['stops'] else ''}{x['to']} "
-                               f"{(x['departure'] or '')[:16]} {' '.join(x['flights'])}" for x in s["slices"])
-            print(f"{i:>3} {s['display_total']:>13}  {','.join(s['carriers']):10} {segs}")
+        # minPrice / carrier minimums are PER PERSON (rounded up), rows are the party total
+        print(f"solutions: {d.get('solutionCount')}  min/pp: {out['min_price']}  ({out['elapsed_s']} s)")
+        print("carriers (min/pp): " + ", ".join(f"{c} {p}" for c, p in carriers))
+        print_solutions(sols, a)
         print(f"\nopen in browser: {url}")
     if a.out or a.json_only:
         dump(out, a.out or "-")
@@ -543,13 +577,16 @@ def cmd_calendar(a):
                                   for g in dd.get("itineraryCarrierList", {}).get("groups", [])]})
         cur = chunk_end + dt.timedelta(days=1)
     rows = [r for r in rows if r["price"] is not None]
+    for r in rows:
+        r.update({"pax": a.adults, "price_basis": "per_person"})
     rows.sort(key=lambda r: (r["price"], r["depart"]))
     out = {"query": {k: v for k, v in vars(a).items() if k != "func"}, "elapsed_s": round(time.time() - t0, 1),
            "chunks": meta, "results": rows}
     if not a.json_only:
         for m in meta:
             print(f"chunk {m['start']}..{m['end']}: {m.get('n', 'ERR')} day(s) priced; carriers {m.get('carriers', m.get('error'))}")
-        print(f"{'price':>9}  {'depart':10} nights")
+        # calendar minPrice is PER PERSON (2 adults: 12 May +14 nights MU+ = EUR687.00, verified 2026-10-04)
+        print(f"{'EUR/pp':>9}  {'depart':10} nights")
         for r in rows[: a.top]:
             print(f"{r['display']:>9}  {r['depart']:10} {r['nights'] if r['nights'] is not None else '-'}")
         print(f"({out['elapsed_s']} s)")
@@ -575,13 +612,16 @@ def main(argv=None):
     def common(p):
         p.add_argument("--from", dest="origins", help="origin airport/city codes, comma separated")
         p.add_argument("--to", help="destination codes, e.g. TYO or NRT,HND")
-        p.add_argument("--route", help="routing code, outbound (e.g. 'C:CA', 'X:PEK', 'N')")
-        p.add_argument("--ext", help="extension code, outbound (e.g. '-CODESHARE', 'MAXSTOPS 1')")
-        p.add_argument("--route-ret", help="routing code, return slice")
-        p.add_argument("--ext-ret", help="extension code, return slice")
+        p.add_argument("--route", help="routing code, outbound / slice 1; with --slice also the later slices "
+                                       "unless --route-ret (e.g. 'C:CA', 'X:PEK', 'N', 'MU+')")
+        p.add_argument("--ext", help="extension code, outbound / slice 1; with --slice also the later slices "
+                                     "unless --ext-ret (e.g. '-CODESHARE', 'MAXSTOPS 1')")
+        p.add_argument("--route-ret", help="routing code, return slice (--slice: slices 2..n)")
+        p.add_argument("--ext-ret", help="extension code, return slice (--slice: slices 2..n)")
         p.add_argument("--sales-city", help="point of sale city, e.g. ZAG, STO, LON (default: departure city)")
         p.add_argument("--curr", default="EUR", help="currency (default EUR; '' = sales-city currency)")
-        p.add_argument("--adults", type=int, default=1)
+        p.add_argument("--adults", type=int, default=1,
+                       help="adults; search rows are the party TOTAL (+ EUR/pp), calendar is per person")
         p.add_argument("--cabin", default="economy", choices=list(CABINS))
         p.add_argument("--max-stops", type=int, default=None)
         p.add_argument("--extra-stops", type=int, default=1, help="extra stops vs. minimum (default 1, -1=any)")
@@ -597,11 +637,14 @@ def main(argv=None):
     common(p)
     p.add_argument("--date", help="outbound date YYYY-MM-DD")
     p.add_argument("--return", dest="ret", help="return date (round trip)")
-    p.add_argument("--slice", action="append", help="multi-city slice ORIG:DEST:DATE (repeat); '/' separates multiple airports")
+    p.add_argument("--slice", action="append",
+                   help="multi-city slice ORIG:DEST:DATE[:ROUTE] (repeat); '/' separates multiple airports; "
+                        "ROUTE = this slice's routing code, e.g. 'BUD:TYO:2027-05-12:C:MU X:PVG C:MU'")
     p.add_argument("--minus", type=int, default=0, help="date flexibility: days before")
     p.add_argument("--plus", type=int, default=0, help="date flexibility: days after")
     p.add_argument("--page-size", type=int, default=50)
-    p.add_argument("--carriers", help="run one query per carrier with routing 'XX+' and merge, e.g. QR,EK,TK,CA,LO,AY")
+    p.add_argument("--carriers", help="run one query per carrier with routing 'XX+' on EVERY slice and merge, "
+                                      "e.g. QR,EK,TK,CA,LO,AY")
     p.set_defaults(func=cmd_search)
 
     p = sub.add_parser("calendar", help="calendar of lowest fares")

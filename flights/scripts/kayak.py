@@ -297,6 +297,9 @@ def main():
         if a.show_links:
             cols.append(("url", "URL"))
         print_table(shown, cols, limit=a.limit, maxw=130)
+        if dd and rows and len(shown) <= max(5, len(rows) // 10):
+            print(f"only {len(shown)} distinct fares in {len(rows)} rows (same fare on many dates/times); "
+                  f"add --pages {a.pages + 2} or narrow --flex to see other carriers")
         if any(r["airport_change"] for r in shown[: a.limit]):
             print("'~' in a route = station change (e.g. CRL~BRU): you must get to another airport yourself")
         if any(r["separate_tickets"] for r in shown[: a.limit]):

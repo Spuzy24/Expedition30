@@ -171,8 +171,9 @@ def price_header(pax: int = 1, basis: str = "per_person", cur: str = "EUR") -> s
     """Table header for a price column, so per-person and party-total tools can't be confused.
 
     basis 'per_person' -> 'EUR/pp'; basis 'total' -> 'EUR total (N pax)' (N > 1) or 'EUR/pp'.
-    Verified 2026-10-04 with --adults 1 vs 2 (same route/date): kayak, aviasales and gflights
-    show per-person prices; kiwi_graphql, booking_flights and matrix show the party total."""
+    Verified 2026-10-04 with --adults 1 vs 2 (same route/date): kayak (momondo) shows per-person
+    prices; kiwi_graphql, aviasales, booking_flights, gflights search and matrix search show the
+    party total (matrix's min/carrier lines and its calendar are per person)."""
     if basis == "total" and pax > 1:
         return f"{cur} total ({pax} pax)"
     return f"{cur}/pp"

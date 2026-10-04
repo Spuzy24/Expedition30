@@ -4,7 +4,9 @@
     python gflights_calendar.py --from VIE --to TYO --start 2027-02-01 --end 2027-03-31 [--stay 14] [--heatmap]
     python gflights_calendar.py grid --from VIE --to NRT --depart 2027-03-01..2027-03-07 --return 2027-03-15..2027-03-21
 
-Global options (--gl/--curr/--hl/--sleep) may be given first, exactly as for gflights.py.
+Global options (--gl/--curr/--hl/--sleep/--quiet/--max-wait) may be given first, exactly as for
+gflights.py. On a Google rate limit it stops with exit 4 ("rate-limited: stop using Google for this
+session") once the back-off would exceed --max-wait (default 60 s).
 """
 import os
 import sys
@@ -15,7 +17,7 @@ import gflights  # noqa: E402
 if __name__ == "__main__":
     argv = sys.argv[1:]
     glob, rest = [], list(argv)
-    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep", "--quiet"):
+    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep", "--quiet", "--max-wait"):
         if rest[0] == "--quiet":  # flag (no value); may appear between the others
             glob.append(rest.pop(0))
         else:

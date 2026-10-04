@@ -365,7 +365,7 @@ def _bag_warning(a) -> None:
         print(BAG_WARNING, file=sys.stderr)
 
 
-def _one_query(a, src, dst, it, ret, fsc) -> list[dict]:
+def _one_query(a, src, dst, it, ret) -> list[dict]:
     rows = _search_raw(a, src, dst, it, ret)
     if ret and getattr(a, "combine_oneways", False) and getattr(a, "return_dates", None):
         seen = {(r["route"], r["times"]) for r in rows}
@@ -398,7 +398,7 @@ def run_search(a, src=None, quiet=False) -> list[dict]:
     for g in groups:
         it, ret = _itin(a, g, dst)
         try:
-            part = _one_query(a, g, dst, it, ret, fsc)
+            part = _one_query(a, g, dst, it, ret)
         except RuntimeError as e:
             if len(groups) == 1:
                 raise

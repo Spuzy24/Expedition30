@@ -34,13 +34,26 @@ Examples
   python gflights.py sweep --origins europe --to TYO,OSA --start 2027-02-01 --end 2027-03-31 \
         --stay 14 --cache sweep_cache.json --details 5
 
-Prices are for 1 adult (change with --adults), economy, in --curr (default EUR),
-point of sale --gl (default HR), language --hl (default en). All prices are what
-Google Flights would show; always re-check on the booking site before paying.
+Prices are economy, in --curr (default EUR), point of sale --gl (default HR), language --hl
+(default en). With --adults N the search price is the PARTY TOTAL (verified 2026-10-04: VIE-NRT
+OW 1 adult EUR 625, 2 adults EUR 1250): the table header then says "EUR total (N pax)" and adds
+EUR/pp; JSON rows carry price (total), price_pp, pax, price_basis. calendar/grid/explore use the
+same passenger field and are assumed to be totals too (not verified). All prices are what Google
+Flights would show; always re-check on the booking site before paying.
 
-Be polite: the default is >= 3 s (+ jitter) between requests. Google answers abuse
-with HTTP 429 or a reCAPTCHA "unusual traffic" page; the client then backs off and,
-after repeated failures, stops (sweep progress is saved in the cache file).
+Price insights ("lowest now", "typical A-B" range): returned for SINGLE-ORIGIN searches (one-way
+and round trip, also with a city destination such as TYO = NRT,HND; verified 2026-10-04) and
+printed under the table; multi-origin batches come back with {} (dry run 2026-10-04). Use
+--per-origin (one request per origin) if you need them for several origins.
+
+Be polite: the default is >= 3 s (+ jitter) between requests. Google answers abuse with HTTP 429
+or a reCAPTCHA "unusual traffic" page. The client backs off 45 s, 90 s, 180 s (each back-off is
+printed to stderr, even with --quiet) but never waits more than --max-wait seconds IN TOTAL per run
+(default 60 s for search/calendar/grid/explore = one 45 s back-off; sweep 315 s). Past that it
+stops, keeps partial results (sweep progress is saved in the cache file), prints
+"rate-limited: stop using Google for this session" and exits with code 4 (3 = no results).
+After that message, do not call Google again for ~15 min; use the other sources.
+--out and --cache create missing parent directories.
 """
 from __future__ import annotations
 
@@ -60,6 +73,9 @@ try:
     import requests
 except ImportError:  # pragma: no cover
     sys.exit("pip install requests  (see flights/scripts/requirements.txt)")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _common import price_header  # noqa: E402
 
 RPC_BASE = ("https://www.google.com/_/FlightsFrontendUi/data/"
             "travel.frontend.flights.FlightsFrontendService/")
@@ -183,12 +199,22 @@ class RateLimited(RuntimeError):
     pass
 
 
+RATE_LIMIT_EXIT = 4
+RATE_LIMIT_MSG = ("rate-limited: stop using Google for this session (HTTP 429 / captcha; Google usually "
+                  "recovers after ~15 min). Continue with Kiwi, momondo (kayak.py), Matrix, Aviasales.")
+MAX_WAIT_DEFAULT = 60.0        # search / calendar / grid / explore: fail fast
+MAX_WAIT_SWEEP_DEFAULT = 315.0  # sweep: the old 45 + 90 + 180 s back-off
+
+
 class Client:
     def __init__(self, hl="en", gl="HR", curr="EUR", min_interval=3.0, jitter=1.5,
-                 timeout=60, max_retries=3, verbose=True):
+                 timeout=60, max_retries=3, verbose=True, max_wait=MAX_WAIT_DEFAULT):
         self.hl, self.gl, self.curr = hl, gl.upper(), curr.upper()
         self.min_interval, self.jitter = min_interval, jitter
         self.timeout, self.max_retries, self.verbose = timeout, max_retries, verbose
+        self.max_wait = max_wait      # max TOTAL seconds of back-off per run (429s + network errors)
+        self.waited = 0.0
+        self.rate_limited = False     # set once Google throttled us; commands then exit RATE_LIMIT_EXIT
         self.s = requests.Session()
         self.s.headers.update({"user-agent": UA, "accept-language": f"{hl},en;q=0.8"})
         self._last = 0.0
@@ -198,7 +224,23 @@ class Client:
         if self.verbose:
             print(*a, file=sys.stderr, flush=True)
 
+    def _backoff(self, seconds: float, why: str, rate_limit: bool) -> None:
+        """Sleep `seconds` unless that would push the run's total back-off past --max-wait.
+        Always printed to stderr (even with --quiet), so a wait is never silent."""
+        if self.waited + seconds > self.max_wait:
+            if rate_limit:
+                self.rate_limited = True
+                raise RateLimited(f"{why}; next back-off {seconds:.0f} s would exceed --max-wait "
+                                  f"{self.max_wait:.0f} s (waited {self.waited:.0f} s so far)")
+            raise RuntimeError(f"{why}; giving up (--max-wait {self.max_wait:.0f} s)")
+        print(f"  ! {why}; backing off {seconds:.0f} s (total {self.waited + seconds:.0f}/{self.max_wait:.0f} s "
+              f"allowed by --max-wait)", file=sys.stderr, flush=True)
+        time.sleep(seconds)
+        self.waited += seconds
+
     def _pace(self):
+        if self.rate_limited:
+            raise RateLimited("not sending: Google rate-limited this run earlier")
         wait = self._last + self.min_interval + random.uniform(0, self.jitter) - time.time()
         if wait > 0:
             time.sleep(wait)
@@ -208,6 +250,8 @@ class Client:
         return urllib.parse.urlencode({"hl": self.hl, "gl": self.gl, "curr": self.curr})
 
     def _request(self, method: str, url: str, **kw) -> requests.Response:
+        if self.rate_limited:  # never hit Google again in a run that was already throttled
+            raise RateLimited("not sending: Google rate-limited this run earlier")
         backoff = 45
         for attempt in range(self.max_retries + 1):
             self._pace()
@@ -215,22 +259,25 @@ class Client:
             try:
                 r = self.s.request(method, url, timeout=self.timeout, allow_redirects=True, **kw)
             except requests.RequestException as e:
-                self.log(f"  ! network error {e!r}; retry in {backoff}s")
-                time.sleep(backoff)
+                if attempt >= self.max_retries:
+                    raise RuntimeError(f"network error {e!r} on {url[:80]}")
+                self._backoff(backoff, f"network error {e!r}", rate_limit=False)
                 backoff *= 2
                 continue
             blocked = (r.status_code == 429 or "/sorry/" in r.url
                        or "unusual traffic" in r.text[:5000])
             if blocked:
+                why = f"Google rate limit / captcha (HTTP {r.status_code}) on {url[:80]}"
                 if attempt >= self.max_retries:
-                    raise RateLimited(f"Google rate limit / captcha (HTTP {r.status_code}) on {url[:80]}")
-                self.log(f"  ! rate limited (HTTP {r.status_code}); sleeping {backoff}s")
-                time.sleep(backoff)
+                    self.rate_limited = True
+                    raise RateLimited(why)
+                self._backoff(backoff, why, rate_limit=True)
                 backoff *= 2
                 continue
             if r.status_code >= 500:
-                self.log(f"  ! HTTP {r.status_code}; retry in 10s")
-                time.sleep(10)
+                if attempt >= self.max_retries:
+                    raise RuntimeError(f"HTTP {r.status_code} on {url[:80]}")
+                self._backoff(10, f"HTTP {r.status_code}", rate_limit=False)
                 continue
             return r
         raise RuntimeError(f"giving up on {url[:80]}")
@@ -573,7 +620,7 @@ def browser_fetch(url: str, verbose=True, wait_ms=4000) -> str:
         html = page.content()
         b.close()
     if "unusual traffic" in html[:20000]:
-        raise RateLimited("browser got Google captcha page")
+        raise RateLimited("browser got Google captcha page")  # caller marks Client.rate_limited
     return html
 
 
@@ -587,6 +634,7 @@ def do_search_one(c: Client, backend: str, origins, dests, date, ret, a):
             if its or fn is order[-1]:
                 return its, ins, fn.__name__.replace("search_", "")
         except RateLimited:
+            c.rate_limited = True
             raise
         except Exception as e:  # noqa: BLE001
             last = e
@@ -737,8 +785,16 @@ def fmt_dur(m):
     return f"{m // 60}h{m % 60:02d}" if isinstance(m, int) else "?"
 
 
-def print_table(rows: list[dict], top: int, rt: bool):
-    hdr = f"{'#':>3} {'price':>8} {'cur':3} {'from':4}>{'to':4} {'depart':16} {'dur':>6} {'st':>2} {'via':12} {'ST':2} airline / flights"
+def print_table(rows: list[dict], top: int, rt: bool, adults: int = 1, curr: str = "EUR"):
+    # The RPC price is the PARTY TOTAL for all adults (verified 2026-10-04, VIE-NRT 12 May OW:
+    # 1 adult EUR 625, 2 adults EUR 1250; price insights double too). With N > 1 a per-person column is added.
+    pp = adults > 1
+    price_hdr = price_header(adults, "total", curr)  # 'EUR/pp' or 'EUR total (2 pax)'
+    w = max(8, len(price_hdr))
+    hdr = (f"{'#':>3} {price_hdr:>{w}} {'cur':3} " + (f"{curr + '/pp':>7} " if pp else "")
+           + f"{'from':4}>{'to':4} {'depart':16} {'dur':>6} {'st':>2} {'via':12} {'ST':2} airline / flights")
+    if pp:
+        print(f"(price = TOTAL for {adults} adults; /pp = per person)")
     print(hdr)
     print("-" * len(hdr))
     for i, r in enumerate(rows[:top], 1):
@@ -746,13 +802,21 @@ def print_table(rows: list[dict], top: int, rt: bool):
         st = "ST" if r.get("self_transfer") else ""
         fl = " ".join(r["flights"])
         al = ", ".join(r["airlines"] or [])[:30]
-        line = (f"{i:>3} {r['price'] if r['price'] is not None else '-':>8} {r['currency']:3} "
+        ppx = ""
+        if pp:
+            ppx = f"{round(r['price'] / adults, 2) if r['price'] is not None else '-':>7} "
+        line = (f"{i:>3} {r['price'] if r['price'] is not None else '-':>{w}} {r['currency']:3} {ppx}"
                 f"{r['origin']:4}>{r['destination']:4} {r['depart']:16} {fmt_dur(r['duration_min']):>6} "
                 f"{r['stops']:>2} {via:12} {st:2} {al} | {fl}")
         if rt and r.get("return_leg"):
             rl = r["return_leg"]
             line += f"\n{'':>13}return: {rl['origin']}>{rl['destination']} {rl['depart']} via {','.join(rl['layovers'])} | {' '.join(rl['flights'])} (total {rl['price']})"
         print(line)
+
+
+def rate_limit_exit():
+    print(f"\n!! {RATE_LIMIT_MSG}", file=sys.stderr, flush=True)
+    sys.exit(RATE_LIMIT_EXIT)
 
 
 def dump(obj, path):
@@ -800,6 +864,8 @@ def cmd_search(a, c: Client):
                 meta.append({"error": str(e)})
                 break
             for it in its:
+                it["pax"], it["price_basis"] = a.adults, "total"
+                it["price_pp"] = round(it["price"] / a.adults, 2) if it["price"] is not None else None
                 it["query_date"], it["query_return"] = d, r
                 it["trip"] = "round-trip" if r else "one-way"
                 it["google_flights_url"] = gf_url([it["origin"]], [it["destination"]], d, r, c)
@@ -818,13 +884,16 @@ def cmd_search(a, c: Client):
         if key not in seen:
             seen.add(key)
             uniq.append(x)
-    if a.expand and any(x["query_return"] for x in uniq):
+    if a.expand and any(x["query_return"] for x in uniq) and not c.rate_limited:
         for x in uniq[: a.expand]:
             if not x["query_return"]:
                 continue
             c.log(f"expand return for {x['origin']} {' '.join(x['flights'])} {x['price']}")
             try:
                 x["return_leg"] = expand_return(c, x, [x["origin"]], dests, x["query_date"], x["query_return"], a)
+            except RateLimited as e:
+                c.log(f"  !! expand stopped: {e}")
+                break
             except Exception as e:  # noqa: BLE001
                 c.log(f"  ! expand failed: {e!r}")
     out = {"query": {"origins": origins, "destinations": dests, "pairs": pairs, "gl": c.gl,
@@ -833,7 +902,17 @@ def cmd_search(a, c: Client):
            "elapsed_s": round(time.time() - t0, 1), "requests": c.n_requests,
            "meta": meta, "results": uniq}
     if not a.json_only:
-        print_table(uniq, a.top, bool(rets[0] or stay))
+        print_table(uniq, a.top, bool(rets[0] or stay), a.adults, c.curr)
+        ins = [m for m in meta if m.get("price_insights")]
+        for m in ins:
+            pi = m["price_insights"]
+            print(f"price insights {','.join(m['origins'])}->{','.join(dests)} {m['date']}"
+                  f"{' / ' + m['return'] if m['return'] else ''}: lowest now {pi.get('lowest_now')}, "
+                  f"typical {pi.get('typical_low')}-{pi.get('typical_high')} {c.curr}"
+                  f"{f' (party total, {a.adults} adults)' if a.adults > 1 else ''}")
+        if uniq and not ins:
+            print("(no price insights: Google sends the 'typical price' range only for some single-origin "
+                  "queries; see --help)")
         cheapest_by_origin = {}
         for x in uniq:
             cheapest_by_origin.setdefault(x["origin"], x)
@@ -842,6 +921,8 @@ def cmd_search(a, c: Client):
         print(f"({len(uniq)} itineraries, {c.n_requests} requests, {out['elapsed_s']} s)")
     if a.out or a.json_only:
         dump(out, a.out or "-")
+    if c.rate_limited:
+        rate_limit_exit()
     if not uniq:
         sys.exit(3)  # make "no results" visible to scripts/monitors instead of exit 0
 
@@ -863,9 +944,13 @@ def cmd_calendar(a, c: Client):
         allrows.extend(rows)
     allrows.sort(key=lambda x: x["price"])
     if not a.json_only:
-        print(f"{'price':>7} {'cur':3} {'origin(s)':20} {'dest':9} {'depart':10} {'return':10}")
+        ph = price_header(a.adults, "total", c.curr)
+        w = max(7, len(ph))
+        if a.adults > 1:
+            print(f"(calendar prices assumed to be the party total for {a.adults} adults, like search; not verified)")
+        print(f"{ph:>{w}} {'cur':3} {'origin(s)':20} {'dest':9} {'depart':10} {'return':10}")
         for r in allrows[: a.top]:
-            print(f"{r['price']:>7} {r['currency'] or c.curr:3} {r['origins'][:20]:20} {r.get('dest', '')[:9]:9} "
+            print(f"{r['price']:>{w}} {r['currency'] or c.curr:3} {r['origins'][:20]:20} {r.get('dest', '')[:9]:9} "
                   f"{r['depart']:10} {r['return'] or '':10}")
         if a.heatmap:
             print_month_grid(allrows)
@@ -900,6 +985,8 @@ def cmd_grid(a, c: Client):
     rows = grid_rpc(c, origins, dests, deps, rets, a)
     cell = {(r["depart"], r["return"]): r["price"] for r in rows}
     if not a.json_only:
+        print(f"({price_header(a.adults, 'total', c.curr)}"
+              f"{'; assumed party total, not verified' if a.adults > 1 else ''})")
         print("depart \\ return " + " ".join(f"{x[5:]:>6}" for x in rets))
         for d in deps:
             print(f"{d:16}" + " ".join(f"{cell.get((d, r), '-'):>6}" for r in rets))
@@ -947,6 +1034,7 @@ def cmd_sweep(a, c: Client):
 
     def save():
         if a.cache:
+            os.makedirs(os.path.dirname(os.path.abspath(a.cache)), exist_ok=True)
             tmp = a.cache + ".tmp"
             with open(tmp, "w") as fh:
                 json.dump(cache, fh, indent=1)
@@ -983,7 +1071,7 @@ def cmd_sweep(a, c: Client):
     # optional detail lookups for the best origins (calendar mode)
     ranked = sorted([(o, v) for o, v in cache["origins"].items() if v.get("cheapest") is not None and o in origins],
                     key=lambda kv: kv[1]["cheapest"])
-    if a.details and not a.date:
+    if a.details and not a.date and not c.rate_limited:
         for o, v in ranked[: a.details]:
             if v.get("detail"):
                 continue
@@ -1022,6 +1110,8 @@ def cmd_explore(a, c: Client):
     origins = expand_codes(a.origins)
     rows = explore_rpc(c, origins, a.region, a.month, a.duration, a)
     if not a.json_only:
+        if a.adults > 1:
+            print(f"(prices assumed to be the party total for {a.adults} adults; not verified)")
         print(f"{'price':>7} {'cur':3} {'destination':24} {'country':12} {'apt':4} {'dates':23} airline/stops")
         for r in rows[: a.top]:
             print(f"{r.get('price') or '-':>7} {c.curr:3} {str(r.get('name'))[:24]:24} {str(r.get('country'))[:12]:12} "
@@ -1042,6 +1132,9 @@ def main(argv=None):
     ap.add_argument("--hl", default="en", help="UI language (default en)")
     ap.add_argument("--sleep", type=float, default=3.0, help="min seconds between requests (default 3)")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--max-wait", type=float, default=None,
+                    help=f"max total seconds of rate-limit back-off per run, then stop with exit {RATE_LIMIT_EXIT} "
+                         f"(default {MAX_WAIT_DEFAULT:.0f}; sweep {MAX_WAIT_SWEEP_DEFAULT:.0f}). 0 = stop at the first 429")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     def common(p, need_to=True):
@@ -1062,6 +1155,8 @@ def main(argv=None):
         p.add_argument("--out", help="write JSON here")
         p.add_argument("--json-only", action="store_true", help="print JSON to stdout, no table")
         p.add_argument("--no-self-transfer", action="store_true", help="drop self-transfer itineraries")
+        p.add_argument("--max-wait", type=float, default=argparse.SUPPRESS,
+                       help="same as the global --max-wait (may also be given after the subcommand)")
 
     p = sub.add_parser("search", help="specific dates")
     common(p)
@@ -1119,8 +1214,16 @@ def main(argv=None):
             ap.error("sweep needs --start/--end (calendar mode) or --date")
     a.via_list = expand_codes(a.via) if getattr(a, "via", None) else None
     a.bags_filter = ([a.bags or 0, int(a.carry_on)] if (a.bags or a.carry_on) else None)
-    c = Client(hl=a.hl, gl=a.gl, curr=a.curr, min_interval=a.sleep, verbose=not a.quiet)
-    a.func(a, c)
+    if a.max_wait is None:
+        a.max_wait = MAX_WAIT_SWEEP_DEFAULT if a.cmd == "sweep" else MAX_WAIT_DEFAULT
+    c = Client(hl=a.hl, gl=a.gl, curr=a.curr, min_interval=a.sleep, verbose=not a.quiet, max_wait=a.max_wait)
+    try:
+        a.func(a, c)
+    except RateLimited as e:  # grid / explore / anything not handled inside the command
+        print(f"  !! {e}", file=sys.stderr)
+        c.rate_limited = True
+    if c.rate_limited:
+        rate_limit_exit()
 
 
 if __name__ == "__main__":
