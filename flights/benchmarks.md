@@ -65,3 +65,17 @@ include the Japan-side backtrack a plain return forces on you.
 The cheapest carrier (MU) was absent from Google and from both Kiwi answers (in B1 Kiwi MCP did show MU), and found
 among these four sources only by forcing the carrier in Matrix. momondo/Aviasales/Booking were not part of B3.
 **Per-carrier passes (Matrix `--carriers`, Kiwi `--only-airlines`) are mandatory.**
+
+## B4 (2026-10-04): full dry run of the skill (test agent). RT ZAG-area → TYO/OSA, out 12 May ±3, ~14 nights, 1 checked bag
+| Source | Best found | Note |
+|---|---|---|
+| **momondo** (`kayak.py --flex 3`) | **€684** MU out / CZ back BUD⇄KIX, 2×23 kg, OPODO | Also a €627 split (TR+CZ, 2 tickets, bag unknown); top-50 page collapsed to one fare across dates (→ dedupe) |
+| Kiwi GraphQL **origin-scan RT** | **€708** Air India VIE⇄HND (DEL), 1 PNR, 1 bag | **Missed by the multi-origin Kiwi MCP and GraphQL `search`**, found only per origin (→ per-origin loop) |
+| Google Flights `--bags 1` | €675 Scoot VIE–SIN–HND | Google's bag-inclusive price is unreliable for LCCs (Aviasales with-bag floor €856) |
+| Matrix `MU+` | €715 MU BUD⇄TYO | Airline fare level, which drives the "book direct?" decision |
+| Aviasales | €716 / `cheapest_with_baggage` €856 | The best bag signal |
+| Kiwi with `--checked-bags 1` | MU €1,051.89 (vs €717 without) | Kiwi's €335 bag add-on on a fare that includes bags (→ never rank on Kiwi bag prices for MU) |
+| positioning.py (9 homes × 8 hubs) | ≈ €1,000 all-in via IST/ATH | 8 min, no winner: ATH RT €588 vs BUD €717 leaves only €129, eaten by positioning + bags + nights |
+
+**Outcome:** recommended MU/CZ BUD⇄KIX €684 fare ≈ €804 all-in (ground + Budapest night: no direct bus that day).
+Lessons → fixes tracked in `research/09-review-resolution.md`.

@@ -26,6 +26,7 @@
    - **China Eastern / Shanghai Airlines (MU/FM):** BUD (PVG, XIY, NGB), VIE (XIY), VCE (PVG), MXP. Japan from PVG: NRT, HND, KIX and more.
    - **China Southern (CZ):** BUD and BEG to CAN. **Hainan (HU):** PRG/BEG/BRU to PEK. **Air Serbia (JU):** BEG–PVG/CAN. **Juneyao (HO):** BRU and ATH to PVG (BRU–PVG–NRT €327 OW, Mar 2027, the cheapest hub fare in B0; sold as one ticket with OU from ZAG on Skiplagged).
    - ⚠ Air China promo fares **often do not show on Google Flights / ITA Matrix**. Always check **airchina.com** (flexible search) and Trip.com.
+   - ⚠ **China Eastern fare brands (ceair.com, Oct 2026):** on Europe itineraries Basic = 0 checked bags, Standard/Flexible = 1×23 kg (GDS data at OTAs says 2×23 kg for ECONOMY STANDARD). In B1 the Standard fare was €686–741 RT. An MU price clearly below that level is probably Basic, so confirm the allowance at checkout and in manage-booking.
    - China–Japan political row (since Nov 2025) cut many Chinese Japan routes. Secondary Japanese airports are now mostly reached via PVG (MU) or ICN (KE).
    - Long PEK/PVG layovers: Air China and China Eastern may offer free transit hotels (check eligibility).
 2. **Gulf:** Qatar (ZAG 4/wk on A320 since Jun 2026; BUD, BEG, VIE, VCE), flydubai+Emirates (flydubai at ZAG, LJU, BEG, BUD; **Emirates itself does NOT fly ZAG**), Etihad (VIE, MUC, PRG, MXP; frequent sales). ⚠ The 2026 Iran conflict suspended Gulf routes Mar–Jun 2026 and risk was still "elevated" in Sep 2026. Add a reliability caveat.
