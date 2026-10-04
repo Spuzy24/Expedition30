@@ -297,8 +297,8 @@ SORT = {"top": 0, "best": 1, "cheapest": 2, "departure": 3, "arrival": 4, "durat
 
 
 def _airports(codes: list[str]) -> list:
-    # [[code, 0]] = airport; Google city ids (e.g. "/m/07dfk" Tokyo) use type 5
-    return [[[c, 5 if c.startswith("/m/") else 0] for c in codes]]
+    # [[code, 0]] = airport; Google city ids (e.g. "/m/07dfk" Tokyo) use type 4 (as the web app sends)
+    return [[[c, 4 if c.startswith(("/m/", "/g/")) else 0] for c in codes]]
 
 
 def build_segment(origins, dests, date, stops=0, classifier=3, selected=None,
@@ -536,6 +536,20 @@ def browser_fetch(url: str, verbose=True, wait_ms=4000) -> str:
         # Pre-seed the consent cookie (EU); harmless elsewhere.
         ctx.add_cookies([{"name": "SOCS", "value": "CAESHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmVuIAEaBgiA_LyaBg",
                           "domain": ".google.com", "path": "/"}])
+        # Through some proxies Chromium rejects Google's long-URL JS bundles with ERR_BLOCKED_BY_ORB,
+        # which breaks the interactive app (date grid, price graph, Explore). Serving those bundles
+        # via `requests` fixes it (verified 2026-10-04). The server-rendered results we parse do not
+        # need JS, so this only matters if you extend this function to click widgets.
+        def _js(route):
+            try:
+                r = requests.get(route.request.url, headers={"user-agent": UA}, timeout=60)
+                route.fulfill(status=r.status_code, body=r.content,
+                              headers={"content-type": r.headers.get("content-type", "text/javascript"),
+                                       "access-control-allow-origin": "*",
+                                       "cross-origin-resource-policy": "cross-origin"})
+            except Exception:  # noqa: BLE001
+                route.continue_()
+        ctx.route(re.compile(r"https://www\.gstatic\.com/_/mss/boq-travel/.*"), _js)
         page = ctx.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=90000)
         if "consent.google" in page.url:
