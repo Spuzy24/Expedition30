@@ -40,3 +40,14 @@
 | ZAG→TYO RT 10–24 Feb, 7 points of sale | Google Flights `gl`/`curr` | all within 0.5% | POS switching is a myth on GF |
 | Air China ZAG→HND OW 20 Jan | Kiwi `--only-airlines CA` | €625 (incl. bag) | Hidden in Kiwi's unfiltered results |
 | Air China ZAG↔TYO RT Jan/Feb | Kiwi `--only-airlines CA` | €1,524–1,879 | implausible: Kiwi stitching; check other sources |
+
+## B2 (2026-10-04): open-jaw premium (in TYO, out OSA) vs plain return, out 12 May / back 26 May 2027
+| Source | Plain RT | Open-jaw | Premium |
+|---|---|---|---|
+| ITA Matrix VIE (`--slice VIE:TYO:… --slice OSA:VIE:…`) | €1,151 (NH/OS nonstop) | €1,475 (NH out, LH via MUC back) | **+€324 (+28%)** |
+| momondo BUD (MU out / CZ back) | €688 (NRT/HND both ways) | €686 (out PVG–KIX, back KIX–CAN) | ≈ 0 |
+| Kiwi MCP ZAG, Air China only (Jan/Feb) | €1,881 (HND/HND) | €1,879 (HND in / KIX out) | ≈ 0 |
+
+**Conclusion:** the "open-jaw ≈ return" rule from blogs holds for Chinese carriers (and Kiwi/momondo
+mix TYO/OSA automatically when the destination list is `TYO,OSA`), but NOT always for European/Star
+Alliance fares. **Always price it explicitly**, never assume.

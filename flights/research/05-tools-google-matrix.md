@@ -398,6 +398,9 @@ Result (RT 14 nights, 1 adult, economy, no bags, prices as cached by Google on 2
 | 59 | SKG | 1000 | 2027-02-08 → 2027-02-22 (NRT,HND) | 33 |  |
 | 60 | EDI | 1001 | 2027-03-15 → 2027-03-29  | 59 |  |
 
+"(NRT,HND)" marks origins redone in run 2 with per-city calendars (the cheaper city is shown);
+"dates priced" < 59 = Google had no cached price for the other days.
+
 Zagreb-region view: BUD €658, MXP €659, PRG €678, VIE €688, MUC €810, BLQ €824, VCE €843,
 ZAG €955, BEG €964, LJU €967 (best dates mostly early/mid February). GF does not build
 Ryanair/Wizz positioning + long-haul combinations, so e.g. "ZAG→ATH (low-cost) + ATH→TYO €555" must
@@ -417,7 +420,7 @@ $ python gflights.py explore --from ZAG --region japan --month 2 --duration 2wee
 ```
 47 places (many share an airport); Osaka/Kyoto came back **without a price** (same sparse cache as
 ZAG→KIX). `--month` omitted = "next ~6 months" (the browser showed Tokyo Jan 21–27 2027 €775 for
-1-week trips). `--region` takes `japan`, `asia`, any `/m/` MID, or an airport code. Request format
+1-week trips). `--region` takes `japan` (tested), `asia`/`south korea`/… (MIDs built in, untested), any `/m/` MID, or an airport code. Request format
 taken from nas-/google-flights-rs and confirmed against the browser (§3.2). Explore without a
 region (the `gflights` lib default) returns ~67 "popular" destinations from ZAG and **no Japan**.
 

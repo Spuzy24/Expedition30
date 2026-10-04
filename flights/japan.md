@@ -40,7 +40,7 @@
 - **Osaka/Kyoto:** KIX (¥970 Nankai to Namba; Haruka ¥1,800 to Kyoto). ITM is domestic only; UKB (Kobe) has some international flights since 2025.
 - **NGO** Nagoya, **FUK** Fukuoka (best-connected secondary), **CTS** Sapporo, **OKA** Naha, **HIJ** Hiroshima (Korean Air from 23 Dec 2026), plus many Korean/Taiwanese feeds to small airports.
 - Secondary airports often price **the same as Tokyo** on KE/MU/CA: use one if the trip starts or ends there.
-- **Open-jaw** (into TYO, out of OSA or vice versa) usually prices like a normal return on carriers serving both. Always test it. It saves ¥14,000 Shinkansen or a ≥¥3,990 Peach flight.
+- **Open-jaw** (into TYO, out of OSA or vice versa): ≈ free on Chinese carriers (MU/CZ/CA), but **+28% on a Star Alliance VIE fare in benchmark B2**. Always price it explicitly. It saves a ¥14,000 Shinkansen or a ≥¥3,990 Peach flight.
 
 ## 4. Seasonality (2026/27)
 - **Cheapest:** mid-Jan → early Mar (avoid **Chinese New Year from 6 Feb 2027** on China routings); mid-May → June (after Golden Week, rainy season); late Oct → early Dec.
