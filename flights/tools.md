@@ -155,6 +155,16 @@ python3 quotes.py best --trip tyo-2027-05               # best per origin→dest
 Total = fare×(1+card fee) + bag cost + extras + ground (round trip from `ground.json`; open-jaw on the
 home side = half of each). Everything is per person; `--per total --pax N` divides. `mcp_flights.py --log TRIP` auto-adds.
 
+## 10b. Price monitoring: `monitor.py`
+```bash
+python3 monitor.py flights/searches/<trip>/watch.json            # run all checks, print summary + ALERT lines
+python3 monitor.py flights/searches/<trip>/watch.json --history  # stored history per check
+```
+Watch file lists checks as normal toolkit commands plus how to get JSON (`"json": "file:--json"` for
+kayak/kiwi_graphql/aviasales/booking/positioning, `"file:--out"` for gflights/matrix, `"stdout:--json"`
+for mcp_flights). It extracts the min EUR price per check and alerts on a new low or ≤ `threshold_eur`.
+Example + Routine prompt: playbook §9. Tested 2026-10-04 (4 checks, 77 s).
+
 ## 11. Manual-only sources (give the user exact URLs)
 - Skyscanner: `https://www.skyscanner.net/transport/flights/zag/tyoa/270512/270526/` (whole month `?oym=2705&iym=2705`; Everywhere `/transport/flights-from/zag/`)
 - Trip.com: `https://www.trip.com/flights/showfarefirst?dcity=bud&acity=tyo&ddate=2027-05-12&rdate=2027-05-26&triptype=rt&class=y&quantity=1&locale=en-XX&curr=EUR` (also try other locales)

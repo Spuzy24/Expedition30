@@ -116,10 +116,12 @@ Save the report to `flights/searches/<trip>/report.md` and commit.
 
 ## 9. Monitor (if not booking now)
 - Ask the user to turn on **Google Flights price tracking** for the chosen dates and "any dates" (email alerts), and optionally Skyscanner/Kayak alerts or Secret Flying/Jack's Flight Club e-mails.
-- Offer a **scheduled re-check** (Routine via `create_trigger` / `send_later`), e.g. daily or every 2 days. Each run:
-  - re-run the 2–3 winning queries + `deals.py --days 3`
-  - append quotes
-  - report only if the price drops below the threshold, or a deal appears
+- Write a watchlist `flights/searches/<trip>/watch.json` with the 3–6 queries that found the best options. Include at least one carrier-forced Matrix query and one momondo query. Format in `scripts/monitor.py --help`. Test it: `python3 flights/scripts/monitor.py flights/searches/<trip>/watch.json`. It tracks the min € per check in `watch_state.json` and prints `ALERT` lines for a new low or ≤ threshold.
+- With the user's OK, create a **Routine** (`create_trigger`, recurring, e.g. daily at a jittered morning time in Europe/Zagreb, fresh session per fire, push notification on) with a standalone prompt like:
+  > In repo Spuzy24/Expedition30, branch claude/nice-albattani-0rz6ea: run `bash flights/scripts/setup.sh`, then `python3 flights/scripts/monitor.py flights/searches/<trip>/watch.json` and `python3 flights/scripts/deals.py --days 2`. Commit and push the updated watch_state.json. If any line starts with ALERT, or a deal mentions Japan from VIE/BUD/ZAG/LJU/BEG/MUC/VCE/MXP, re-verify that fare (playbook §7) and report it with the booking link. Otherwise reply "no change" in one line.
+
+  Use `send_later` for a one-off check (e.g. before a known sale such as Qatar Black Friday).
+- Each run costs ~2–5 min; daily is plenty (fares move in multi-day steps).
 - Book on a dip: the ZAG–TYO history showed a €240 drop lasting only 2 days.
 - Expected sale moments: Qatar Black Friday (late Nov), Air China weekend discount, Chinese carriers' promos (travel-dealz), LOT/Finnair sales.
 

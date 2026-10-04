@@ -52,3 +52,14 @@
 **Conclusion:** the "open-jaw ≈ return" rule from blogs holds for Chinese carriers (and Kiwi/momondo
 mix TYO/OSA automatically when the destination list is `TYO,OSA`), but NOT always for European/Star
 Alliance fares. **Always price it explicitly**, never assume.
+
+## B3 (2026-10-04): RT BUD → TYO, 2 Jun → 16 Jun 2027 (via `monitor.py` test)
+| Source | Cheapest | Itinerary |
+|---|---|---|
+| **ITA Matrix forced `MU+`** | **€686** (seats confirmed) | MU BUD–PVG–TYO RT |
+| Google Flights | €810 | QR via DOH |
+| Kiwi MCP | €856 | W6 BUD–WAW + QR (self-transfer) |
+| Kiwi GraphQL | €895 | W6+ET / AI+FR self-transfer mess |
+
+Again the cheapest carrier (MU) was absent from Google and from both Kiwi answers, and found only by
+forcing the carrier in Matrix. **Per-carrier passes (Matrix `--carriers`, Kiwi `--only-airlines`) are mandatory.**
