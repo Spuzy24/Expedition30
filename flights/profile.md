@@ -31,7 +31,7 @@
 | Max stops each way | [2] |
 | Max total travel time each way | [30 h] |
 | Overnight layover / airport sleep OK? | [yes if it saves ≥ €100] |
-| Self-transfer (separate tickets) OK? | [yes with ≥ 3 h buffer, ≥ €80 saving, no checked-bag issues] |
+| Self-transfer (separate tickets) OK? | [yes with ≥ 4–6 h buffer on the same day or an overnight (positioning flights: the day before), ≥ €100 saving after bags/ground/hotel (≥ €150 for an Asian-hub self-transfer), bags re-checked by the traveller] |
 | Hidden-city / throwaway tricks OK? | [NO unless the user explicitly opts in] |
 | OTAs with poor service OK? | [yes if saving ≥ €50 and fare is a plain non-changeable ticket anyway] |
 | Ground travel to a departure airport | [up to ~10 h each way by bus/train if saving justifies it] |

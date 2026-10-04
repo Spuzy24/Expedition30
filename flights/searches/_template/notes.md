@@ -1,7 +1,7 @@
 # Trip <trip-id>: search log
 
 ## Brief (from profile.md)
-- Travelers / bags:
+- Travelers (adults/children/infants, passports) / bags per person:
 - Home / allowed origins:
 - Japan airports / open-jaw:
 - Date window / flexibility / trip length:

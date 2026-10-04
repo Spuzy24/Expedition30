@@ -24,6 +24,7 @@
 | **Deal feeds** | Auto | `scripts/deals.py` (22 RSS feeds) | Flash sales, error fares, regional benchmarks (fly4free.pl Japan tag, travel-dealz Japan, utazomajom.hu) | Expired deals; Secret Flying feed blocked |
 | **Skyscanner** | **Manual** | user's browser: `skyscanner.net/transport/flights/zag/tyoa/YYMMDD/YYMMDD/`, whole month `?oym=2703&iym=2703`, Everywhere `/transport/flights-from/zag/` | Broadest tiny-OTA list + seller ratings; whole-month/Everywhere | PerimeterX captcha to bots; month/Everywhere prices cached |
 | **Trip.com** | **Manual** (also visible inside Kayak as provider CTRIPAIR) | user's browser: `trip.com/flights/showfarefirst?dcity=vie&acity=tyo&ddate=2027-03-10&triptype=ow&class=y&quantity=1&locale=en-XX&curr=EUR` (try other locales) | Often cheapest seller for Chinese carriers (CA, MU, CZ, HO, HU), open-jaw | Verification wall to bots |
+| Japan-origin OTAs (skyticket.jp, Trip.com `locale=ja-JP`) | **Manual** | user's browser | Japan→Europe one-ways and domestic legs priced in JPY (weak yen) | Check the card FX fee; one-way only |
 | **Secret Flying** | **Manual** | secretflying.com origin pages (Zagreb, Ljubljana, Vienna, Budapest, Belgrade) | Error fares from our region | Cloudflare blocks scripts |
 | Airline sites (Air China, China Eastern, Juneyao, Hainan, Korean, Turkish, Qatar, LOT, Finnair, Etihad…) | **Manual** (bot walls) | user's browser, exact flights/dates from our shortlist | Web-only promos (Air China €551 MXP case), direct-booking protection, Air China Fri–Sun discount | Air China airchina.com blocks cloud IPs; airchina.at loads but its search can't be automated |
 
@@ -42,11 +43,11 @@ online check-in sold as a service, payment-method "discounts", dynamic currency 
 price higher than the metasearch showed.
 
 ## 3. What the tests taught us about coverage (2026-10-04)
-- **No engine finds everything.** Same trip, different winners:
+- **No engine finds everything.** Similar ZAG→TYO one-way queries, different winners (20 Jan unless noted):
   - Google Flights default list: €571 ZAG→TYO OW.
   - Kiwi: €418 self-transfer / €373 ±3 days.
   - Skiplagged: $566 single ticket.
-  - Kayak `--nearby --flex 3`: €356 FR+HO via CRL.
+  - Kayak `--nearby --flex 3` (10 Mar ±3): €356 FR+HO via CRL→BRU.
 - **Carrier blind spots:** Kiwi showed Air China ZAG only with `--only-airlines CA`. Google Flights has no MU/CA/CZ on Europe→Japan at all. ITA Matrix hides them unless forced. Air China web promos may be missing everywhere except airchina.com.
 - **Independent tests:** momondo ranked #1 for lowest fares in Frommer's 2025 and 2026; Skyscanner top-rated by Which? (Oct 2025); Google Flights mid-pack on price but best for discovery.
 - **Cached vs live:** Skyscanner month/Everywhere, Kayak/momondo calendars, Aviasales ribbon, AZair and Google Explore are indicative only. Always re-run an exact-date live search.

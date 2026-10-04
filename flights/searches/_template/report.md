@@ -4,8 +4,8 @@
 <!-- itinerary, total € per person incl. bags + ground, what's included, where to book, risk level, why -->
 
 ## Top options
-| # | Total € pp | Fare € | Bags | Route & times | Carriers | Ticket type | Seller | Risk | Link |
-|---|---|---|---|---|---|---|---|---|---|
+| # | Total € pp | Total € party | Fare € | Bags | Route & times | Carriers | Ticket type | Seller | Risk | Checked at checkout (--live)? | Link |
+|---|---|---|---|---|---|---|---|---|---|---|---|
 
 ## Cheapest at any risk (if different)
 

@@ -65,7 +65,7 @@ Write `flights/searches/<trip>/report.md`, then commit and push.
 - **Recommendation:** itinerary, total € pp incl. bags/ground, where to book, risk.
 - **Top-5 table:** total | fare | bags | route/times | carriers | ticket type | seller | risk | link.
 - Cheapest-at-any-risk alternative, timing verdict (vs "typical" range).
-- **Manual checks for the user** with exact URLs: Skyscanner, Trip.com, the airline site (Air China: airchina.at, book Fri–Sun for ≤6% off), Secret Flying. These sites block bots, so never try to bypass captchas.
+- **Manual checks for the user** with exact URLs: Skyscanner, Trip.com, the airline site (Air China: airchina.at, book Fri–Sun for ≤6% off), Secret Flying, and Google Flights in their own browser: the **"Cheapest" tab** (self-transfer combos our script never sees) and **multi-city** for the open-jaw. These sites block bots, so never try to bypass captchas.
 - Assumptions and what wasn't checked.
 
 ## 8. Monitor (if not buying now)

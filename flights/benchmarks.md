@@ -7,7 +7,7 @@
 
 | Source (tool) | Cheapest | Bags | Itinerary / seller | Note |
 |---|---|---|---|---|
-| **momondo.de** (`kayak.py`) | **€686** | **2×23 kg** | MU BUD–PVG–KIX / **CZ** KIX–CAN–BUD, one ticket, seller **Opodo** | Mixed-carrier combo no other engine showed. Opodo = caution seller (check Prime/checkout price) |
+| **momondo.de** (`kayak.py`) | **€686** | **2×23 kg** | MU BUD–PVG–KIX / **CZ** KIX–CAN–BUD, one booking (single ticket not verified), seller **Opodo** | Mixed-carrier combo no other engine showed. Opodo = caution seller (check Prime/checkout price) |
 | Aviasales (`aviasales.py`) | €706 / €718 | 0 (Kiwi) / 2 (Gotogate) | MU BUD–PVG–NRT RT | "cheapest_with_baggage" €718 |
 | Booking.com Flights (`booking_flights.py`) | €741 | 2 | MU BUD–PVG–NRT RT | Etraveli inventory (high-risk seller tier) |
 | Kiwi MCP (`mcp_flights.py kiwi`) | €748 | **reported 0 checked** (wrong: MU fare includes bags) | MU BUD–PVG–NRT RT | With `--bags 1` it jumped to €1,083 MU / €925 CA VIE–PEK–HND. **Kiwi's bag data for Chinese carriers is unreliable** |
@@ -46,12 +46,13 @@
 | Source | Plain RT | Open-jaw | Premium |
 |---|---|---|---|
 | ITA Matrix VIE (`--slice VIE:TYO:… --slice OSA:VIE:…`) | €1,151 (NH/OS nonstop) | €1,475 (NH out, LH via MUC back) | **+€324 (+28%)** |
-| momondo BUD (MU out / CZ back) | €688 (NRT/HND both ways) | €686 (out PVG–KIX, back KIX–CAN) | ≈ 0 |
+| momondo BUD (MU out / CZ back) | €688 (NRT/HND both ways) | not measured: the €686 row (out PVG–KIX, back KIX–CAN) is in KIX / out KIX, i.e. a plain return, not an open-jaw | n/a |
 | Kiwi MCP ZAG, Air China only (Jan/Feb) | €1,881 (HND/HND) | €1,879 (HND in / KIX out) | ≈ 0 |
 
-**Conclusion:** the "open-jaw ≈ return" rule from blogs holds for Chinese carriers (and Kiwi/momondo
-mix TYO/OSA automatically when the destination list is `TYO,OSA`), but NOT always for European/Star
-Alliance fares. **Always price it explicitly**, never assume.
+**Conclusion:** not established. The only true open-jaw pair with comparable dates is the Matrix VIE one (+28%), and it
+compares two pruned default answers; the Kiwi Air China pair uses Kiwi's stitched (implausible) RT pricing. Blogs say
+open-jaw ≈ return on legacy and Chinese carriers. **Price it explicitly every time** (see playbook §5 for tools) and
+include the Japan-side backtrack a plain return forces on you.
 
 ## B3 (2026-10-04): RT BUD → TYO, 2 Jun → 16 Jun 2027 (via `monitor.py` test)
 | Source | Cheapest | Itinerary |
@@ -61,5 +62,6 @@ Alliance fares. **Always price it explicitly**, never assume.
 | Kiwi MCP | €856 | W6 BUD–WAW + QR (self-transfer) |
 | Kiwi GraphQL | €895 | W6+ET / AI+FR self-transfer mess |
 
-Again the cheapest carrier (MU) was absent from Google and from both Kiwi answers, and found only by
-forcing the carrier in Matrix. **Per-carrier passes (Matrix `--carriers`, Kiwi `--only-airlines`) are mandatory.**
+The cheapest carrier (MU) was absent from Google and from both Kiwi answers (in B1 Kiwi MCP did show MU), and found
+among these four sources only by forcing the carrier in Matrix. momondo/Aviasales/Booking were not part of B3.
+**Per-carrier passes (Matrix `--carriers`, Kiwi `--only-airlines`) are mandatory.**

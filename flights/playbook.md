@@ -7,7 +7,7 @@
 ## 0. Golden rules (learned the hard way, not folklore)
 
 1. **No single engine finds the cheapest fare.** Benchmark B1 (`benchmarks.md`), same RT query: momondo **€686** (MU+CZ, 2 bags), Aviasales €706, Booking €741, Kiwi €748, Skiplagged ≈€762, Google Flights €811, ITA Matrix €1,083. **Google Flights did not show China Eastern / Air China at all**, and those are the cheapest carriers to Japan. **ITA Matrix's default answer is pruned**; forced with `--route "MU+"` it found €715 (B1). Always triangulate ≥ 4 independent inventories, and never rely on Google alone.
-2. **Where you start matters more than any hack.** VIE/BUD/IST/BRU long-haul fares were €230–650 below ZAG for the same trip. Price the ground or positioning leg and compare totals.
+2. **Where you start matters more than any hack.** In the Google test (RT 10–24 Feb 2027) VIE was €230–330 below ZAG for the same dates, and one-way hub fares from BRU/IST undercut ZAG single tickets in the Kiwi origin-scans. Price the ground or positioning leg and compare totals.
 3. **The cheapest hub changes with the dates:** BRU in March 2027, IST in May 2027. Re-run the origin scan for each date window.
 4. **Engines hide carriers.** Kiwi only showed Air China ZAG→PEK→HND when filtered by carrier. Air China web promos are often absent from GF/ITA. Run per-carrier queries for the key carriers.
 5. **Price every construction:** return, 2× one-way, open-jaw (TYO/OSA), mixed carriers, positioning + long-haul, Asian-hub self-transfer. None wins consistently.
@@ -58,13 +58,13 @@ Run **all** of these (each sees different inventory). Most productive first (per
 
 Then **per-carrier passes** (each engine's top-15 hides carriers):
 - `mcp_flights.py kiwi ZAG,VIE,BUD TYO,OSA D --flex 3 --only-airlines CA`, then repeat with `MU,FM`, `CZ`, `HU`, `KE,OZ`, `TK`, `QR`, `EY`, `LO`, `AY`, `NH`
-- `matrix.py search … --route "CA+"` (and MU+, KE+ …) with `--sales-city` set to the origin city
+- `matrix.py search … --route "CA+"` (and MU+, KE+ …) (sales city defaults to the departure city; changing it made no difference in tests)
 
 Log the best 2–3 per source/origin with `quotes.py add` (or the scripts' `--log`).
 
 ## 4. Sweep B: Europe-wide long-haul origin + positioning (≈20 min)
 Goal: find a European city whose long-haul to Japan is so cheap that a positioning leg still wins
-(the ~€457 RT GDN→ARN→PEK→HND pattern; €327 BRU–PVG–NRT on Juneyao in Mar 2027).
+(the ~€457 RT GDN→ARN→PEK→HND pattern; €327 one-way BRU–PVG–NRT on Juneyao in Mar 2027).
 1. `kiwi_graphql.py per-city --from Continent:europe --to Country:JP --dates …` (cheapest European origin per Japanese city)
 2. `kiwi_graphql.py origin-scan --to TYO,OSA --dates … --origins ZAG,VIE,BUD,BEG,MUC,VCE,MXP,FCO,BRU,AMS,CDG,FRA,IST,WAW,HEL,ARN,CPH,OSL,DUB,LHR,MAD,BCN,ATH,PRG,OTP` (+ `--checked-bags 1`)
 3. `gflights.py sweep --origins europe --to TYO,OSA --start … --end … --stay N --cache searches/<trip>/gf_sweep.json --details 5` (resumable)
@@ -80,7 +80,7 @@ For the best 3–5 candidates so far:
 - **Open-jaw:** in TYO, out OSA (and the reverse): `matrix.py search --slice ZAG:TYO:D1 --slice OSA:ZAG:D2`, `gflights` multi-city if supported, airline multi-city. Usually ≈ RT price and saves a ¥14,000 Shinkansen.
 - **Secondary Japanese airports** (FUK, NGO, CTS, OKA, HIJ…) when the itinerary starts or ends there. KE/MU often price them like Tokyo.
 - **Asian-hub self-transfer:** Europe→ICN/TPE/PVG/PEK/HKG/BKK/SIN + LCC last leg (`japan.md` §6). Only when the Europe→hub fare is ≥ ~€150 below a through ticket, or the user wants a free stopover. Check transit/entry rules (K-ETA for Korea).
-- **Stopover value-adds:** Turkish Stopover (free hotel night in economy), Finnair, China visa-free (until 31 Dec 2026).
+- **Stopover value-adds:** Turkish Stopover (free hotel night in economy), Finnair, China (240-h visa-free transit; the 30-day visa-free entry only to 31 Dec 2026 unless renewed).
 - **Nearby-date shifts:** ±3 days, Mon–Wed departures.
 
 ## 6. Seller selection: cheapest *trustworthy* seller for each finalist (≈10 min)
@@ -102,6 +102,7 @@ For each finalist, check and write down:
 - [ ] Seller trust tier, fees at checkout, refund/change rules (fare basis via Matrix if relevant)
 - [ ] Total per-person cost (`quotes.py list --trip …`) and risk rating (safe/low/moderate/risky/tos)
 - [ ] Gulf routing? Add the 2026 conflict reliability caveat.
+- [ ] Party extras: seats together (fees on many fares); mixed-carrier tickets: bag allowance per the most significant carrier, so read it at checkout.
 
 ## 8. Report to the user
 Use this structure (keep it skimmable):
@@ -126,6 +127,6 @@ Save the report to `flights/searches/<trip>/report.md` and commit.
 - Expected sale moments: Qatar Black Friday (late Nov), Air China weekend discount, Chinese carriers' promos (travel-dealz), LOT/Finnair sales.
 
 ## 10. Time budget & stopping rule
-A full hunt is ~1.5–2 h of tool time. Stop when 4+ independent inventories agree on the floor
+A full hunt is ~1.5–2 h of tool time. Stop when 4+ independent inventories (count each group once: Google Flights/Matrix · Kiwi MCP/GraphQL · Kayak/momondo · Skiplagged · Aviasales · Booking/Etraveli) agree on the floor
 (within ~5%), every construction in §5 has been priced, and the top 3 are validated. Report what
 was NOT checked (blocked sites) as manual items for the user.

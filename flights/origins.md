@@ -44,7 +44,7 @@ Ryanair routes (verified 2026-10-04 via `https://www.ryanair.com/api/views/locat
 - **BUD** → ARN, CPH, BGY, MXP, STN, BVA, CRL, PRG, WMI…
 - **ZAD** (mostly summer) → ARN, HEL, CPH, VIE, BUD, MXP, STN…
 
-Proven feeder → Japan pairings:
+Candidate feeder → Japan pairings (priced examples: Ryanair GDN–ARN + CA ARN–PEK–HND ≈ €457 RT; FR ZAG–CRL + HO BRU–PVG–NRT ≈ €361 OW):
 - ZAG–FCO → ITA FCO–HND
 - ZAG–BGY → CA/NH ex-MXP
 - ZAG–WMI → LOT WAW–NRT
@@ -60,7 +60,7 @@ Separate-ticket rules (see `tricks.md`):
 - Watch for airport changes (BGY→MXP, CRL→BRU, STN→LHR, WMI→WAW).
 - Cabin-bag sizes differ (Ryanair free item 40×30×20 cm).
 
-Wizz Air network not verified (its API needs a build token). Use Azair/Kiwi, which include Wizz.
+Wizz Air works through `ryanair_wizz.py` (routes/anywhere/calendar; verified 2026-10-04: BUD 97 destinations, BTS 39, VCE 36, TSF 9, LJU 2, no ZAG or VIE). Fares are in local currency (HUF…), converted at ECB rates; fare only, no bags.
 
 ## 4. Regional deal feeds (scanned by `scripts/deals.py`)
 Best Japan signal:

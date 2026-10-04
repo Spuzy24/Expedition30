@@ -56,7 +56,7 @@ python3 matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-
 ```
 - **The default answer is pruned** (6–17 solutions, 4–5 carriers, varies run to run). B1 default €1,083 vs `MU+` €715. **Always use `--carriers`** (~40 s per carrier) or routing codes.
 - `--no-avail` shows fare levels without confirmed seats (e.g. CA €574 OW ex-VIE). These are **leads**, not bookable prices.
-- Routing (per slice): `CA+` (≥1 CA flight), `C:CA` / `O:EK` = exactly ONE segment marketed/operated, `X:IST` connect at IST. `N` is not valid; use `--max-stops 0`.
+- Routing (per slice): `CA+` (≥1 CA flight), `C:CA` / `O:EK` = exactly ONE segment marketed/operated, `X:IST` connect at IST. `N` = nonstop per Google's docs (it returned 0 on a date without a nonstop; confirm on a date with one). `--max-stops 0` or `C:OS` also work.
 - Extension (verified): `MAXSTOPS 1`, `MINCONNECT 120`, `MAXCONNECT 240`, `-AIRLINES TK`, `ALLIANCE STAR-ALLIANCE`, `-CODESHARE`, `-REDEYES` (shows a totally different set!), `-OVERNIGHTS`, `-PROPS`, `F BC=K`. Values starting with `-` are accepted.
 - Sales city made no difference (8 cities, identical €1,123). 15–60 s per query; default pacing 5 s. Browser fallback is flaky; use HTTP.
 - No LCCs, no self-transfer, no NDC/web-only fares; often pricier than GF for the same airline.

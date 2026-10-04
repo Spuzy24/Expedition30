@@ -24,13 +24,13 @@
 1. **Chinese carriers, 1 stop in China.** These are usually the cheapest and normally include 23 kg (often 2×23 on MU).
    - **Air China (CA):** **ZAG→OTP→PEK, Mon/Wed/Fri, since 4 Sep 2026.** Also BUD (daily), VIE, MUC, MXP, VCE, ARN, BRU. Japan from PEK: HND (~32/wk) and KIX (2/day). PEK–NRT/NGO/CTS/OKA were **cut for NW26**.
    - **China Eastern / Shanghai Airlines (MU/FM):** BUD (PVG, XIY, NGB), VIE (XIY), VCE (PVG), MXP. Japan from PVG: NRT, HND, KIX and more.
-   - **China Southern (CZ):** BUD and BEG to CAN. **Hainan (HU):** PRG/BEG/BRU to PEK. **Air Serbia (JU):** BEG–PVG/CAN.
+   - **China Southern (CZ):** BUD and BEG to CAN. **Hainan (HU):** PRG/BEG/BRU to PEK. **Air Serbia (JU):** BEG–PVG/CAN. **Juneyao (HO):** BRU and ATH to PVG (BRU–PVG–NRT €327 OW, Mar 2027, the cheapest hub fare in B0; sold as one ticket with OU from ZAG on Skiplagged).
    - ⚠ Air China promo fares **often do not show on Google Flights / ITA Matrix**. Always check **airchina.com** (flexible search) and Trip.com.
    - China–Japan political row (since Nov 2025) cut many Chinese Japan routes. Secondary Japanese airports are now mostly reached via PVG (MU) or ICN (KE).
    - Long PEK/PVG layovers: Air China and China Eastern may offer free transit hotels (check eligibility).
 2. **Gulf:** Qatar (ZAG 4/wk on A320 since Jun 2026; BUD, BEG, VIE, VCE), flydubai+Emirates (flydubai at ZAG, LJU, BEG, BUD; **Emirates itself does NOT fly ZAG**), Etihad (VIE, MUC, PRG, MXP; frequent sales). ⚠ The 2026 Iran conflict suspended Gulf routes Mar–Jun 2026 and risk was still "elevated" in Sep 2026. Add a reliability caveat.
 3. **Turkish (TK) via IST:** ZAG 14/wk, LJU, VIE, BUD, BEG → NRT/HND/KIX daily. One ticket from ZAG; Kayak's cheapest ZAG fare (~€755).
-4. **Nonstops from Europe:** Finnair HEL (NRT/HND/KIX), LOT WAW–NRT (ZAG 15/wk, LJU 11/wk feeders), ANA VIE–HND (3/wk winter), Austrian VIE–NRT (**summer only**, back ~29 Mar 2027), LH/ANA MUC–HND, LH MUC–KIX (3/wk NW26), ITA FCO–HND, Swiss ZRH–NRT, KL/AF, BA/JAL, SAS CPH–HND, ANA ARN/MXP/IST–HND.
+4. **Nonstops from Europe:** Finnair HEL (NRT/HND/KIX), LOT WAW–NRT (ZAG 15/wk, LJU 11/wk feeders), ANA VIE–HND (3/wk from 3 Dec 2026, no flights 26 Dec–11 Jan), Austrian VIE–NRT (**summer only**, back ~29 Mar 2027), LH/ANA MUC–HND, LH MUC–KIX (3/wk NW26), ITA FCO–HND, Swiss ZRH–NRT, KL/AF, BA/JAL, SAS CPH–HND, ANA ARN/MXP/IST–HND.
 5. **Via Korea (ICN):** Korean Air from VIE, BUD, PRG, MXP reaches about 16 Japanese airports (best for FUK/HIJ/OKJ/KMJ…). Trinity (ex-T'way) ZAG–ICN was **summer-only 2026**; 2027 unknown.
 6. **Via Taiwan (TPE):** EVA/China Airlines from VIE/PRG/MUC; Starlux from PRG. Tigerair Taiwan reaches about 25 Japanese airports.
 7. **Others:** Saudia RUH–NRT (from 17 Nov 2026), Uzbekistan via TAS, Air Astana ALA–NRT (announced 1 Dec 2026, unconfirmed), Ethiopian via ADD–ICN, EgyptAir CAI–NRT, Air India via DEL, Vietnam Airlines/VietJet via HAN/SGN (VietJet PRG–HAN from Oct 2026), Scoot via SIN.
@@ -40,7 +40,7 @@
 - **Osaka/Kyoto:** KIX (¥970 Nankai to Namba; Haruka ¥1,800 to Kyoto). ITM is domestic only; UKB (Kobe) has some international flights since 2025.
 - **NGO** Nagoya, **FUK** Fukuoka (best-connected secondary), **CTS** Sapporo, **OKA** Naha, **HIJ** Hiroshima (Korean Air from 23 Dec 2026), plus many Korean/Taiwanese feeds to small airports.
 - Secondary airports often price **the same as Tokyo** on KE/MU/CA: use one if the trip starts or ends there.
-- **Open-jaw** (into TYO, out of OSA or vice versa): ≈ free on Chinese carriers (MU/CZ/CA), but **+28% on a Star Alliance VIE fare in benchmark B2**. Always price it explicitly. It saves a ¥14,000 Shinkansen or a ≥¥3,990 Peach flight.
+- **Open-jaw** (into TYO, out of OSA or vice versa): blogs say ≈ a return price; our only clean test was **+28% on a Star Alliance VIE fare** (B2), and the Chinese-carrier "≈ free" rows in B2 turned out not to be open-jaws. Always price it explicitly. When comparing with a plain return, add the backtrack the return forces on you (¥14,000 Shinkansen or a ≥¥3,990 Peach flight plus bag) to the return's total.
 
 ## 4. Seasonality (2026/27)
 - **Cheapest:** mid-Jan → early Mar (avoid **Chinese New Year from 6 Feb 2027** on China routings); mid-May → June (after Golden Week, rainy season); late Oct → early Dec.
@@ -53,7 +53,7 @@
 - Croatians/EU: **90 days visa-free**. JESTA isn't before fiscal 2028. Visit Japan Web is optional.
 - Domestic add-ons: Peach KIX–NRT from ¥3,990 (no bag); Jetstar Japan, Spring Japan, Skymark. ANA's foreigner fare **ended 18 May 2026**. The JAL Japan Explorer Pass still exists but its 2026 price isn't published (2024: ¥7,700–14,300/segment).
 - Transit rules for a Croatian passport (re-check before booking):
-  - **China:** 30 days visa-free until 31 Dec 2026, then 240 h transit.
+  - **China:** airside transit on one ticket: no visa. 240-h visa-free transit (onward ticket to a third country such as Japan, designated ports incl. PEK/PKX/PVG/CAN): fine for landside self-transfers and short stopovers. 30-day visa-free entry: until 31 Dec 2026 unless renewed (re-check for 2027 trips).
   - **Korea:** K-ETA needed to enter (not for airside transit).
   - **Taiwan:** visa-free 90 days, online arrival card.
   - **Vietnam:** e-visa probably needed landside.
