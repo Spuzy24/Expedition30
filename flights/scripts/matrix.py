@@ -246,7 +246,13 @@ def parse_calendar(d: dict) -> list[dict]:
 # --------------------------------------------------------------------------------------
 # Browser backend (Playwright) - drives the real web app, captures the API JSON
 # --------------------------------------------------------------------------------------
-def browser_search(url: str, timeout_s=150) -> dict:
+def browser_search(body: dict, timeout_s=180) -> dict:
+    """Run `body` through the real Matrix web app (headless Chromium).
+
+    Deep links (/flights?search=...) do not trigger a search in headless mode, so we
+    drive a trivial one-way search through the form and, in a request interceptor,
+    swap the app's /v1/search JSON for ours while keeping the app's BotGuard token
+    (bgProgramResponse). The captured JSON response is returned."""
     from playwright.sync_api import sync_playwright
     launch: dict[str, Any] = {"headless": True}
     proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
@@ -255,12 +261,30 @@ def browser_search(url: str, timeout_s=150) -> dict:
     if os.environ.get("CHROMIUM_PATH"):
         launch["executable_path"] = os.environ["CHROMIUM_PATH"]
     found: dict[str, Any] = {}
+
+    def rewrite(route):
+        req = route.request
+        pd = req.post_data or ""
+        if "/v1/search" not in pd:
+            return route.continue_()
+        i, j = pd.find("{"), pd.rfind("}")
+        try:
+            orig = json.loads(pd[i:j + 1])
+        except ValueError:
+            return route.continue_()
+        mine = dict(body)
+        if orig.get("bgProgramResponse"):
+            mine["bgProgramResponse"] = orig["bgProgramResponse"]
+        found["swapped"] = True
+        route.continue_(post_data=pd[:i] + json.dumps(mine) + pd[j + 1:])
+
     with sync_playwright() as p:
         b = p.chromium.launch(**launch)
-        page = b.new_page(viewport={"width": 1400, "height": 1000})
+        page = b.new_page(viewport={"width": 1400, "height": 1100})
+        page.route("**/content-alkalimatrix-pa.googleapis.com/batch**", rewrite)
 
         def on_resp(r):
-            if "alkalimatrix" in r.url and "batch" in r.url:
+            if "alkalimatrix" in r.url and "batch" in r.url and found.get("swapped") and "d" not in found:
                 try:
                     t = r.text()
                 except Exception:  # noqa: BLE001
@@ -272,7 +296,27 @@ def browser_search(url: str, timeout_s=150) -> dict:
                     except ValueError:
                         pass
         page.on("response", on_resp)
-        page.goto(url, wait_until="load", timeout=90000)
+        page.goto("https://matrix.itasoftware.com/search", wait_until="load", timeout=90000)
+        page.wait_for_timeout(2500)
+        page.get_by_text("One Way", exact=True).click()
+        page.wait_for_timeout(600)
+        inputs = page.locator("input")
+        for idx, code in ((0, "VIE"), (1, "NRT")):
+            el = inputs.nth(idx)
+            el.click()
+            el.type(code, delay=100)
+            page.wait_for_timeout(2000)
+            opts = page.locator("mat-option, [role=option]")
+            if opts.count():
+                opts.first.click()
+            page.wait_for_timeout(400)
+        dummy = (dt.date.today() + dt.timedelta(days=60)).strftime("%m/%d/%Y")
+        d = inputs.nth(2)
+        d.click()
+        d.type(dummy, delay=40)
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(500)
+        page.get_by_role("button", name="Search").last.click()
         t0 = time.time()
         while "d" not in found and time.time() - t0 < timeout_s:
             page.wait_for_timeout(1000)
@@ -295,7 +339,7 @@ def run(a, body: dict, url: str) -> dict:
             if a.backend == "http" or "QPX" in str(e) or '"input"' in str(e):
                 raise
             log(f"  ! http backend failed ({e}); trying browser")
-    return browser_search(url)
+    return browser_search(body)
 
 
 def cmd_search(a):
