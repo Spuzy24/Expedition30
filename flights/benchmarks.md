@@ -17,6 +17,7 @@
 | Kiwi GraphQL `search --checked-bags 1` | €1,135 | 1 | CA/MU out + TR back combos | Bag-pricing path gives odd results. Cross-check with the MCP |
 
 **Conclusions (B1):**
+0. Control check: `gflights.py search --from BUD --to TYO --date 2027-05-12 --return 2027-05-26 --via PVG,PEK,CAN` returned **0 itineraries**. Google Flights does not have these MU/CA/CZ fares at all; this isn't a script limit.
 1. The floor (~€686–741 with bags) came from **Chinese carriers ex-BUD**, visible on momondo, Aviasales, Booking and Kiwi, but **invisible on Google Flights and ITA Matrix**. Never rely on Google/Matrix alone for Europe→Japan.
 2. **momondo/Kayak found a cheaper mixed-carrier ticket** (MU out + CZ back) than any single-carrier RT. Always include `kayak.py`.
 3. Bags: OTAs (Booking, Gotogate, Opodo) list 2 bags on MU; Kiwi said 0. **Verify bag allowance on the carrier's fare/OTA checkout**, not on Kiwi.
