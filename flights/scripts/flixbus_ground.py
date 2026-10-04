@@ -6,6 +6,7 @@ Usage:
   python3 flixbus_ground.py --date 2026-11-10 --to "Vienna Airport" "Budapest Airport"
   python3 flixbus_ground.py --from "Ljubljana" --date 2026-11-10   # another home base
   python3 flixbus_ground.py --cities "Graz Airport"                # just resolve city ids
+  python3 flixbus_ground.py --drive --home 15.9819,45.8150          # driving km/time to AIRPORT_COORDS (OSRM)
 
 Uses the same endpoints as flixbus.com (no key needed):
   autocomplete: https://global.api.flixbus.com/search/autocomplete/cities?q=...
@@ -53,6 +54,18 @@ CITY_IDS = {
     "Prague Airport": "ffb87aeb-111d-40fd-8f06-b6838da8762e",
     "Prague": "40de1ad1-8646-11e6-9066-549f350fcb0c",
 }
+# Airport coordinates (lon, lat) for --drive. Add more as needed.
+AIRPORT_COORDS = {
+    "ZAG": (16.0688, 45.7429), "LJU": (14.4576, 46.2237), "GRZ": (15.4396, 46.9911), "RJK": (14.5703, 45.2169),
+    "TRS": (13.4722, 45.8275), "PUY": (13.9222, 44.8935), "KLU": (14.3377, 46.6425), "ZAD": (15.3467, 44.1083),
+    "OSI": (18.8102, 45.4627), "BNX": (17.2975, 44.9414), "VIE": (16.5697, 48.1103), "BUD": (19.2611, 47.4298),
+    "BTS": (17.2127, 48.1702), "VCE": (12.3519, 45.5053), "TSF": (12.1944, 45.6484), "BEG": (20.3091, 44.8184),
+    "SPU": (16.2980, 43.5389), "SJJ": (18.3315, 43.8246), "TZL": (18.7248, 44.4587), "BLQ": (11.2887, 44.5354),
+    "MUC": (11.7861, 48.3538), "MXP": (8.7231, 45.6306), "BGY": (9.7042, 45.6739), "PRG": (14.2600, 50.1008),
+    "FCO": (12.2389, 41.8003), "ZRH": (8.5492, 47.4647), "FMM": (10.2395, 47.9888), "SOF": (23.4114, 42.6967),
+    "OTP": (26.0850, 44.5711), "FRA": (8.5622, 50.0379),
+}
+
 DEFAULT_TARGETS = [
     "Zagreb Airport", "Ljubljana", "Graz", "Trieste Airport", "Venice Airport", "Treviso Airport",
     "Vienna Airport", "Bratislava Airport", "Budapest Airport", "Belgrade", "Sarajevo", "Banja Luka",
@@ -101,6 +114,21 @@ def search(frm, to, date):
     return sorted(out, key=lambda x: x["dep"])
 
 
+def drive(home, codes):
+    """Free-flow driving distance/time via the public OSRM demo server (no traffic, no border waits)."""
+    import time
+    lon, lat = (float(x) for x in home.split(","))
+    for code in codes:
+        alon, alat = AIRPORT_COORDS[code]
+        try:
+            r = get(f"https://router.project-osrm.org/route/v1/driving/{lon},{lat};{alon},{alat}?overview=false")["routes"][0]
+            h = r["duration"] / 3600
+            print(f"{code}: {r['distance'] / 1000:.0f} km, {int(h)}h{int(h % 1 * 60):02d} (free-flow)")
+        except Exception as e:
+            print(code, "ERROR", e)
+        time.sleep(1.1)  # be polite to the demo server
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--from", dest="frm", default="Zagreb")
@@ -108,7 +136,12 @@ def main():
     ap.add_argument("--date", default=(dt.date.today() + dt.timedelta(days=30)).isoformat())
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--cities", nargs="*", help="only resolve these names to FlixBus city ids")
+    ap.add_argument("--drive", action="store_true", help="print OSRM driving km/time from --home to airports")
+    ap.add_argument("--home", default="15.9819,45.8150", help="lon,lat of home (default: Zagreb centre)")
     a = ap.parse_args()
+    if a.drive:
+        drive(a.home, a.to or list(AIRPORT_COORDS))
+        return
     if a.cities:
         for n in a.cities:
             print(n, resolve(n))
