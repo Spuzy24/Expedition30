@@ -1,0 +1,27 @@
+--- a/flights/scripts/matrix.py
++++ b/flights/scripts/matrix.py
+@@ -373,6 +373,9 @@
+     ("QR+" on every slice) surfaces fares that a plain query hides (verified: QR, EK on VIE-TYO)."""
+     allsol, per = [], []
+     base_route, base_route_ret = a.route, a.route_ret
++    if base_route or base_route_ret:
++        sys.exit("--carriers forces '<XX>+' routing per carrier; it cannot be combined with --route/--route-ret "
++                 "(every pass would run the same query). Use one or the other.")
+     for i, cx in enumerate(codes(a.carriers)):
+         if i:
+             time.sleep(a.sleep + random.uniform(0, 2))
+@@ -392,7 +395,13 @@
+             sol["forced_carrier"] = cx
+         allsol.extend(out["solutions"])
+     a.route, a.route_ret = base_route, base_route_ret
+-    allsol.sort(key=lambda x: (x["price"] is None, x["price"]))
++    # the same solution (e.g. CA out + MU back) is returned by several forced-carrier passes: keep one
++    uniq: dict = {}
++    for sol in allsol:
++        k = tuple((x["departure"], tuple(x["flights"])) for x in sol["slices"])
++        if k not in uniq or (sol["price"] or 1e12) < (uniq[k]["price"] or 1e12):
++            uniq[k] = sol
++    allsol = sorted(uniq.values(), key=lambda x: (x["price"] is None, x["price"]))
+     if not a.json_only:
+         print("per carrier: " + ", ".join(f"{p['carrier']} {p.get('min') or p.get('error', '-')}" for p in per))
+         for i, sol in enumerate(allsol[: a.top], 1):

@@ -1,0 +1,48 @@
+--- a/flights/scripts/deals.py
++++ b/flights/scripts/deals.py
+@@ -111,6 +111,14 @@
+     return items
+ 
+ 
++def norm_link(link):
++    """Drop tracking parameters (utm_*, fbclid...) so the same post from two feeds dedupes."""
++    u = urllib.parse.urlsplit(link)
++    q = [(k, v) for k, v in urllib.parse.parse_qsl(u.query) if not k.lower().startswith(("utm_", "fbclid", "mc_"))]
++    return urllib.parse.urlunsplit((u.scheme, u.netloc.lower().removeprefix("www."), u.path.rstrip("/"),
++                                    urllib.parse.urlencode(q), ""))
++
++
+ def age_days(datestr):
+     try:
+         d = email.utils.parsedate_to_datetime(datestr)
+@@ -130,6 +138,8 @@
+     p.add_argument("--region", action="store_true", help="require a home-region origin mention")
+     p.add_argument("--any-asia", action="store_true", help="also match Asian hubs")
+     p.add_argument("--include-noise", action="store_true", help="keep hotel/cruise/package posts")
++    p.add_argument("--keep-undated", action="store_true",
++                   help="keep items whose date can't be parsed (default: drop them; they bypassed --days)")
+     p.add_argument("--json", action="store_true")
+     a = p.parse_args()
+ 
+@@ -140,7 +150,7 @@
+     for name, url, _lang in FEEDS:
+         try:
+             items = parse(fetch(url))
+-            status.append((name, f"ok {len(items)}"))
++            status.append((name, f"ok {len(items)}" if items else "EMPTY (feed returned 0 items - moved?)"))
+         except Exception as e:
+             status.append((name, f"FAIL {type(e).__name__}: {str(e)[:60]}"))
+             continue
+@@ -153,9 +163,11 @@
+             if a.region and not reg_rx.search(blob):
+                 continue
+             ad = age_days(it["date"])
++            if ad is None and not a.keep_undated:
++                continue
+             if ad is not None and ad > a.days:
+                 continue
+-            key = it["link"] or it["title"]
++            key = norm_link(it["link"]) if it["link"] else it["title"].strip().lower()
+             if key in seen:
+                 continue
+             seen.add(key)

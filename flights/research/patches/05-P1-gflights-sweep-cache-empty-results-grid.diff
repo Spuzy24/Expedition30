@@ -1,0 +1,112 @@
+--- a/flights/scripts/gflights.py
++++ b/flights/scripts/gflights.py
+@@ -479,8 +479,18 @@
+         trip = 1
+     main = build_main(segs, trip, a.adults, CABIN[a.cabin], bags=a.bags_filter,
+                       max_price=a.max_price, exclude_basic=a.exclude_basic)
+-    inner = c.rpc("GetShoppingResults", [[], main, SORT[a.sort], 1, 0, 1])
+-    return parse_shopping(inner, c.curr)
++    payloads = c.rpc("GetShoppingResults", [[], main, SORT[a.sort], 1, 0, 1], all_chunks=True)
++    insights: dict = {}
++    for inner in payloads or []:  # the itinerary list is not guaranteed to be in the first wrb.fr chunk
++        its, ins = parse_shopping(inner, c.curr)
++        insights = insights or ins
++        if its:
++            return its, ins
++    c.log(f"  ! GetShoppingResults: 0 itineraries ({len(payloads or [])} payload(s) decoded) for "
++          f"{','.join(origins)}->{','.join(dests)} {date}{' / ' + ret if ret else ''}. Either no flights match "
++          f"the filters or Google sent an empty/throttled answer (seen 2026-10-04: 0 rows in 1 s, while the same "
++          f"query shape had returned 300 rows 10 min earlier). Re-check later or with --backend auto.")
++    return [], insights
+ 
+ 
+ def expand_return(c: Client, it: dict, origins, dests, date, ret, a) -> dict | None:
+@@ -649,9 +659,13 @@
+ 
+ def grid_rpc(c: Client, origins, dests, dep_dates: list[str], ret_dates: list[str], a=None) -> list[dict]:
+     stops = STOPS[a.stops] if a else 0
+-    segs = [build_segment(origins, dests, dep_dates[0], stops, 3),
+-            build_segment(dests, origins, ret_dates[0], stops, 1)]
+-    main = build_main(segs, 1, getattr(a, "adults", 1), CABIN[getattr(a, "cabin", "economy")])
++    via = getattr(a, "via_list", None)
++    segs = [build_segment(origins, dests, dep_dates[0], stops, 3, via=via),
++            build_segment(dests, origins, ret_dates[0], stops, 1, via=via)]
++    # same filters as search/calendar (previously --bags/--via/--max-price/--exclude-basic were ignored here)
++    main = build_main(segs, 1, getattr(a, "adults", 1), CABIN[getattr(a, "cabin", "economy")],
++                      bags=getattr(a, "bags_filter", None), max_price=getattr(a, "max_price", None),
++                      exclude_basic=getattr(a, "exclude_basic", False))
+     out = []
+     # <=200 cells per call
+     step = max(1, 200 // max(1, len(ret_dates)))
+@@ -828,6 +842,8 @@
+         print(f"({len(uniq)} itineraries, {c.n_requests} requests, {out['elapsed_s']} s)")
+     if a.out or a.json_only:
+         dump(out, a.out or "-")
++    if not uniq:
++        sys.exit(3)  # make "no results" visible to scripts/monitors instead of exit 0
+ 
+ 
+ def cmd_calendar(a, c: Client):
+@@ -894,21 +910,39 @@
+         dump({"query": vars_clean(a), "gl": c.gl, "curr": c.curr, "results": rows}, a.out or "-")
+ 
+ 
++SIG_DEFAULTS = {"via": None, "bags": None, "max_price": None, "exclude_basic": False, "no_self_transfer": False}
++
++
++def _sig_compatible(old_sig: str | None, new_sig: str) -> bool:
++    """A cache written before these keys were part of the signature is valid only for default values."""
++    try:
++        return {**SIG_DEFAULTS, **json.loads(old_sig)} == json.loads(new_sig)
++    except (TypeError, ValueError):
++        return False
++
++
+ def cmd_sweep(a, c: Client):
+     origins, dests = expand_codes(a.origins), expand_codes(a.to)
+     stay = parse_range(a.stay)
++    # Every option that changes prices must be in the signature, or a resumed sweep silently reuses
++    # prices from a different query (e.g. bag-less prices for a --bags 1 rerun).
+     sig = json.dumps({"dests": dests, "start": a.start, "end": a.end, "stay": stay, "gl": c.gl,
+                       "curr": c.curr, "stops": a.stops, "adults": a.adults, "cabin": a.cabin,
+-                      "date": a.date, "ret": a.ret}, sort_keys=True)
++                      "date": a.date, "ret": a.ret, "via": a.via_list, "bags": a.bags_filter,
++                      "max_price": a.max_price, "exclude_basic": a.exclude_basic,
++                      "no_self_transfer": a.no_self_transfer}, sort_keys=True)
+     cache = {"signature": sig, "origins": {}}
+     if a.cache and os.path.exists(a.cache):
+         with open(a.cache) as fh:
+             old = json.load(fh)
+-        if old.get("signature") == sig:
++        if old.get("signature") == sig or _sig_compatible(old.get("signature"), sig):
+             cache = old
++            cache["signature"] = sig
+             c.log(f"resuming: {len(cache['origins'])} origin(s) already cached in {a.cache}")
+         else:
+-            c.log("cache signature differs (other query) - starting a fresh cache section")
++            bak = f"{a.cache}.{int(time.time())}.bak"
++            os.replace(a.cache, bak)  # keep the other query's progress instead of overwriting it
++            c.log(f"cache signature differs (other query) - old cache moved to {bak}; starting fresh")
+             cache = {"signature": sig, "origins": {}, "previous": old.get("signature")}
+ 
+     def save():
+--- a/flights/scripts/gflights_calendar.py
++++ b/flights/scripts/gflights_calendar.py
+@@ -15,11 +15,12 @@
+ if __name__ == "__main__":
+     argv = sys.argv[1:]
+     glob, rest = [], list(argv)
+-    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep"):
+-        glob += rest[:2]
+-        rest = rest[2:]
+-    while rest and rest[0] == "--quiet":
+-        glob.append(rest.pop(0))
++    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep", "--quiet"):
++        if rest[0] == "--quiet":  # flag (no value); may appear between the others
++            glob.append(rest.pop(0))
++        else:
++            glob += rest[:2]
++            rest = rest[2:]
+     if not rest or rest[0] not in ("calendar", "grid"):
+         rest = ["calendar"] + rest
+     gflights.main(glob + rest)
