@@ -373,6 +373,9 @@ def cmd_search_carriers(a):
     ("QR+" on every slice) surfaces fares that a plain query hides (verified: QR, EK on VIE-TYO)."""
     allsol, per = [], []
     base_route, base_route_ret = a.route, a.route_ret
+    if a.slice and any(parse_slice(x)[3] for x in a.slice):
+        sys.exit("--carriers forces '<XX>+' on every slice; it cannot be combined with a per-slice route "
+                 "(ORIG:DEST:DATE:ROUTE). Use one or the other.")
     if base_route or base_route_ret:
         sys.exit("--carriers forces '<XX>+' routing per carrier; it cannot be combined with --route/--route-ret "
                  "(every pass would run the same query). Use one or the other.")
@@ -381,7 +384,7 @@ def cmd_search_carriers(a):
             time.sleep(a.sleep + random.uniform(0, 2))
         a.route = f"{cx}+" if not base_route else base_route
         a.route_ret = f"{cx}+" if not base_route_ret else base_route_ret
-        log(f"[{i + 1}] carrier {cx}")
+        log(f"[{i + 1}] carrier {cx} (routing '{cx}+' on every slice)")
         try:
             out = _cmd_search(a, quiet=True)
         except MatrixError as e:
@@ -413,18 +416,40 @@ def cmd_search_carriers(a):
               "solutions": allsol}, a.out or "-")
 
 
+def parse_slice(spec: str) -> tuple[list[str], list[str], str, str | None]:
+    """'BUD:TYO:2027-05-12' or 'BUD:TYO:2027-05-12:C:CA X:PEK C:CA' -> (origins, dests, date, route).
+    Everything after the 3rd ':' is the slice's routing code (it may itself contain ':')."""
+    parts = spec.split(":", 3)
+    if len(parts) < 3:
+        sys.exit(f"--slice {spec!r}: expected ORIG:DEST:DATE[:ROUTE]")
+    o, d, date = parts[:3]
+    route = parts[3].strip() if len(parts) > 3 and parts[3].strip() else None
+    return codes(o.replace("/", ",")), codes(d.replace("/", ",")), date, route
+
+
+def slice_routing(a, i: int, own_route: str | None) -> tuple[str | None, str | None]:
+    """Routing/extension code for multi-city slice i. Slice 1 gets --route/--ext; later slices get
+    --route-ret/--ext-ret, or else the SAME --route/--ext (so --carriers MU / --route "MU+" forces MU on
+    every slice; before 2026-10-04 only slice 1 was forced and an open-jaw priced EUR 4,241 on NH+TK).
+    A route written in the slice spec (ORIG:DEST:DATE:ROUTE) wins."""
+    route = a.route if i == 0 else (a.route_ret or a.route)
+    ext = a.ext if i == 0 else (a.ext_ret or a.ext)
+    return own_route or route, ext
+
+
 def _cmd_search(a, quiet=False):
     slices = []
     if a.slice:
-        for sp in a.slice:
-            o, d, date = sp.split(":")[:3]
-            slices.append(slice_obj(codes(o.replace("/", ",")), codes(d.replace("/", ",")), date,
-                                    minus=a.minus, plus=a.plus))
+        for i, sp in enumerate(a.slice):
+            o, d, date, own = parse_slice(sp)
+            route, ext = slice_routing(a, i, own)
+            slices.append(slice_obj(o, d, date, route, ext, minus=a.minus, plus=a.plus))
         kind = "multi-city"
-        if a.route:
-            slices[0]["routeLanguage"] = a.route
-        if a.ext:
-            slices[0]["commandLine"] = a.ext
+        if not quiet:
+            log("slices: " + " || ".join(f"{','.join(x['origins'])}-{','.join(x['destinations'])} {x['date']}"
+                                         f"{' route ' + repr(x['routeLanguage']) if x.get('routeLanguage') else ''}"
+                                         f"{' ext ' + repr(x['commandLine']) if x.get('commandLine') else ''}"
+                                         for x in slices))
     else:
         if not (a.origins and a.to and a.date):
             sys.exit("need --from/--to/--date or --slice O:D:DATE ...")

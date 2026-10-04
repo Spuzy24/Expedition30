@@ -8,7 +8,7 @@ script for things the MCP tool does not expose:
   * per-city cheapest fares ("one per city"): e.g. ZAG -> anywhere in Europe (positioning),
     or Continent:europe -> Country:JP  => cheapest European origin for every Japanese city
   * origin scan: query each European hub separately to rank the cheapest origin for Japan
-  * price calendar (cheapest per day) for one-way or return
+  * price calendar (cheapest per day) for one-way or round trip (--nights / --return-dates)
   * flags for self-transfer/virtual interlining, hidden-city, throwaway; checked bags priced in
 
 Endpoint: POST https://api.skypicker.com/umbrella/v2/graphql?featureName=<Op>
@@ -24,19 +24,37 @@ Location syntax for --from/--to (comma separated, mix freely):
 Examples
 --------
   python3 kiwi_graphql.py search --from ZAG@400 --to Country:JP --dates 2027-03-01..2027-03-15
-  python3 kiwi_graphql.py search --from ZAG,VIE,BUD --to TYO,OSA --dates 2027-03-08..2027-03-12 \
-          --return-dates 2027-03-22..2027-03-26 --checked-bags 1
+  python3 kiwi_graphql.py search --from ZAG,VIE,BUD --to TYO,OSA --dates 2027-03-08..2027-03-12 \\
+          --return-dates 2027-03-22..2027-03-26 [--combine-oneways]
   python3 kiwi_graphql.py search --from VIE --to TYO --dates 2027-03-01..2027-03-10 --nights 14-18
   python3 kiwi_graphql.py per-city --from Continent:europe --to Country:JP --dates 2027-03-01..2027-03-15
   python3 kiwi_graphql.py per-city --from ZAG,LJU,GRZ --to Continent:europe --dates 2027-03-08..2027-03-12
-  python3 kiwi_graphql.py origin-scan --to Country:JP --dates 2027-03-01..2027-03-15 \
+  python3 kiwi_graphql.py origin-scan --to Country:JP --dates 2027-03-01..2027-03-15 \\
           --origins ZAG,VIE,BUD,MUC,FRA,IST,WAW,HEL,MXP,FCO,BRU,AMS,CDG,LHR,MAD,BCN,ARN,CPH,PRG
-  python3 kiwi_graphql.py calendar --from ZAG --to TYO --dates 2027-02-01..2027-03-31
+  python3 kiwi_graphql.py calendar --from ZAG --to TYO --dates 2027-02-01..2027-03-31            # one-way
+  python3 kiwi_graphql.py calendar --from BUD --to TYO --dates 2027-05-01..2027-05-31 --nights 14  # RT per departure day
+  python3 kiwi_graphql.py calendar --from BUD --to TYO --dates 2027-05-12 --return-dates 2027-05-20..2027-05-30
   python3 kiwi_graphql.py places --near ZAG --radius 400
 
-Notes: a single multi-origin query returns at most ~25-50 itineraries sorted by price,
-so one origin can dominate; use origin-scan to compare origins fairly. Very long origin
-lists (e.g. 6 whole countries) can return 0 results - split them. Keep >= 2 s between calls.
+search with several origins (a list, or ZAG@km that expands to several airports) runs ONE QUERY
+PER ORIGIN, merged and price-sorted (+ one combined query for round trips, which alone finds
+"out of VIE, back to BUD" combos). A single multi-origin query returns <= 50 itineraries and is
+not a global price sort: one origin crowds out the others (2026-10-04: Air India VIE-HND RT
+EUR 708 was missing from `--from VIE,BUD`; per-origin finds it). --no-per-origin = old single
+query. A radius of 400 km = ~27 airports = ~27 queries (~2 min); prefer an explicit list.
+Very long origin lists in one query (e.g. 6 whole countries) can return 0 results.
+
+calendar: one-way by default; round trip with --nights A[-B] (cheapest RT per departure day,
+any stay in A..B) or --return-dates (fixed --dates day -> price per return day; fixed return
+day -> price per departure day; both ranges -> one query per return day, max 14).
+
+Output: prices are the PARTY TOTAL for --adults N (verified: 2 adults = exactly 2x the 1-adult
+price); the table header says "EUR total (N pax)" and adds EUR/pp; JSON eur = Kiwi's real total,
+eur_pp = per person, pax, price_basis. Routes: one direction each, " | " between outbound and
+return; '~' = station change inside a direction (ZAG-CRL~BRU-PVG-KIX); JSON airport_change.
+--checked-bags N ranks by Kiwi price + Kiwi's own bag add-on (see FARE€ / KIWI-BAG€). Kiwi has no
+bag data for MU/CA/CZ (their fares include bags), so pass --fsc-bags-included MU,CA,CZ or compare
+without bags. Keep >= 2 s between calls (enforced).
 """
 from __future__ import annotations
 
@@ -46,7 +64,8 @@ import time
 
 import requests
 
-from _common import dump_json, parse_date_range, polite_session, print_table, split_codes
+from _common import (daterange, dump_json, parse_date_range, polite_session, price_header, print_table,
+                     split_codes, station_route)
 
 URL = "https://api.skypicker.com/umbrella/v2/graphql"
 S = polite_session(min_delay=2.0, jitter=1.0)
@@ -88,6 +107,9 @@ Q_OPC_RET = ("query ReturnOnePerCity($search: SearchReturnInput, $filter: Itiner
              " returnOnePerCityItineraries(search: $search, filter: $filter, options: $options)" + _OPC)
 Q_CAL = """query PriceCalendar($search: SearchPricesCalendarInput, $filter: ItinerariesFilterInput, $options: ItinerariesOptionsInput) {
  itineraryPricesCalendar(search: $search, filter: $filter, options: $options) { __typename ... on AppError { error: message }
+  ... on ItineraryPricesCalendar { calendar { date ratedPrice { price { amount } rating } } } } }"""
+Q_RCAL = """query ReturnPriceCalendar($search: SearchReturnPricesCalendarInput, $filter: ItinerariesFilterInput, $options: ItinerariesOptionsInput) {
+ returnItineraryPricesCalendar(search: $search, filter: $filter, options: $options) { __typename ... on AppError { error: message }
   ... on ItineraryPricesCalendar { calendar { date ratedPrice { price { amount } rating } } } } }"""
 Q_PLACES = """query Places($search: PlacesSearchInput, $filter: PlacesFilterInput, $options: PlacesOptionsInput, $first: Int) {
  places(search: $search, filter: $filter, options: $options, first: $first) { __typename ... on AppError { error: message }
@@ -214,14 +236,16 @@ def _itin(a, src, dst):
     return it, ret
 
 
-def _sector_txt(sec) -> tuple[str, str, str]:
+def _sector_txt(sec) -> tuple[str, str, str, bool]:
+    """(route, times, airlines, station_change) of one direction. The route marks a station
+    change with '~' (ZAG-CRL~BRU-PVG-KIX: FR lands at Charleroi, the next flight leaves Brussels)."""
     segs = sec["sectorSegments"]
-    path = "-".join([segs[0]["segment"]["source"]["station"]["code"]] +
-                    [s["segment"]["destination"]["station"]["code"] for s in segs])
+    path, change = station_route([(s["segment"]["source"]["station"]["code"],
+                                   s["segment"]["destination"]["station"]["code"]) for s in segs])
     dep = segs[0]["segment"]["source"]["localTime"][:16].replace("T", " ")
     arr = segs[-1]["segment"]["destination"]["localTime"][5:16].replace("T", " ")
     al = ",".join(dict.fromkeys(s["segment"]["carrier"]["code"] for s in segs))
-    return path, f"{dep}->{arr}", al
+    return path, f"{dep}->{arr}", al, change
 
 
 def _bag_fee(it, checked: int) -> float:
@@ -253,10 +277,11 @@ def _row(it, ret: bool, checked: int = 0) -> dict:
     fee = _bag_fee(it, checked)
     fee_eur = round(fee * eur / price, 2) if price else fee
     first, last = secs[0]["sectorSegments"][0]["segment"], secs[-1]["sectorSegments"][-1]["segment"]
-    return {"price": price, "eur": eur,
+    return {"price": round(price, 2), "eur": eur,
             "fare_eur": round(eur - fee_eur, 2), "kiwi_bag_eur": fee_eur,
             "route": " | ".join(p[0] for p in parts), "times": " | ".join(p[1] for p in parts),
             "airlines": " | ".join(p[2] for p in parts), "tickets": it.get("pnrCount"),
+            "airport_change": any(p[3] for p in parts),
             "checked_bags": it["bagsInfo"]["includedCheckedBags"], "flags": ",".join(flags),
             "dep_local": first["source"]["localTime"][:16], "arr_local": last["destination"]["localTime"][:16],
             "book": ("https://www.kiwi.com" + url[0]["node"]["bookingUrl"]) if url else None}
@@ -324,31 +349,84 @@ def _oneway_combos(a, src, dst, top=12) -> list[dict]:
                            "airlines": f"{o['airlines']} | {b['airlines']}",
                            "tickets": (o["tickets"] or 1) + (b["tickets"] or 1),
                            "checked_bags": min(o["checked_bags"], b["checked_bags"]), "flags": flags,
+                           "airport_change": o["airport_change"] or b["airport_change"],
                            "dep_local": o["dep_local"], "arr_local": b["arr_local"],
                            "book": f"{o['book']} + {b['book']}"})
     return combos
 
 
 # ----------------------------------------------------------------- commands
-def run_search(a, src=None, quiet=False) -> list[dict]:
-    src = src or ids(a.origins)
-    dst = ids(a.dests)
-    it, ret = _itin(a, src, dst)
-    if a.limit_api > 50 and not quiet:
-        print("[kiwi] note: the API returns at most 50 itineraries per query (--limit-api > 50 is ignored)",
-              file=sys.stderr)
+BAG_WARNING = ("[kiwi] WARNING: ranking includes Kiwi's bag add-on; Kiwi has no bag data for MU/CA/CZ, "
+               "whose fares include bags; use --fsc-bags-included or compare without bags")
+
+
+def _bag_warning(a) -> None:
+    if getattr(a, "checked_bags", 0) and not getattr(a, "fsc_bags_included", None):
+        print(BAG_WARNING, file=sys.stderr)
+
+
+def _one_query(a, src, dst, it, ret, fsc) -> list[dict]:
     rows = _search_raw(a, src, dst, it, ret)
     if ret and getattr(a, "combine_oneways", False) and getattr(a, "return_dates", None):
         seen = {(r["route"], r["times"]) for r in rows}
         rows += [c for c in _oneway_combos(a, src, dst) if (c["route"], c["times"]) not in seen]
+    return rows
+
+
+def run_search(a, src=None, quiet=False) -> list[dict]:
+    """Search; with a.per_origin (CLI `search` default) and several origin ids, one query per
+    origin, merged and price-sorted. A single multi-origin query is NOT a global price sort:
+    Kiwi returns <= 50 itineraries and one origin can crowd out a cheaper fare from another
+    (dry run 2026-10-04: Air India VIE-HND EUR 708 missing from `--from VIE,BUD` and ZAG@400)."""
+    if not quiet:
+        _bag_warning(a)
+    src = src or ids(a.origins)
+    dst = ids(a.dests)
+    if a.limit_api > 50 and not quiet:
+        print("[kiwi] note: the API returns at most 50 itineraries per query (--limit-api > 50 is ignored)",
+              file=sys.stderr)
     fsc = set(split_codes(getattr(a, "fsc_bags_included", None) or ""))
+    groups = [[x] for x in src] if (getattr(a, "per_origin", False) and len(src) > 1) else [src]
+    if len(groups) > 1:
+        rt = bool(getattr(a, "return_dates", None) or getattr(a, "nights", None))
+        if rt:  # the combined query also finds cross-airport returns (out VIE, back BUD), per-origin can't
+            groups.append(src)
+        if not quiet:
+            print(f"[kiwi] {len(src)} origins -> one query per origin{' + 1 combined (cross-airport returns)' if rt else ''}"
+                  f" = {len(groups)} queries (~3-6 s each; --no-per-origin = one combined query)", file=sys.stderr)
+    rows, seen = [], set()
+    for g in groups:
+        it, ret = _itin(a, g, dst)
+        try:
+            part = _one_query(a, g, dst, it, ret, fsc)
+        except RuntimeError as e:
+            if len(groups) == 1:
+                raise
+            print(f"[kiwi] {g[0]}: {e}", file=sys.stderr)
+            continue
+        if len(groups) > 1 and not quiet:
+            best = min((r["eur"] for r in part), default=None)
+            print(f"[kiwi]   {g[0] if len(g) == 1 else 'combined'}: {len(part)} itineraries, min {best} EUR",
+                  file=sys.stderr)
+        for r in part:
+            k = (r["route"], r["times"], r["eur"])
+            if k not in seen:
+                seen.add(k)
+                rows.append(r)
+    pax = getattr(a, "adults", 1)
     for r in rows:
         r["rank_eur"] = _rank_eur(r, fsc)
+        # Kiwi prices are the PARTY TOTAL for all adults (verified 2026-10-04, MU BUD-PVG-NRT RT:
+        # 1 adult EUR 748, 2 adults EUR 1,496); eur stays Kiwi's real price (monitor.py reads it)
+        r.update({"pax": pax, "price_basis": "total", "eur_pp": round(r["eur"] / pax, 2) if pax else r["eur"]})
     rows.sort(key=lambda r: (r["rank_eur"], r["eur"]))
     if not quiet:
         print(f"[kiwi] {len(rows)} itineraries; sources={src[:6]}{'...' if len(src) > 6 else ''} "
               f"dest={dst}", file=sys.stderr)
-        cols = [("eur", "EUR"), ("price", f"PRICE({a.currency.upper()})")]
+        cur = a.currency.upper()
+        cols = [("eur", price_header(pax, "total")), ("price", f"PRICE({cur})")]
+        if pax > 1:
+            cols.insert(1, ("eur_pp", "EUR/pp"))
         if a.checked_bags:
             cols += [("fare_eur", "FARE€"), ("kiwi_bag_eur", "KIWI-BAG€")]
         if fsc:
@@ -356,6 +434,8 @@ def run_search(a, src=None, quiet=False) -> list[dict]:
         print_table(rows, cols + [("route", "ROUTE"), ("times", "TIMES"), ("airlines", "AIRLINES"),
                                   ("tickets", "PNRs"), ("checked_bags", "BAGS"), ("flags", "FLAGS")],
                     limit=a.limit, maxw=90)
+        if any(r.get("airport_change") for r in rows[: a.limit or len(rows)]):
+            print("'~' in a route = station change (e.g. CRL~BRU): you must get to another airport yourself")
         heavy = sorted({c for r in rows[: a.limit or len(rows)] if r.get("kiwi_bag_eur", 0) >= 150
                         for c in _carriers(r)} - fsc)
         if heavy:
@@ -367,6 +447,7 @@ def run_search(a, src=None, quiet=False) -> list[dict]:
 
 
 def cmd_per_city(a) -> list[dict]:
+    _bag_warning(a)
     it, ret = _itin(a, ids(a.origins), ids(a.dests))
     v = {"search": {"itinerary": it, "passengers": _pax(a.adults, a.checked_bags, a.hand_bags),
                     "cabinClass": {"cabinClass": "ECONOMY", "applyMixedClasses": False}},
@@ -380,12 +461,15 @@ def cmd_per_city(a) -> list[dict]:
              "country": x["destination"]["station"]["country"]["code"],
              "date": (x.get("departureDate") or "")[:10]} for x in res.get("itineraries") or []]
     rows.sort(key=lambda r: r["eur"])
-    print_table(rows, [("eur", "EUR"), ("from", "FROM"), ("to", "TO"), ("city", "CITY"),
+    for r in rows:
+        r.update({"pax": a.adults, "price_basis": "total"})
+    print_table(rows, [("eur", price_header(a.adults, "total")), ("from", "FROM"), ("to", "TO"), ("city", "CITY"),
                        ("country", "CC"), ("date", "DATE")], limit=a.limit)
     return rows
 
 
 def cmd_origin_scan(a) -> list[dict]:
+    _bag_warning(a)
     out = []
     for o in split_codes(a.scan_origins):
         try:
@@ -402,27 +486,81 @@ def cmd_origin_scan(a) -> list[dict]:
                         "best_single_ticket_eur": no_st["eur"] if no_st else None,
                         "single_ticket_route": no_st["route"] if no_st else None})
     out.sort(key=lambda r: r["eur"])
-    print_table(out, [("origin", "ORIGIN"), ("eur", "BEST EUR"), ("route", "ROUTE"),
+    tot = " total" if a.adults > 1 else ""
+    print_table(out, [("origin", "ORIGIN"), ("eur", f"BEST {price_header(a.adults, 'total')}"), ("route", "ROUTE"),
                       ("times", "TIMES"), ("flags", "FLAGS"),
-                      ("best_single_ticket_eur", "1-TICKET EUR"),
+                      ("best_single_ticket_eur", f"1-TICKET EUR{tot}"),
                       ("single_ticket_route", "1-TICKET ROUTE")], maxw=70)
     return out
 
 
-def cmd_calendar(a) -> list[dict]:
-    d1, d2 = parse_date_range(a.dates)
-    v = {"search": {"source": {"ids": ids(a.origins)}, "destination": {"ids": ids(a.dests)},
-                    "dates": _range(d1, d2), "passengers": _pax(a.adults, a.checked_bags, a.hand_bags),
-                    "cabinClass": {"cabinClass": "ECONOMY", "applyMixedClasses": False}},
-         "filter": _filter(a), "options": _options(a)}
-    res = gql("PriceCalendarQuery", Q_CAL, v)["itineraryPricesCalendar"]
-    rows = [{"date": c["date"][:10], "price": float(c["ratedPrice"]["price"]["amount"]),
+def _cal_rows(res, key: str) -> list[dict]:
+    if res.get("__typename") != "ItineraryPricesCalendar":
+        raise RuntimeError(f"calendar: {res.get('error') or res}")
+    return [{key: c["date"][:10], "price": float(c["ratedPrice"]["price"]["amount"]),
              "rating": c["ratedPrice"].get("rating")}
             for c in res.get("calendar") or [] if c.get("ratedPrice") and c["ratedPrice"].get("price")]
-    print_table(rows, [("date", "DATE"), ("price", a.currency.upper()), ("rating", "RATING")])
+
+
+def cmd_calendar(a) -> list[dict]:
+    """Cheapest price per day. One-way by default; round trip with --nights A-B (price per
+    departure day, any stay in A..B) or --return-dates (a fixed return date: price per departure
+    day; a fixed --dates day: price per return day; two ranges: one query per return day)."""
+    if a.nights and a.return_dates:
+        sys.exit("calendar: use --nights OR --return-dates, not both (Kiwi's calendar takes one)")
+    d1, d2 = parse_date_range(a.dates)
+    base = {"source": {"ids": ids(a.origins)}, "destination": {"ids": ids(a.dests)},
+            "passengers": _pax(a.adults, a.checked_bags, a.hand_bags),
+            "cabinClass": {"cabinClass": "ECONOMY", "applyMixedClasses": False}}
+    _bag_warning(a)
+    cur = a.currency.upper()
+    if not (a.nights or a.return_dates):  # one-way
+        v = {"search": {**base, "dates": _range(d1, d2)}, "filter": _filter(a), "options": _options(a)}
+        rows = _cal_rows(gql("PriceCalendarQuery", Q_CAL, v)["itineraryPricesCalendar"], "date")
+        kind, cols = "one-way", [("date", "DATE")]
+    else:
+        def rt(extra: dict, key: str) -> list[dict]:
+            v = {"search": {**base, **extra}, "filter": _filter(a), "options": _options(a)}
+            return _cal_rows(gql("ReturnPriceCalendar", Q_RCAL, v)["returnItineraryPricesCalendar"], key)
+        if a.nights:
+            lo, hi = (a.nights.split("-") + [a.nights])[:2]
+            rows = rt({"visibleDates": _range(d1, d2), "nightsCount": {"start": int(lo), "end": int(hi)}}, "depart")
+            for r in rows:
+                r["nights"] = a.nights
+            kind, cols = f"round trip, {a.nights} nights", [("depart", "DEPART"), ("nights", "NIGHTS")]
+        else:
+            r1, r2 = parse_date_range(a.return_dates)
+            if d1 == d2:  # fixed departure -> price per return day
+                rows = rt({"visibleDates": _range(r1, r2), "departureDates": _range(d1, d1)}, "return")
+                for r in rows:
+                    r["depart"] = d1.isoformat()
+            else:  # price per departure day, one query per return day
+                n = (r2 - r1).days + 1
+                if n > 14:
+                    sys.exit(f"calendar: {n} return days x a departure range = {n} queries; narrow "
+                             f"--return-dates (<= 14 days) or use --nights")
+                rows = []
+                for rd in daterange(r1, r2):
+                    part = rt({"visibleDates": _range(d1, d2), "returnDates": _range(rd, rd)}, "depart")
+                    for r in part:
+                        r["return"] = rd.isoformat()
+                    rows += part
+                rows.sort(key=lambda r: (r["depart"], r["return"]))
+            kind, cols = "round trip", [("depart", "DEPART"), ("return", "RETURN")]
+        rows = [r for r in rows if not r.get("return") or r["return"] > r["depart"]]
+    for r in rows:
+        r.update({"pax": a.adults, "price_basis": "total", "price_pp": round(r["price"] / a.adults, 2)})
+    hdr = price_header(a.adults, "total", cur)
+    if a.adults > 1:
+        cols = cols + [("price", hdr), ("price_pp", f"{cur}/pp")]
+        hdr = None
+    print(f"[kiwi] calendar ({kind}); prices = cheapest per day, party total for {a.adults} adult(s)",
+          file=sys.stderr)
+    print_table(rows, cols + ([("price", hdr)] if hdr else []) + [("rating", "RATING")])
     if rows:
         b = min(rows, key=lambda r: r["price"])
-        print(f"cheapest day: {b['date']} {b['price']} {a.currency.upper()}")
+        when = " -> ".join(x for x in (b.get("date") or b.get("depart"), b.get("return")) if x)
+        print(f"cheapest: {when}{' (' + a.nights + ' nights)' if a.nights else ''} {b['price']} {cur}")
     return rows
 
 
@@ -447,8 +585,10 @@ def main():
         p.add_argument("--nights", help="e.g. 14-21 -> round trip with that stay length")
         p.add_argument("--currency", default="EUR")
         p.add_argument("--market", default="hr")
-        p.add_argument("--adults", type=int, default=1)
-        p.add_argument("--checked-bags", type=int, default=0, help="price in N checked bags")
+        p.add_argument("--adults", type=int, default=1,
+                       help="adults; Kiwi prices are the PARTY TOTAL (table shows EUR total (N pax) + EUR/pp)")
+        p.add_argument("--checked-bags", type=int, default=0,
+                       help="price in N checked bags (Kiwi's add-on; unreliable for MU/CA/CZ: see --fsc-bags-included)")
         p.add_argument("--hand-bags", type=int, default=0, help="price in N cabin bags")
         p.add_argument("--max-stops", type=int)
         p.add_argument("--no-self-transfer", action="store_true",
@@ -465,12 +605,17 @@ def main():
         p.add_argument("--limit-api", type=int, default=50, help="itineraries requested (API max 50)")
         p.add_argument("--json")
 
-    common(sub.add_parser("search", help="itinerary search (multi-origin/region/radius)"))
+    p = sub.add_parser("search", help="itinerary search (multi-origin/region/radius)")
+    common(p)
+    p.add_argument("--no-per-origin", dest="per_origin", action="store_false",
+                   help="several origins (list or ZAG@km radius) in ONE query (old behaviour; not a global "
+                        "price sort). Default: one query per origin, merged")
     common(sub.add_parser("per-city", help="cheapest fare per destination city"))
     p = sub.add_parser("origin-scan", help="query each origin separately; rank origins")
     common(p, need_from=False)
     p.add_argument("--origins", dest="scan_origins", nargs="+", required=True)
-    common(sub.add_parser("calendar", help="cheapest one-way price per day"))
+    common(sub.add_parser("calendar", help="cheapest price per day: one-way, or round trip with --nights / "
+                                           "--return-dates"))
     p = sub.add_parser("places", help="airports within a radius")
     p.add_argument("--near", required=True)
     p.add_argument("--radius", type=int, default=400)

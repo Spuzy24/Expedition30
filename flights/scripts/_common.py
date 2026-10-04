@@ -6,6 +6,8 @@ Nothing here talks to a specific travel site. It provides:
   * eur_rates()/to_eur() - ECB daily reference rates (cached for 12 h on disk)
                         so prices from different sources can be compared in EUR.
   * print_table()     - simple fixed-width table printer (no extra deps).
+  * price_header()    - 'EUR/pp' or 'EUR total (N pax)' column header (per-person vs party total).
+  * station_route()   - 'ZAG-CRL~BRU-PVG-KIX' route string; '~' marks a station (airport) change.
   * daterange()/parse_date_range() - date helpers for "2027-03-01..2027-03-10"
                         or "2027-03-05+-3" style arguments.
   * dump_json()       - writes --json output.
@@ -165,13 +167,42 @@ def print_table(rows: list[dict], cols: list[tuple[str, str]] | None = None,
         print("  ".join(v.ljust(w) for v, w in zip(c, widths)), file=file)
 
 
+def price_header(pax: int = 1, basis: str = "per_person", cur: str = "EUR") -> str:
+    """Table header for a price column, so per-person and party-total tools can't be confused.
+
+    basis 'per_person' -> 'EUR/pp'; basis 'total' -> 'EUR total (N pax)' (N > 1) or 'EUR/pp'.
+    Verified 2026-10-04 with --adults 1 vs 2 (same route/date): kayak, aviasales and gflights
+    show per-person prices; kiwi_graphql, booking_flights and matrix show the party total."""
+    if basis == "total" and pax > 1:
+        return f"{cur} total ({pax} pax)"
+    return f"{cur}/pp"
+
+
+def station_route(pairs: Sequence[tuple[str, str]]) -> tuple[str, bool]:
+    """[('ZAG','CRL'), ('BRU','PVG'), ('PVG','KIX')] -> ('ZAG-CRL~BRU-PVG-KIX', True).
+
+    One direction only. '~' marks a station change: a segment departs from a different airport
+    than the previous one arrived at (same convention as mcp_flights.py). Join the directions of
+    a round trip with ' | ' yourself, so the gap between them is never marked."""
+    if not pairs:
+        return "", False
+    out, change = pairs[0][0], False
+    for i, (o, d) in enumerate(pairs):
+        if i and o != pairs[i - 1][1]:
+            out += f"~{o}"
+            change = True
+        out += f"-{d}"
+    return out, change
+
+
 def dump_json(obj, path: str | None) -> None:
-    """path '-' => stdout, else file path."""
+    """path '-' => stdout, else file path (parent directories are created)."""
     if not path:
         return
     txt = json.dumps(obj, indent=1, ensure_ascii=False, default=str)
     if path == "-":
         print(txt)
     else:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         Path(path).write_text(txt)
         print(f"[json] wrote {path}", file=sys.stderr)

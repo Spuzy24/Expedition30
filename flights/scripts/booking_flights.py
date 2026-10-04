@@ -16,6 +16,12 @@ Location codes: airports as XXX.AIRPORT, metro cities as XXX.CITY (TYO, OSA, LON
 The script appends the suffix automatically (city list below; override with an explicit
 suffix, e.g. --to TYO.CITY). Several origins may be given (comma) - they are searched in turn.
 
+Output: EUR = TOTAL for all travellers (with --adults 2 the price doubles, verified 2026-10-04);
+the header says "EUR total (N pax)" and adds EUR/pp (per-traveller price from travellerPrices).
+BAGS = checked bags per traveller; SELF-TR = Etraveli virtual interlining (separate tickets).
+Routes: one direction each, " | " between directions; '~' = station change inside a direction
+(e.g. ZAG-CRL~BRU-PVG-KIX). JSON: route, airport_change, eur_pp, pax, price_basis.
+
 Examples
 --------
   python3 booking_flights.py --from VIE --to TYO --depart 2027-03-10
@@ -29,7 +35,7 @@ import time
 from urllib.parse import urlencode
 
 from _browser import browser_page, click_consent, wait_until
-from _common import dump_json, print_table, split_codes, to_eur
+from _common import dump_json, price_header, print_table, split_codes, station_route, to_eur
 
 METRO = {"TYO", "OSA", "SPK", "LON", "MIL", "PAR", "ROM", "STO", "BER", "MOW", "NYC", "BUH",
          "BJS", "SHA", "SEL", "OSL", "IST", "REK", "CHI", "WAS", "YTO", "BRU", "VEN", "NAG"}
@@ -72,9 +78,11 @@ def parse(d: dict) -> list[dict]:
     rows = []
     for o in d.get("flightOffers", []):
         price, cur = _money(o["priceBreakdown"]["total"])
-        legs_txt, carriers, vi, checked = [], [], False, []
-        for s in o["segments"]:
-            path = "-".join([s["legs"][0]["departureAirport"]["code"]] + [l["arrivalAirport"]["code"] for l in s["legs"]])
+        legs_txt, carriers, vi, checked, routes, change = [], [], False, [], [], False
+        for s in o["segments"]:  # one segment = one direction; '~' marks a station change inside it
+            path, ch = station_route([(l["departureAirport"]["code"], l["arrivalAirport"]["code"]) for l in s["legs"]])
+            change = change or ch
+            routes.append(path)
             legs_txt.append(f"{path} {s['departureTime'][5:16].replace('T', ' ')}->{s['arrivalTime'][5:16].replace('T', ' ')}")
             carriers.append(",".join(dict.fromkeys(l["flightInfo"]["carrierInfo"]["marketingCarrier"] for l in s["legs"])))
             vi = vi or bool(s.get("isVirtualInterlining"))
@@ -82,8 +90,16 @@ def parse(d: dict) -> list[dict]:
             per_trav = [(x.get("luggageAllowance") or {}).get("maxPiece", 0) for x in s.get("travellerCheckedLuggage") or []]
             checked.append(min(per_trav) if per_trav else 0)
         brand = (o.get("brandedFareInfo") or {}).get("fareName")
+        # priceBreakdown.total = ALL travellers (verified 2026-10-04: 1 adult EUR 415.45; 2 adults EUR 850.98
+        # = 2 x 425.49 in travellerPrices); eur stays the total (monitor.py reads it)
+        tp = [_money(x["travellerPriceBreakdown"]["total"]) for x in o.get("travellerPrices") or []
+              if (x.get("travellerPriceBreakdown") or {}).get("total")]
+        n_trav = len(tp) or 1
+        eur_pp = (to_eur(max(p for p, _ in tp), tp[0][1]) if tp else None)
         rows.append({"price": price, "currency": cur, "eur": to_eur(price, cur), "fare_brand": brand,
+                     "eur_pp": eur_pp if eur_pp is not None else round(to_eur(price, cur) / n_trav, 2),
                      "itinerary": " | ".join(legs_txt), "airlines": " | ".join(carriers),
+                     "route": " | ".join(routes), "airport_change": change,
                      "checked_bags": min(checked) if checked else 0, "self_transfer": vi,
                      "flight_key": o.get("flightKey")})
     rows.sort(key=lambda r: r["eur"] or r["price"])
@@ -96,14 +112,17 @@ def main():
     ap.add_argument("--to", dest="dests", nargs="+", required=True)
     ap.add_argument("--depart", required=True)
     ap.add_argument("--return", dest="ret")
-    ap.add_argument("--adults", type=int, default=1)
+    ap.add_argument("--adults", type=int, default=1, help="adults; prices are the party TOTAL (+ EUR/pp column)")
     ap.add_argument("--currency", default="EUR")
     ap.add_argument("--limit", type=int, default=20)
     ap.add_argument("--json")
     a = ap.parse_args()
-    allrows = []
+    allrows, first = [], True
     for o in split_codes(a.origins):
         for d in split_codes(a.dests):
+            if not first:
+                time.sleep(5)
+            first = False
             rows, raw, url = search(o, d, a.depart, a.ret, a.adults, a.currency)
             agg = (raw or {}).get("aggregation") or {}
             stops = {s["numberOfStops"]: _money(s["minPrice"])[0] for s in agg.get("stops", [])}
@@ -111,11 +130,17 @@ def main():
                   f"{agg.get('totalCount')} offers; min price by stops {stops}\n   {url}")
             for r in rows:
                 r.update({"from": o, "to": d, "depart": a.depart, "return": a.ret, "url": url})
-            print_table(rows, [("eur", "EUR"), ("checked_bags", "BAGS"), ("fare_brand", "BRAND"), ("self_transfer", "SELF-TR"),
-                               ("airlines", "AIRLINES"), ("itinerary", "ITINERARY")],
+            for r in rows:
+                r.update({"pax": a.adults, "price_basis": "total"})
+            cols = [("eur", price_header(a.adults, "total", a.currency.upper()))]
+            if a.adults > 1:
+                cols.append(("eur_pp", "EUR/pp"))
+            print_table(rows, cols + [("checked_bags", "BAGS"), ("fare_brand", "BRAND"), ("self_transfer", "SELF-TR"),
+                                      ("airlines", "AIRLINES"), ("itinerary", "ITINERARY")],
                         limit=a.limit, maxw=110)
+            if any(r["airport_change"] for r in rows[: a.limit]):
+                print("'~' in a route = station change (e.g. CRL~BRU): you must get to another airport yourself")
             allrows += rows
-            time.sleep(5)
     dump_json(allrows, a.json)
 
 
