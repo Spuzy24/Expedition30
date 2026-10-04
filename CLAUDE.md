@@ -32,7 +32,7 @@ search engine, OTA, airline and trick, ranked by **true total cost** (fare + bag
 1. **Google Flights doesn't carry the Chinese carriers** (China Eastern, Air China, China Southern) on Europe→Japan, and those are usually the cheapest. **ITA Matrix has them but prunes its default answer**, so force carriers (`matrix.py --carriers MU,CA,CZ,…` or `--route "MU+"`). Benchmark B1: momondo €686 / Matrix-forced-MU €715 vs Google €811 vs Matrix-default €1,083.
 2. **momondo/Kayak (`kayak.py`), Kiwi (MCP + GraphQL), Aviasales, Booking.com and Skiplagged** each see different inventory. Use them all. momondo found a mixed MU+CZ ticket nobody else showed.
 3. **Origin beats tricks:** BUD/VIE/IST/BRU long-haul fares run €200–650 below ZAG. The cheapest European hub changes with dates (BRU in Mar 2027, IST in May 2027). Price ground or positioning legs and compare totals.
-4. **Engines hide carriers:** Kiwi showed Air China's new ZAG→OTP→PEK flight (since Sep 2026) only with `--only-airlines CA`. Run per-carrier passes.
+4. **Engines hide carriers:** Kiwi showed Air China's new ZAG→OTP→PEK flight (since Sep 2026) only with `--only-airlines CA`. In B1/B3 the cheapest carrier (China Eastern) appeared only when forced in Matrix (`--route MU+`). **Per-carrier passes are mandatory.**
 5. **Kiwi's bag data is wrong for Chinese carriers** (says 0 checked when the fare includes 2×23 kg). Verify bags via the OTA/airline.
 6. **Switching Google Flights country/currency changes nothing** (7 markets within 0.5%). VPN/incognito are myths.
 7. Return vs 2× one-way vs open-jaw: no fixed winner (open-jaw is ≈ free on Chinese carriers, +28% on a Star Alliance fare). Price all of them.

@@ -69,7 +69,7 @@ Write `flights/searches/<trip>/report.md`, then commit and push.
 - Assumptions and what wasn't checked.
 
 ## 8. Monitor (if not buying now)
-Offer a scheduled re-check (Routine: `create_trigger`, or `send_later` for one-offs) that re-runs the 2–3 winning queries + `deals.py --days 3`, appends quotes, and only reports on a drop below threshold. Suggest Google Flights price tracking to the user.
+Write `flights/searches/<trip>/watch.json` (3–6 winning queries incl. one carrier-forced Matrix + one momondo check) and test `python3 $S/monitor.py <watch.json>` (prints `ALERT` on a new low / ≤ threshold). With the user's OK, create a daily Routine using the prompt template in playbook §9 (`send_later` for one-offs). Suggest Google Flights price tracking to the user too.
 
 ## Guardrails
 - Never book, pay, create accounts or enter personal data. The user buys.
