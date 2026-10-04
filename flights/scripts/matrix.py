@@ -23,17 +23,16 @@ Subcommands
             (~1 month per call; longer windows are split). Round trip with --stay N or N-M nights.
 
 Routing / extension code cheat-sheet (Matrix syntax, per slice):
-  --route "C:CA"          only Air China flights           --route "X:PEK"   connect in PEK
-  --route "CA+"           one or more CA flights            --route "N"       nonstop
-  --route "C:CA X:PEK C:CA"  CA - PEK - CA                  --route "O:EK"    operated by EK
-  --ext "-CODESHARE"      no codeshares                     --ext "MAXSTOPS 1"
-  --ext "-REDEYES"        no red-eyes                       --ext "MINCONNECT 90" / "MAXCONNECT 300"
-  --ext "F BC=Q|BC=V"     fare basis/booking class filter   --ext "-AIRLINES CA MU"
-  (see https://matrix.itasoftware.com help pages; invalid codes return a QPX error message)
+  --route "CA+"           one or more Air China flights    --route "X:PEK"   connect in PEK
+  --route "C:CA"          exactly one CA flight (nonstop)  --route "C:CA X:PEK C:CA"  CA-PEK-CA
+  --route "O:EK"          one flight operated by EK (C:/O: each denote ONE segment)
+  --ext "MAXSTOPS 1"      max 1 stop                        --ext "MINCONNECT 120" / "MAXCONNECT 240" (minutes)
+  --ext "-CODESHARE" / "-REDEYES" / "-AIRLINES TK" / "F BC=K"  (see report for which were verified)
+  Invalid codes return a QPX error message, e.g. 'SLICE-PROHIBITED-CABINS ...'.
 
 Examples
   python matrix.py search --from VIE --to TYO --date 2027-03-10 --curr EUR
-  python matrix.py search --from ARN --to TYO --date 2027-02-09 --return 2027-02-23 --route "C:CA" --route-ret "C:CA" --sales-city STO --no-avail
+  python matrix.py search --from ARN --to TYO --date 2027-02-09 --return 2027-02-23 --route "CA+" --route-ret "CA+" --sales-city STO --no-avail
   python matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-31 --stay 14
   python matrix.py search --slice ZAG:NRT:2027-03-10 --slice KIX:ZAG:2027-03-24
 
@@ -234,7 +233,8 @@ def parse_calendar(d: dict) -> list[dict]:
                 opts = (day.get("tripDuration") or {}).get("options") or []
                 if opts:
                     for o in opts:
-                        rows.append({"depart": date, "nights": o.get("tripLength"),
+                        tl = o.get("tripLength")
+                        rows.append({"depart": date, "nights": tl if isinstance(tl, int) and tl >= 0 else None,
                                      "price": price_num(o.get("minPrice")), "display": o.get("minPrice"),
                                      "solutions": o.get("solutionCount")})
                 else:
@@ -265,6 +265,8 @@ def browser_search(body: dict, timeout_s=180) -> dict:
     def rewrite(route):
         req = route.request
         pd = req.post_data or ""
+        if os.environ.get("MATRIX_DEBUG"):
+            log(f"  [debug] batch request: {pd[pd.find('Content-ID'):][:160]!r} ... has /v1/search: {'/v1/search' in pd}")
         if "/v1/search" not in pd:
             return route.continue_()
         i, j = pd.find("{"), pd.rfind("}")
@@ -289,6 +291,8 @@ def browser_search(body: dict, timeout_s=180) -> dict:
                     t = r.text()
                 except Exception:  # noqa: BLE001
                     return
+                if os.environ.get("MATRIX_DEBUG"):
+                    log(f"  [debug] batch response {r.status}: {t[:300]!r}")
                 if '"solutionList"' in t or '"calendar"' in t or '"error"' in t:
                     i, j = t.find("{"), t.rfind("}")
                     try:
@@ -304,8 +308,8 @@ def browser_search(body: dict, timeout_s=180) -> dict:
         for idx, code in ((0, "VIE"), (1, "NRT")):
             el = inputs.nth(idx)
             el.click()
-            el.type(code, delay=100)
-            page.wait_for_timeout(2000)
+            el.type(code, delay=120)
+            page.wait_for_timeout(2500)
             opts = page.locator("mat-option, [role=option]")
             if opts.count():
                 opts.first.click()
@@ -315,11 +319,24 @@ def browser_search(body: dict, timeout_s=180) -> dict:
         d.click()
         d.type(dummy, delay=40)
         page.keyboard.press("Escape")
-        page.wait_for_timeout(500)
-        page.get_by_role("button", name="Search").last.click()
+        page.keyboard.press("Tab")
+        page.wait_for_timeout(800)
+        btn = page.get_by_role("button", name="Search").last
+        for _ in range(20):
+            if btn.is_enabled():
+                break
+            page.wait_for_timeout(500)
+        if not btn.is_enabled():
+            page.screenshot(path="matrix_browser_debug.png")
+            b.close()
+            raise MatrixError("browser backend: search form not valid (see matrix_browser_debug.png)")
+        btn.click()
         t0 = time.time()
         while "d" not in found and time.time() - t0 < timeout_s:
             page.wait_for_timeout(1000)
+        if "d" not in found and os.environ.get("MATRIX_DEBUG"):
+            page.screenshot(path="matrix_browser_debug.png")
+            log(f"  [debug] swapped={found.get('swapped')} url={page.url[:120]}")
         b.close()
     if "d" not in found:
         raise MatrixError("browser backend: no search response captured")
@@ -513,7 +530,17 @@ def main(argv=None):
     p.add_argument("--chunk-days", type=int, default=31, help="days per API call (default 31)")
     p.set_defaults(func=cmd_calendar)
 
-    a = ap.parse_args(argv)
+    # allow `--ext -CODESHARE` (values starting with '-') by rewriting to `--ext=-CODESHARE`
+    argv = list(sys.argv[1:] if argv is None else argv)
+    fixed, i = [], 0
+    while i < len(argv):
+        if argv[i] in ("--ext", "--ext-ret", "--route", "--route-ret") and i + 1 < len(argv):
+            fixed.append(f"{argv[i]}={argv[i + 1]}")
+            i += 2
+            continue
+        fixed.append(argv[i])
+        i += 1
+    a = ap.parse_args(fixed)
     if a.curr == "":
         a.curr = None
     if a.cmd == "calendar" and not (a.origins and a.to):

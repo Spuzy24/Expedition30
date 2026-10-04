@@ -7,8 +7,10 @@ cached endpoints (min-prices.aviasales.ru calendar_preload / price_matrix, map.a
 are gone (404/302) and the Travelpayouts Data API needs a partner token (account signup).
 
 The script opens https://www.aviasales.com/search/<ORIG><DDMM><DEST>[<DDMM>]<pax>, lets the page
-run the search, raises the results page size from 10 to --page-size (by rewriting the page's
-own results request), collects every results chunk and prints tickets sorted by price.
+run the search (after answering the cookie banner - the search waits for it), collects the
+results), collects every results chunk (each holds the 10 "best" tickets + the cheapest
+ticket; the page-size cannot be raised - rewriting the request breaks the WAF check) and
+prints the tickets sorted by price, plus the overall cheapest / cheapest-with-baggage.
 Prices are LIVE offers from OTAs/airlines (agent = seller), in EUR. Many cheapest offers are
 self-transfer combos sold by OTAs such as Mytrip/Gotogate (e.g. Ryanair + China Eastern).
 
@@ -25,6 +27,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import sys
 import time
 
@@ -39,31 +42,37 @@ def search_url(o: str, d: str, dep: str, ret: str | None, adults: int, currency:
             f"?currency={currency.lower()}&language=en")
 
 
-def run(o, d, dep, ret, adults=1, currency="EUR", page_size=100, timeout=90) -> list[dict]:
+def run(o, d, dep, ret, adults=1, currency="EUR", timeout=90) -> list[dict]:
     url = search_url(o, d, dep, ret, adults, currency)
     chunks = []
 
-    def set_limit(route, request):
-        try:
-            body = json.loads(request.post_data or "{}")
-            body["limit"] = page_size
-            route.continue_(post_data=json.dumps(body))
-        except Exception:
-            route.continue_()
-
-    with browser_page(capture=lambda u: "/search/v3.2/results" in u or "/search/v2/start" in u) as (page, cap):
-        page.route("**/search/v3.2/results", set_limit)
+    with browser_page(capture=lambda u: ("/search/v3.2/results" in u or "/search/v2/start" in u
+                                         or "/search/prices/ribbon" in u)) as (page, cap):
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        click_consent(page, tries=3)
+        consent = {"done": False}
 
         def done():
+            # The search only starts after the cookie banner is answered, which can appear late.
+            if not consent["done"]:
+                consent["done"] = click_consent(page, tries=1)
             res = [c for c in cap if "/results" in c["url"] and c.get("json")]
             return any(isinstance(c["json"], list) and c["json"] and
                        c["json"][0].get("last_update_timestamp") == 0 for c in res)
-        ok = wait_until(done, timeout)
+        ok = wait_until(done, timeout, step=1.5, page=page)
         print(f"[aviasales] {o}->{d} {dep}{'/' + ret if ret else ''}: "
               f"{'complete' if ok else 'TIMEOUT (partial)'}; title={page.title()!r}", file=sys.stderr)
         chunks = [c["json"][0] for c in cap if "/results" in c["url"] and isinstance(c.get("json"), list) and c["json"]]
+        ribbon = next((c["json"] for c in cap if "/ribbon" in c["url"] and c.get("json")), None)
+        if ribbon:
+            print(f"[aviasales] nearby-dates ribbon (cached): {json.dumps(ribbon)[:600]}", file=sys.stderr)
+        if chunks:
+            m = chunks[-1].get("meta") or {}
+            print(f"[aviasales] total tickets={m.get('total_tickets_count')} cheapest="
+                  f"{round(m.get('first_ticket_price') or 0)} cheapest_with_baggage="
+                  f"{round(m.get('cheapest_baggage_ticket_price') or 0)} (EUR)", file=sys.stderr)
+        if os.environ.get("AVIA_DEBUG"):
+            for c in cap:
+                print("  [debug]", c["status"], c["url"][:90], type(c.get("json")).__name__, c.get("err"), file=sys.stderr)
         if not chunks:
             if any(c["url"].endswith("/start") and c["status"] >= 400 for c in cap):
                 print("[aviasales] search/start rejected (bot check) - try later", file=sys.stderr)
@@ -123,7 +132,6 @@ def main():
     ap.add_argument("--return", dest="ret")
     ap.add_argument("--adults", type=int, default=1)
     ap.add_argument("--currency", default="EUR")
-    ap.add_argument("--page-size", type=int, default=100)
     ap.add_argument("--timeout", type=int, default=90)
     ap.add_argument("--limit", type=int, default=25)
     ap.add_argument("--show-urls", action="store_true")
@@ -132,7 +140,7 @@ def main():
     allrows = []
     for o in split_codes(a.origins):
         for d in split_codes(a.dests):
-            rows = run(o, d, a.depart, a.ret, a.adults, a.currency, a.page_size, a.timeout)
+            rows = run(o, d, a.depart, a.ret, a.adults, a.currency, a.timeout)
             print(f"\n== Aviasales {o}->{d} {a.depart}{' / ' + a.ret if a.ret else ''}: "
                   f"{len(rows)} tickets  {search_url(o, d, a.depart, a.ret, a.adults, a.currency)}")
             print_table(rows, [("eur", "EUR"), ("agent", "SELLER"), ("checked_bags", "BAGS"),

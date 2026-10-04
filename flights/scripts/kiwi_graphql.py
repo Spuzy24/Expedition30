@@ -244,7 +244,7 @@ def run_search(a, src=None, quiet=False) -> list[dict]:
     if not quiet:
         print(f"[kiwi] {len(rows)} itineraries; sources={src[:6]}{'...' if len(src) > 6 else ''} "
               f"dest={dst}", file=sys.stderr)
-        print_table(rows, [("eur", "EUR"), ("price", a.currency.upper()), ("route", "ROUTE"),
+        print_table(rows, [("eur", "EUR"), ("price", f"PRICE({a.currency.upper()})"), ("route", "ROUTE"),
                            ("times", "TIMES"), ("airlines", "AIRLINES"), ("tickets", "PNRs"),
                            ("checked_bags", "BAGS"), ("flags", "FLAGS")],
                     limit=a.limit, maxw=90)

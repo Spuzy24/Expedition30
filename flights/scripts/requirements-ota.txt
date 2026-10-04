@@ -1,0 +1,9 @@
+# Dependencies for the OTA / meta-search / LCC scripts in this folder
+# (kiwi_graphql.py, kayak.py, ryanair_wizz.py, azair.py, positioning.py: requests [+ bs4])
+# (aviasales.py, booking_flights.py, flightconnections.py: also Playwright + Chromium)
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+# Pin to the version matching the preinstalled Chromium build in /opt/pw-browsers
+# (chromium-1194 <-> Playwright 1.56). Do NOT run `playwright install` in the sandbox.
+playwright==1.56.0

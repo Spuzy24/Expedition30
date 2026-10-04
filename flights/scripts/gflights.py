@@ -72,7 +72,7 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 CITY_CODES: dict[str, list[str]] = {
     # Japan
     "TYO": ["NRT", "HND"],
-    "OSA": ["KIX", "ITM", "UKB"],
+    "OSA": ["KIX", "ITM"],  # UKB (Kobe, domestic only) breaks GetCalendarGraph
     "SPK": ["CTS"],
     "JPN": ["NRT", "HND", "KIX", "ITM", "NGO", "FUK", "CTS", "OKA"],
     "JAPAN": ["NRT", "HND", "KIX", "ITM", "NGO", "FUK", "CTS", "OKA"],
@@ -126,6 +126,22 @@ def expand_codes(spec: str | Iterable[str]) -> list[str]:
             if c not in out:
                 out.append(c)
     return out
+
+
+CITY_OF: dict[str, str] = {ap: city for city, aps in CITY_CODES.items()
+                            if city not in ("JPN", "JAPAN") for ap in aps}
+
+
+def city_groups(codes: list[str]) -> list[list[str]]:
+    """Split airports into same-city groups: [NRT,HND,KIX,ITM] -> [[NRT,HND],[KIX,ITM]].
+
+    GetCalendarGraph is cache-based; mixing cities (e.g. TYO+OSA) in one call can collapse
+    the answer to a single date when one city pair is sparsely cached (seen for ZAG->KIX),
+    so calendar/sweep query each destination city separately and merge."""
+    groups: dict[str, list[str]] = {}
+    for c in codes:
+        groups.setdefault(CITY_OF.get(c, c), []).append(c)
+    return list(groups.values())
 
 
 def chunks(seq: list, n: int) -> list[list]:
@@ -192,7 +208,7 @@ class Client:
         return urllib.parse.urlencode({"hl": self.hl, "gl": self.gl, "curr": self.curr})
 
     def _request(self, method: str, url: str, **kw) -> requests.Response:
-        backoff = 30
+        backoff = 45
         for attempt in range(self.max_retries + 1):
             self._pace()
             self.n_requests += 1
@@ -219,7 +235,7 @@ class Client:
             return r
         raise RuntimeError(f"giving up on {url[:80]}")
 
-    def rpc(self, method: str, freq: Any) -> Any:
+    def rpc(self, method: str, freq: Any, all_chunks: bool = False) -> Any:
         """POST f.req to a FlightsFrontendService method; return decoded inner JSON."""
         url = f"{RPC_BASE}{method}?{self.locale_qs()}"
         body = "f.req=" + urllib.parse.quote(json.dumps([None, json.dumps(freq, separators=(",", ":"))],
@@ -228,11 +244,17 @@ class Client:
                           headers={"content-type": "application/x-www-form-urlencoded;charset=UTF-8"})
         if r.status_code != 200:
             raise RuntimeError(f"{method}: HTTP {r.status_code}: {r.text[:200]}")
-        return decode_wrb(r.content)
+        return decode_wrb_all(r.content) if all_chunks else decode_wrb(r.content)
 
 
 def decode_wrb(raw: bytes) -> Any:
     """Decode the )]}' + length-prefixed wrb.fr framing; return first inner payload."""
+    allp = decode_wrb_all(raw)
+    return allp[0] if allp else None
+
+
+def decode_wrb_all(raw: bytes) -> list:
+    """All inner wrb.fr payloads (streaming endpoints such as GetExploreDestinations send several)."""
     raw = raw.lstrip()
     if raw.startswith(b")]}'"):
         raw = raw[4:].lstrip()
@@ -255,11 +277,15 @@ def decode_wrb(raw: bytes) -> Any:
                 continue
     else:
         payloads.append(json.loads(raw.decode("utf-8")))
+    inner = []
     for outer in payloads:
         for row in outer if isinstance(outer, list) else []:
             if isinstance(row, list) and len(row) > 2 and row[0] == "wrb.fr" and isinstance(row[2], str):
-                return json.loads(row[2])
-    return None
+                try:
+                    inner.append(json.loads(row[2]))
+                except ValueError:
+                    pass
+    return inner
 
 
 # --------------------------------------------------------------------------------------
@@ -546,7 +572,25 @@ def do_search_one(c: Client, backend: str, origins, dests, date, ret, a):
     return [], {}, "none"
 
 
-def calendar_rpc(c: Client, origins, dests, start, end, stay=None, a=None) -> list[dict]:
+def calendar_rpc(c: Client, origins, dests, start, end, stay=None, a=None, split_cities=True) -> list[dict]:
+    """Calendar for possibly several destination cities: one call set per city, merged (min per day)."""
+    groups = city_groups(dests) if split_cities else [dests]
+    if len(groups) == 1:
+        rows = _calendar_one(c, origins, groups[0], start, end, stay, a)
+        for r in rows:
+            r["dest"] = ",".join(groups[0])
+        return rows
+    best: dict[tuple, dict] = {}
+    for g in groups:
+        for r in _calendar_one(c, origins, g, start, end, stay, a):
+            r["dest"] = ",".join(g)
+            k = (r["depart"], r["return"])
+            if k not in best or r["price"] < best[k]["price"]:
+                best[k] = r
+    return sorted(best.values(), key=lambda x: (x["depart"], x["return"] or ""))
+
+
+def _calendar_one(c: Client, origins, dests, start, end, stay=None, a=None) -> list[dict]:
     """GetCalendarGraph in <=61-day chunks. stay=(min,max) nights => round trip.
 
     Google only honours a single fixed stay length per call, so a range 12-16 costs
@@ -554,7 +598,7 @@ def calendar_rpc(c: Client, origins, dests, start, end, stay=None, a=None) -> li
     if stay and stay[0] != stay[1]:
         rows = []
         for n in range(stay[0], stay[1] + 1):
-            rows.extend(calendar_rpc(c, origins, dests, start, end, (n, n), a))
+            rows.extend(_calendar_one(c, origins, dests, start, end, (n, n), a))
         return rows
     out = []
     d0, d_end = dt.date.fromisoformat(start), dt.date.fromisoformat(end)
@@ -573,7 +617,12 @@ def calendar_rpc(c: Client, origins, dests, start, end, stay=None, a=None) -> li
         if stay:
             freq += [None, [stay[0], stay[1]]]
         inner = c.rpc("GetCalendarGraph", freq)
-        out.extend(parse_calendar(inner))
+        part = parse_calendar(inner)
+        if len(part) <= 1 and (d1 - d0).days > 3:
+            c.log(f"  ! calendar {','.join(origins)}->{','.join(dests)} returned {len(part)} date(s) for {d0}..{d1}: "
+                  f"Google's calendar cache is sparse for this pair (or an airport has no service, e.g. UKB). "
+                  f"Use `search --date A..B` for real prices.")
+        out.extend(part)
         d0 = d1 + dt.timedelta(days=1)
     # de-dupe (dep, ret) keeping min
     best: dict[tuple, dict] = {}
@@ -595,6 +644,61 @@ def grid_rpc(c: Client, origins, dests, dep_dates: list[str], ret_dates: list[st
     for dchunk in chunks(dep_dates, step):
         freq = [None, main, [dchunk[0], dchunk[-1]], [ret_dates[0], ret_dates[-1]]]
         out.extend(parse_calendar(c.rpc("GetCalendarGrid", freq)))
+    return out
+
+
+REGION_MIDS = {"japan": "/m/03_3d", "jp": "/m/03_3d", "asia": "/m/0j0k", "europe": "/m/02j9z",
+               "south korea": "/m/06qd3", "china": "/m/0d05w3", "taiwan": "/m/06f32", "thailand": "/m/07f1x"}
+EXPLORE_DUR = {"weekend": 1, "week": 2, "1week": 2, "2weeks": 3}
+
+
+def explore_rpc(c: Client, origins, region: str | None, month: int | None, duration: str, a=None) -> list[dict]:
+    """GetExploreDestinations (Google Flights Explore): cheapest round trip per destination.
+
+    Format from github.com/nas-/google-flights-rs (explore_request.rs), verified 2026-10-04.
+    region: a name in REGION_MIDS, a raw /m/ MID (type 6) or an airport code (type 0)."""
+    org = [[[o, 0] for o in origins]]
+    routes = [[org, [], None, 0], [[], org, None, 0]]
+    if region:
+        mid = REGION_MIDS.get(region.lower(), region)
+        dest = [[[mid, 6 if mid.startswith(("/m/", "/g/")) else 0]]]
+        routes = [[org, dest, None, 0], [dest, org, None, 0]]
+    trip_date = [month, EXPLORE_DUR[duration]] if month else []
+    options = [None, None, CABIN[getattr(a, "cabin", "economy")], None, trip_date, 1,
+               [getattr(a, "adults", 1), 0, 0, 0],
+               [None, a.max_price] if getattr(a, "max_price", None) else None,
+               None, None, None, None, None, routes, None, None, None, 0]
+    freq = [[], None, None, options, None, 1, None, 0, None, 1, [1100, 719], 2]
+    chunks_ = c.rpc("GetExploreDestinations", freq, all_chunks=True)
+    places: dict[str, dict] = {}
+    for arr in chunks_ or []:
+        try:
+            for e in (arr[3][0] or []) if len(arr) > 3 and arr[3] else []:
+                if isinstance(e, list) and e and e[0]:
+                    places.setdefault(e[0], {"place_id": e[0], "name": e[2] if len(e) > 2 else None,
+                                             "country": e[4] if len(e) > 4 else None,
+                                             "depart": e[11] if len(e) > 11 else None,
+                                             "return": e[12] if len(e) > 12 else None,
+                                             "airport": e[15] if len(e) > 15 else None})
+        except (TypeError, IndexError):
+            pass
+        try:
+            for e in (arr[4][0] or []) if len(arr) > 4 and arr[4] else []:
+                if not isinstance(e, list) or not e or e[0] not in places:
+                    continue
+                p = places[e[0]]
+                if isinstance(e[1], list) and e[1] and isinstance(e[1][0], list):
+                    p["price"] = e[1][0][1]
+                if len(e) > 6 and isinstance(e[6], list):
+                    fd = e[6]
+                    p["airline"] = fd[0] if len(fd) > 0 else None
+                    p["stops"] = fd[2] if len(fd) > 2 else None
+                    p["flight_minutes"] = fd[3] if len(fd) > 3 else None
+                    p["flight_airport"] = fd[5] if len(fd) > 5 else None
+        except (TypeError, IndexError):
+            pass
+    out = [p for p in places.values()]
+    out.sort(key=lambda p: (p.get("price") is None, p.get("price") or 0))
     return out
 
 
@@ -729,9 +833,10 @@ def cmd_calendar(a, c: Client):
         allrows.extend(rows)
     allrows.sort(key=lambda x: x["price"])
     if not a.json_only:
-        print(f"{'price':>7} {'cur':3} {'origin(s)':20} {'depart':10} {'return':10}")
+        print(f"{'price':>7} {'cur':3} {'origin(s)':20} {'dest':9} {'depart':10} {'return':10}")
         for r in allrows[: a.top]:
-            print(f"{r['price']:>7} {r['currency'] or c.curr:3} {r['origins'][:20]:20} {r['depart']:10} {r['return'] or '':10}")
+            print(f"{r['price']:>7} {r['currency'] or c.curr:3} {r['origins'][:20]:20} {r.get('dest', '')[:9]:9} "
+                  f"{r['depart']:10} {r['return'] or '':10}")
         if a.heatmap:
             print_month_grid(allrows)
     if a.out or a.json_only:
@@ -865,6 +970,19 @@ def cmd_sweep(a, c: Client):
         dump({"signature": json.loads(sig), "ranked": [{"origin": o, **v} for o, v in ranked]}, a.out)
 
 
+def cmd_explore(a, c: Client):
+    origins = expand_codes(a.origins)
+    rows = explore_rpc(c, origins, a.region, a.month, a.duration, a)
+    if not a.json_only:
+        print(f"{'price':>7} {'cur':3} {'destination':24} {'country':12} {'apt':4} {'dates':23} airline/stops")
+        for r in rows[: a.top]:
+            print(f"{r.get('price') or '-':>7} {c.curr:3} {str(r.get('name'))[:24]:24} {str(r.get('country'))[:12]:12} "
+                  f"{str(r.get('flight_airport') or r.get('airport'))[:4]:4} {r.get('depart') or ''}>{r.get('return') or '':11} "
+                  f"{r.get('airline') or ''} {r.get('stops') if r.get('stops') is not None else ''}")
+    if a.out or a.json_only:
+        dump({"query": vars_clean(a), "gl": c.gl, "curr": c.curr, "results": rows}, a.out or "-")
+
+
 def vars_clean(a):
     return {k: v for k, v in vars(a).items() if k not in ("func",) and not callable(v)}
 
@@ -878,10 +996,10 @@ def main(argv=None):
     ap.add_argument("--quiet", action="store_true")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    def common(p, dates=True):
+    def common(p, need_to=True):
         p.add_argument("--from", dest="origins", required=(p.prog.split()[-1] != "sweep"),
                        help="origins: IATA list, city codes (TYO), presets (zagreb, europe) or a file")
-        p.add_argument("--to", required=True, help="destinations, e.g. TYO,OSA or JPN")
+        p.add_argument("--to", required=need_to, help="destinations, e.g. TYO,OSA or JPN")
         p.add_argument("--adults", type=int, default=1)
         p.add_argument("--cabin", default="economy", choices=list(CABIN))
         p.add_argument("--stops", default="any", choices=list(STOPS))
@@ -922,6 +1040,13 @@ def main(argv=None):
     p.add_argument("--return", dest="ret", required=True, help="e.g. 2027-03-15..2027-03-21")
     p.set_defaults(func=cmd_grid)
 
+    p = sub.add_parser("explore", help="Google Flights Explore: cheapest RT per destination (optionally in a region)")
+    common(p, need_to=False)
+    p.add_argument("--region", default="japan", help="japan (default), asia, a /m/ MID, or '' for anywhere")
+    p.add_argument("--month", type=int, default=None, help="1-12 (omit = any time in the next ~6 months)")
+    p.add_argument("--duration", default="week", choices=list(EXPLORE_DUR))
+    p.set_defaults(func=cmd_explore)
+
     p = sub.add_parser("sweep", help="many origins, one calendar call each; resumable")
     common(p)
     p.add_argument("--origins", dest="origins_alias", default=None,
@@ -932,11 +1057,13 @@ def main(argv=None):
     p.add_argument("--date", help="specific-date mode instead of calendar")
     p.add_argument("--return", dest="ret", help="return date for specific-date mode")
     p.add_argument("--cache", default="gflights_sweep_cache.json")
+    p.add_argument("--pace", type=float, default=6.0, help="min seconds between requests in a sweep (default 6)")
     p.add_argument("--details", type=int, default=0, help="look up itineraries for best N origins")
     p.set_defaults(func=cmd_sweep)
 
     a = ap.parse_args(argv)
     if a.cmd == "sweep":
+        a.sleep = max(a.sleep, a.pace)
         a.origins = a.origins_alias or a.origins
         if not a.origins:
             ap.error("sweep needs --origins (or --from)")

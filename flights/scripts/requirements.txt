@@ -1,0 +1,16 @@
+# Core (gflights.py rpc/html backends, matrix.py http backend)
+requests>=2.31
+
+# Optional: browser fallbacks (gflights.py --backend browser|auto, matrix.py --backend browser|auto).
+# Pinned to 1.56.x because this container ships Chromium build 1194 under
+# PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers (do NOT run `playwright install` here).
+# In a container without browsers: pip install playwright && playwright install chromium
+playwright==1.56.0
+
+# Not required by the scripts, but useful for cross-checks (all tested 2026-10-04):
+#   flights==0.9.0        (punitarani/fli: `fli flights`, `fli dates`; needs `pip install click` too)
+#   fast-flights==3.1.0   (AWeirdDev/flights; its parser crashes on rows without price - see report)
+#   gflights==0.3.1       (Rust-backed async client: search/price_graph/date_grid/explore/offer)
+# NOTE (Debian/Ubuntu system Python): `flights` pulls `ratelimit`, whose sdist fails to build
+# with the distro setuptools ("install_layout"); install inside a venv:
+#   python3 -m venv .venv && .venv/bin/pip install -r flights/scripts/requirements.txt flights click

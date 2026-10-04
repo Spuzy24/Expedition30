@@ -62,8 +62,9 @@ def browser_page(capture: Callable[[str], bool] | None = None, locale: str = "en
             try:
                 body = r.text()
                 rec["json"] = json.loads(body) if len(body) < max_body else None
-            except Exception:
+            except Exception as e:
                 rec["json"] = None
+                rec["err"] = str(e)[:200]
             captured.append(rec)
 
         page.on("response", on_resp)
@@ -87,10 +88,15 @@ def click_consent(page, tries: int = 1) -> bool:
     return False
 
 
-def wait_until(pred: Callable[[], bool], timeout: float, step: float = 1.0) -> bool:
+def wait_until(pred: Callable[[], bool], timeout: float, step: float = 1.0, page=None) -> bool:
+    """Poll pred() until true. Pass `page`: with Playwright's sync API, time.sleep() blocks
+    event dispatch, so response handlers would never run; page.wait_for_timeout() pumps them."""
     t0 = time.time()
     while time.time() - t0 < timeout:
         if pred():
             return True
-        time.sleep(step)
+        if page is not None:
+            page.wait_for_timeout(int(step * 1000))
+        else:
+            time.sleep(step)
     return False
