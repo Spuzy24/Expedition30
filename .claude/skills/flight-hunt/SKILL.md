@@ -17,7 +17,7 @@ If a script breaks, check `flights/tools.md` ("When things break") before debugg
 
 ## 1. Intake
 - Read `flights/profile.md`. Ask the user every `TBD` in ONE message: home base (assumed Zagreb), pax/ages/student, Japan airports + open-jaw OK?, date window/trip length/flex, bags, risk appetite (self-transfer, positioning flights, hidden-city default NO), payment card, budget.
-- Trip id like `tyo-2027-05`. Create `flights/searches/<trip>/notes.md` and log every search there.
+- Trip id like `tyo-2027-05`: `cp -r flights/searches/_template flights/searches/<trip>`. Log every search in its `notes.md`.
 - If the user's home isn't Zagreb: re-derive `flights/searches/ground.json` with `$S/flixbus_ground.py --from "<City>"` and update `flights/origins.md`.
 
 ## 2. Recon
