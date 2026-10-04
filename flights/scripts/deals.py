@@ -23,6 +23,7 @@ import json
 import re
 import sys
 import time
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 
@@ -39,6 +40,12 @@ FEEDS = [
     ("urlaubspiraten.at", "https://www.urlaubspiraten.at/feed", "de"),
     ("travel-dealz.de search japan", "https://travel-dealz.de/?s=japan&feed=rss2", "de"),
     ("travel-dealz.de", "https://travel-dealz.de/feed/", "de"),
+    ("travel-dealz.com search tokyo", "https://travel-dealz.com/?s=Tokyo&feed=rss2", "en"),
+    ("travel-dealz.com search osaka", "https://travel-dealz.com/?s=Osaka&feed=rss2", "en"),
+    ("utazomajom.hu search Tokió", "https://www.utazomajom.hu/?s=Tokió&feed=rss2", "hu"),
+    ("utazomajom.hu search Japán", "https://www.utazomajom.hu/?s=Japán&feed=rss2", "hu"),
+    ("utazomajom.hu all", "https://www.utazomajom.hu/feed/", "hu"),
+    ("wakacyjnipiraci.pl", "https://www.wakacyjnipiraci.pl/feed", "pl"),
     ("travel-dealz.com", "https://travel-dealz.com/feed/", "en"),
     ("piratinviaggio.it", "https://www.piratinviaggio.it/feed", "it"),
     ("travelpirates.com", "https://www.travelpirates.com/feed", "en"),
@@ -47,8 +54,8 @@ FEEDS = [
 ]
 
 JAPAN = [
-    "japan", "japon", "japón", "japão", "giappone", "japonia", "japonii", "japonsko", "japán",
-    "japonska", "japanu", "japana", "tokyo", "tokio", "tokija", "osaka", "osace", "osaki", "nagoya", "nagoji", "fukuoka",
+    "japan", "japon", "tokió", "japón", "japão", "giappone", "japonia", "japonii", "japonsko", "japán",
+    "japonska", "japánba", "tokióba", "oszaka", "japanu", "japana", "tokyo", "tokio", "tokija", "osaka", "osace", "osaki", "nagoya", "nagoji", "fukuoka",
     "sapporo", "okinawa", "naha", "narita", "haneda", "kansai", "kyoto", "kioto",
     r"\bnrt\b", r"\bhnd\b", r"\bkix\b", r"\bngo\b", r"\bfuk\b", r"\bcts\b", r"\boka\b",
 ]
@@ -79,6 +86,7 @@ def rx(words):
 
 
 def fetch(url, timeout=25):
+    url = urllib.parse.quote(url, safe=":/?&=%#")
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/rss+xml,application/xml,*/*"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
