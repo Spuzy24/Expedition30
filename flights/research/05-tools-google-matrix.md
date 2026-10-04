@@ -24,7 +24,7 @@ pre-installed Chromium 141 build 1194, egress through the agent proxy). Egress I
 | `fast-flights` 3.1.0 (AWeirdDev) | **NO (parser bug)** | fetch works (primp, 0.7 s) but `get_flights()` crashes with `IndexError` on rows without price |
 | `gflights` 0.3.1 (Rust, nas-/google-flights-rs) | YES (bursty) | search/price_graph/date_grid/cheapest_dates/explore/offer; one `cheapest_dates`+`explore` burst earned an HTTP 429 |
 | **ITA Matrix v5 JSON API** (`content-alkalimatrix-pa.googleapis.com/v1/search`) | **YES** (`matrix.py`) | direct HTTP works **without** the BotGuard token today; 15–60 s per query; specific dates, calendar, routing & extension codes, sales city, currency |
-| Matrix via Playwright | FLAKY (fallback) | deep links don't auto-run in headless; fallback drives the form and swaps the request body (keeps the BotGuard token) – worked once, then the swapped search never answered within 3–5 min |
+| Matrix via Playwright | FLAKY (experimental fallback) | the UI form search itself works (captured all formats that way), but deep links don't auto-run in headless and the body-swap fallback answered 1 of 3 attempts (2 timed out after 3–5 min) |
 
 **Point of sale:** changing `gl` (HR, AT, DE, HU, US, GB, JP, IN, TR, SE) **did not change a single
 GF price** – all 82 itineraries of a ZAG–TYO round trip were identical in EUR; other currencies
@@ -462,7 +462,7 @@ Captured with Playwright (UI search VIE→NRT, 10 Mar 2027, sales city ZAG, EUR)
 * UI state URL: `https://matrix.itasoftware.com/flights?search=<base64 JSON>` (type, slices with
   origin/dest/routing/ext/dates, options cabin/stops/extraStops/currency/salesCity, pax). In headless
   Chromium such deep links render but **do not start the search** (console `{error: Object}`), so
-  the browser fallback drives the form and swaps the request body instead.
+  the (experimental) browser fallback drives the form and swaps the request body instead.
 * Timing: **15–60 s per query** (server-side). Never saw a rate limit in ~45 queries at ≥5 s spacing
   (sometimes 2 concurrent).
 
@@ -552,8 +552,9 @@ python matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-3
 python matrix.py search --from VIE --to TYO --date 2027-03-10 --carriers QR,EK,TK,CA,LO,AY,KE   # one query per carrier, merged
 ```
 Values starting with "-" are accepted (`--ext -CODESHARE`). Output: sorted table, carrier minimums,
-and a `matrix.itasoftware.com/flights?search=…` URL to open the same search in a normal browser
-(deep links do work in a real desktop browser).
+and a `matrix.itasoftware.com/flights?search=…` URL meant for opening the search in a normal browser
+(same state format the web app writes; in headless Chromium such links rendered but did not start
+the search – not verified on a desktop browser).
 
 Sample:
 ```

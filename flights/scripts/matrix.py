@@ -11,9 +11,11 @@ The Matrix web app is an Angular front-end over a JSON API:
              content-type: application/json, origin/referer: https://matrix.itasoftware.com
 
 The browser also sends a BotGuard token ("bgProgramResponse"); as of 2026-10-04 the API
-answers without it. If that ever changes use --backend browser, which drives the real web
-app in headless Chromium (Playwright) via a /flights?search=<base64 state> URL and captures
-the same JSON response.
+answers without it. If that ever changes, --backend browser (EXPERIMENTAL) drives the real web
+app in headless Chromium (Playwright): it submits a dummy form search and swaps the request
+body for ours while keeping the app's BotGuard token. Deep links (/flights?search=<base64>) do
+not start a search in headless mode. The swap answered once (a small query) but two later
+heavier queries never got a response within 3-5 min - treat it as a last resort.
 
 Subcommands
   search    specific dates: one-way, round-trip (--return) or multi-city (--slice ...),
