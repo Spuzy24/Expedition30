@@ -15,11 +15,12 @@ import gflights  # noqa: E402
 if __name__ == "__main__":
     argv = sys.argv[1:]
     glob, rest = [], list(argv)
-    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep"):
-        glob += rest[:2]
-        rest = rest[2:]
-    while rest and rest[0] == "--quiet":
-        glob.append(rest.pop(0))
+    while rest and rest[0] in ("--gl", "--curr", "--hl", "--sleep", "--quiet"):
+        if rest[0] == "--quiet":  # flag (no value); may appear between the others
+            glob.append(rest.pop(0))
+        else:
+            glob += rest[:2]
+            rest = rest[2:]
     if not rest or rest[0] not in ("calendar", "grid"):
         rest = ["calendar"] + rest
     gflights.main(glob + rest)

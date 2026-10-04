@@ -78,8 +78,11 @@ def parse(d: dict) -> list[dict]:
             legs_txt.append(f"{path} {s['departureTime'][5:16].replace('T', ' ')}->{s['arrivalTime'][5:16].replace('T', ' ')}")
             carriers.append(",".join(dict.fromkeys(l["flightInfo"]["carrierInfo"]["marketingCarrier"] for l in s["legs"])))
             vi = vi or bool(s.get("isVirtualInterlining"))
-            checked.append(sum((x.get("luggageAllowance") or {}).get("maxPiece", 0) for x in s.get("travellerCheckedLuggage") or []))
-        rows.append({"price": price, "currency": cur, "eur": to_eur(price, cur),
+            # one entry per traveller: take the minimum per-traveller allowance, not the sum over travellers
+            per_trav = [(x.get("luggageAllowance") or {}).get("maxPiece", 0) for x in s.get("travellerCheckedLuggage") or []]
+            checked.append(min(per_trav) if per_trav else 0)
+        brand = (o.get("brandedFareInfo") or {}).get("fareName")
+        rows.append({"price": price, "currency": cur, "eur": to_eur(price, cur), "fare_brand": brand,
                      "itinerary": " | ".join(legs_txt), "airlines": " | ".join(carriers),
                      "checked_bags": min(checked) if checked else 0, "self_transfer": vi,
                      "flight_key": o.get("flightKey")})
@@ -108,7 +111,7 @@ def main():
                   f"{agg.get('totalCount')} offers; min price by stops {stops}\n   {url}")
             for r in rows:
                 r.update({"from": o, "to": d, "depart": a.depart, "return": a.ret, "url": url})
-            print_table(rows, [("eur", "EUR"), ("checked_bags", "BAGS"), ("self_transfer", "SELF-TR"),
+            print_table(rows, [("eur", "EUR"), ("checked_bags", "BAGS"), ("fare_brand", "BRAND"), ("self_transfer", "SELF-TR"),
                                ("airlines", "AIRLINES"), ("itinerary", "ITINERARY")],
                         limit=a.limit, maxw=110)
             allrows += rows

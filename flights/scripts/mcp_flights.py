@@ -51,6 +51,10 @@ SERVERS = {
 _id = 0
 
 
+class RPCError(RuntimeError):
+    """A well-formed JSON-RPC error answer (bad arguments etc.): retrying cannot help."""
+
+
 def rpc(server, method, params, timeout=180, retries=2):
     """POST one JSON-RPC message; parse JSON or SSE ('data: ...') response."""
     global _id
@@ -82,11 +86,14 @@ def rpc(server, method, params, timeout=180, retries=2):
                 if msg is None:
                     raise RuntimeError(f"no JSON-RPC message in response: {raw[:300]}")
             if "error" in msg:
-                raise RuntimeError(f"RPC error: {msg['error']}")
+                raise RPCError(f"RPC error: {msg['error']}")
             return msg["result"]
+        except RPCError:
+            raise  # deterministic: don't burn 3 calls + 18 s of sleeps on it
         except Exception as e:  # network hiccup / server busy
             last = e
-            time.sleep(3 * (attempt + 1))
+            if attempt < retries:
+                time.sleep(3 * (attempt + 1))
     raise last
 
 
@@ -174,30 +181,56 @@ def _route(segs):
     return out
 
 
+_SEG_RX = re.compile(r"([A-Z]{3}) → ([A-Z]{3}) \(([\d-]+ [\d:]+)")
+
+
+def _md_segments(line):
+    """Segments of one markdown result row, split into (outbound, return).
+
+    The row also has 'Outbound: 17h 20m<br/>Return: 22h 25m' in the Duration cell, so split
+    only the Segments cell (the one with arrows) at its 'Return:' marker."""
+    cell = next((c for c in line.split("|") if "→" in c), "")
+    out_part, _, ret_part = cell.partition("Return:")
+    return _SEG_RX.findall(out_part), _SEG_RX.findall(ret_part)
+
+
 def _sk_rows(res, a):
     """Merge structuredContent.flights (price, type attributes, link) with the
-    markdown table (segment details), which come in the same order."""
+    markdown table (segment details), which come in the same order.
+
+    Round trips are kept as two directions (route_out / route_ret, joined with ' | ');
+    '~' only marks an airport change INSIDE one direction (self-transfer red flag), never
+    the arrival airport vs. the return airport two weeks later."""
     sc = res.get("structuredContent") or {}
     cards = sc.get("flights") or []
     txt = "\n".join(c.get("text", "") for c in res.get("content", []))
-    md_segs = []
-    for line in txt.splitlines():
-        if re.match(r"\|\s*[€£$¥]?\s*[\d,]+", line):
-            md_segs.append(re.findall(r"([A-Z]{3}) → ([A-Z]{3}) \(([\d-]+ [\d:]+)", line))
+    md_segs = [_md_segments(line) for line in txt.splitlines()
+               if re.match(r"\|\s*[€£$¥]?\s*[\d,]+", line)]
     rows = []
     for idx, f in enumerate(cards):
-        segs = md_segs[idx] if idx < len(md_segs) else []
-        attrs = f.get("attributes") or []
+        segs_o, segs_r = md_segs[idx] if idx < len(md_segs) else ([], [])
+        rf = f.get("returnFlight") or {}
+        dep_o = (f.get("departure") or {}).get("airport", "")
+        arr_o = (f.get("arrival") or {}).get("airport", "")
+        dep_r = (rf.get("departure") or {}).get("airport", "")
+        arr_r = (rf.get("arrival") or {}).get("airport", "")
+        route_out = _route(segs_o) if segs_o else f"{dep_o}-{arr_o}"
+        route_ret = (_route(segs_r) if segs_r else f"{dep_r}-{arr_r}") if rf else ""
+        attrs = list(dict.fromkeys((f.get("attributes") or []) + (rf.get("attributes") or [])))
         rows.append({
             "source": "skiplagged", "price": (f.get("price") or {}).get("amount"),
             "cur": (f.get("price") or {}).get("currency", "?"),
-            "duration": f.get("duration", ""), "stops": str(f.get("layovers", "")),
+            "duration": f.get("duration", "") + (f" / {rf.get('duration', '')}" if rf else ""),
+            "stops": str(f.get("layovers", "")) + (f"/{rf.get('layovers', '')}" if rf else ""),
             "type": ",".join(x for x in attrs if x not in ("standard",)) or "standard",
-            "carriers": f.get("airlines", ""),
-            "segments": [f"{x[0]}-{x[1]} {x[2]}" for x in segs],
-            "route": _route(segs) if segs else
-                     f"{(f.get('departure') or {}).get('airport', '')}-{(f.get('arrival') or {}).get('airport', '')}",
+            "carriers": f.get("airlines", "") + (f" | {rf.get('airlines', '')}" if rf else ""),
+            "segments": [f"{x[0]}-{x[1]} {x[2]}" for x in segs_o] + [f"RET {x[0]}-{x[1]} {x[2]}" for x in segs_r],
+            "route": route_out + (f" | {route_ret}" if route_ret else ""),
+            "route_out": route_out, "route_ret": route_ret,
+            "origin": dep_o or route_out[:3], "dest": arr_o or route_out[-3:],
+            "return_from": dep_r or route_ret[:3], "return_to": arr_r or route_ret[-3:],
             "out_time": (f.get("departure") or {}).get("dateTime", ""),
+            "ret_time": (rf.get("departure") or {}).get("dateTime", ""),
             "link": f.get("deepLink", ""),
         })
     return rows
@@ -241,13 +274,13 @@ def print_kiwi(query, rows, a):
 
 
 def print_sk(rows):
-    print(f"{'price':>7} {'cur':<3}  {'type':<18} {'stops':<8} {'duration':<9} {'route':<24} carriers / link")
+    print(f"{'price':>7} {'cur':<3}  {'type':<18} {'stops':<8} {'duration':<17} {'route':<32} carriers / link")
     for r in rows:
         if "raw" in r:
             print(json.dumps(r["raw"])[:300])
             continue
-        print(f"{(r['price'] or 0):>7.0f} {r['cur']:<3}  {r['type'][:18]:<18} {r['stops'][:8]:<8} {r['duration'][:9]:<9} "
-              f"{r['route'][:24]:<24} {r['carriers']}\n{'':>13}{' | '.join(r['segments'])}\n{'':>13}{r['link']}")
+        print(f"{(r['price'] or 0):>7.0f} {r['cur']:<3}  {r['type'][:18]:<18} {r['stops'][:8]:<8} {r['duration'][:17]:<17} "
+              f"{r['route'][:32]:<32} {r['carriers']}\n{'':>13}{' | '.join(r['segments'])}\n{'':>13}{r['link']}")
 
 
 def log_rows(rows, a, source):
@@ -269,12 +302,17 @@ def log_rows(rows, a, source):
                 cmd += ["--ret", r["ret"][:10], "--return-from", r["return_from"], "--return-to", r["return_to"]]
         else:
             route = r.get("route", "")
-            if not route:
+            if not route or not r.get("origin") or not r.get("dest"):
                 continue
-            cmd += ["--origin", route[:3], "--dest", route[-3:], "--out", a.date, "--carriers", r["carriers"],
+            # dest = where the OUTBOUND ends (route[-3:] of a round-trip string is the origin again)
+            cmd += ["--origin", r["origin"], "--dest", r["dest"], "--out", a.date, "--carriers", r["carriers"],
                     "--via", route, "--link", r["link"], "--notes", r.get("type", "")]
             if a.ret:
                 cmd += ["--ret", a.ret]
+                if r.get("return_from"):
+                    cmd += ["--return-from", r["return_from"]]
+                if r.get("return_to"):
+                    cmd += ["--return-to", r["return_to"]]
             if "interline" in r.get("type", "").lower():
                 cmd += ["--self-transfer", "--risk", "moderate"]
             if "hidden" in r.get("type", "").lower():

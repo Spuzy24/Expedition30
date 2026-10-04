@@ -44,6 +44,8 @@ import argparse
 import sys
 import time
 
+import requests
+
 from _common import dump_json, parse_date_range, polite_session, print_table, split_codes
 
 URL = "https://api.skypicker.com/umbrella/v2/graphql"
@@ -59,19 +61,22 @@ fragment Seg on SectorSegment { layover { duration isBaggageRecheck }
     carrier { code name } } }
 fragment Itin on Itinerary { __typename id price { amount } priceEur { amount } duration pnrCount
   provider { code }
-  bagsInfo { includedCheckedBags includedHandBags hasNoCheckedBaggage }
+  bagsInfo { includedCheckedBags includedHandBags hasNoCheckedBaggage
+    checkedBagTiers { tierPrice { amount } bags { weight { value } } } }
   travelHack { isTrueHiddenCity isVirtualInterlining isThrowawayTicket }
   bookingOptions { edges { node { bookingUrl } } } }
 """
 Q_RET = """query SearchReturnItinerariesQuery($search: SearchReturnInput, $filter: ItinerariesFilterInput, $options: ItinerariesOptionsInput) {
  returnItineraries(search: $search, filter: $filter, options: $options) { __typename
   ... on AppError { error: message }
-  ... on Itineraries { metadata { itinerariesCount hasMorePending }
+  ... on Itineraries { metadata { itinerariesCount hasMorePending missingProviders { code }
+     statusPerProvider { provider { code } pending errorHappened errorMessage } }
    itineraries { ...Itin ... on ItineraryReturn { outbound { sectorSegments { ...Seg } } inbound { sectorSegments { ...Seg } } } } } } }""" + _SEG
 Q_OW = """query SearchOneWayItinerariesQuery($search: SearchOnewayInput, $filter: ItinerariesFilterInput, $options: ItinerariesOptionsInput) {
  onewayItineraries(search: $search, filter: $filter, options: $options) { __typename
   ... on AppError { error: message }
-  ... on Itineraries { metadata { itinerariesCount hasMorePending }
+  ... on Itineraries { metadata { itinerariesCount hasMorePending missingProviders { code }
+     statusPerProvider { provider { code } pending errorHappened errorMessage } }
    itineraries { ...Itin ... on ItineraryOneWay { sector { sectorSegments { ...Seg } } } } } } }""" + _SEG
 _OPC = """ { __typename ... on AppError { error: message }
   ... on OnePerCityItineraries { itineraries { price { amount } priceEur { amount } departureDate
@@ -89,9 +94,19 @@ Q_PLACES = """query Places($search: PlacesSearchInput, $filter: PlacesFilterInpu
   ... on PlaceConnection { edges { node { __typename id name ... on Station { code } ... on City { code } } } } } }"""
 
 
-def gql(op: str, query: str, variables: dict) -> dict:
-    r = S.post(f"{URL}?featureName={op}", json={"query": query, "variables": variables}, timeout=120)
-    d = r.json()
+def gql(op: str, query: str, variables: dict, retries: int = 1) -> dict:
+    for attempt in range(retries + 1):
+        try:
+            r = S.post(f"{URL}?featureName={op}", json={"query": query, "variables": variables}, timeout=120)
+            if r.status_code == 429 or r.status_code >= 500:
+                raise RuntimeError(f"{op}: HTTP {r.status_code}")
+            d = r.json()  # ValueError on an HTML error/challenge page
+            break
+        except (requests.RequestException, ValueError, RuntimeError) as e:
+            if attempt >= retries:
+                raise RuntimeError(f"{op}: {e!r}") from e
+            print(f"[kiwi] {op}: {e!r}; retrying in 10 s", file=sys.stderr)
+            time.sleep(10)
     if d.get("errors"):
         raise RuntimeError(f"{op}: {d['errors'][0].get('message')}")
     return d["data"]
@@ -209,26 +224,68 @@ def _sector_txt(sec) -> tuple[str, str, str]:
     return path, f"{dep}->{arr}", al
 
 
-def _row(it, ret: bool) -> dict:
+def _bag_fee(it, checked: int) -> float:
+    """Price of the checked bags Kiwi ADDED to this itinerary's price (query currency).
+
+    With adultsHoldBags > 0 the returned price = fare + the cheapest checkedBagTier, and
+    includedCheckedBags then counts the priced-in bags too. A tier price of 0 means the
+    fare itself includes the bag (per Kiwi). Kiwi's bag data is missing for some full-service
+    carriers (MU: '0 bags' + EUR 334.89 RT for 1x23 kg, while GDS data says 2x23 kg)."""
+    if not checked:
+        return 0.0
+    tiers = (it.get("bagsInfo") or {}).get("checkedBagTiers") or []
+    fees = [float(t["tierPrice"]["amount"]) for t in tiers
+            if t.get("tierPrice") and len(t.get("bags") or []) >= 1]
+    return min(fees) if fees else 0.0
+
+
+def _row(it, ret: bool, checked: int = 0) -> dict:
     secs = [it["outbound"], it["inbound"]] if ret else [it["sector"]]
     parts = [_sector_txt(s) for s in secs]
     th = it["travelHack"]
     flags = [n for n, v in (("self-transfer", th["isVirtualInterlining"]),
                             ("hidden-city", th["isTrueHiddenCity"]),
                             ("throwaway", th["isThrowawayTicket"])) if v]
+    if (it.get("pnrCount") or 1) > 1 and not th["isVirtualInterlining"]:
+        flags.append(f"{it['pnrCount']}-tickets")
     url = (it.get("bookingOptions") or {}).get("edges") or []
-    return {"price": float(it["price"]["amount"]), "eur": round(float(it["priceEur"]["amount"]), 2),
+    price, eur = float(it["price"]["amount"]), round(float(it["priceEur"]["amount"]), 2)
+    fee = _bag_fee(it, checked)
+    fee_eur = round(fee * eur / price, 2) if price else fee
+    first, last = secs[0]["sectorSegments"][0]["segment"], secs[-1]["sectorSegments"][-1]["segment"]
+    return {"price": price, "eur": eur,
+            "fare_eur": round(eur - fee_eur, 2), "kiwi_bag_eur": fee_eur,
             "route": " | ".join(p[0] for p in parts), "times": " | ".join(p[1] for p in parts),
             "airlines": " | ".join(p[2] for p in parts), "tickets": it.get("pnrCount"),
             "checked_bags": it["bagsInfo"]["includedCheckedBags"], "flags": ",".join(flags),
+            "dep_local": first["source"]["localTime"][:16], "arr_local": last["destination"]["localTime"][:16],
             "book": ("https://www.kiwi.com" + url[0]["node"]["bookingUrl"]) if url else None}
 
 
-# ----------------------------------------------------------------- commands
-def run_search(a, src=None, quiet=False) -> list[dict]:
-    src = src or ids(a.origins)
-    dst = ids(a.dests)
-    it, ret = _itin(a, src, dst)
+def _carriers(row) -> set:
+    return {c for part in row["airlines"].split("|") for c in part.strip().split(",") if c}
+
+
+def _rank_eur(row, fsc: set) -> float:
+    """Ranking price: the Kiwi price, except that with --fsc-bags-included the Kiwi bag add-on is
+    dropped for itineraries flown only by those carriers (their fares include checked bags)."""
+    if fsc and row.get("kiwi_bag_eur") and _carriers(row) <= fsc:
+        return row["fare_eur"]
+    return row["eur"]
+
+
+def _check_meta(res, a) -> None:
+    md = res.get("metadata") or {}
+    if md.get("hasMorePending"):
+        print("[kiwi] WARNING: hasMorePending=true - Kiwi had not finished searching; results may be "
+              "partial (re-run in a few seconds)", file=sys.stderr)
+    bad = [s for s in md.get("statusPerProvider") or [] if s.get("errorHappened") or s.get("pending")]
+    for s in bad:
+        print(f"[kiwi] WARNING: provider {s['provider']['code']} pending={s.get('pending')} "
+              f"error={s.get('errorMessage')}", file=sys.stderr)
+
+
+def _search_raw(a, src, dst, it, ret) -> list[dict]:
     v = {"search": {"itinerary": it, "passengers": _pax(a.adults, a.checked_bags, a.hand_bags),
                     "cabinClass": {"cabinClass": "ECONOMY", "applyMixedClasses": False}},
          "filter": _filter(a, a.limit_api), "options": _options(a)}
@@ -240,14 +297,72 @@ def run_search(a, src=None, quiet=False) -> list[dict]:
     if res["__typename"] != "Itineraries":
         print(f"[kiwi] {res.get('error') or res}", file=sys.stderr)
         return []
-    rows = sorted((_row(x, ret) for x in res["itineraries"]), key=lambda r: r["eur"])
+    _check_meta(res, a)
+    return [_row(x, ret, a.checked_bags) for x in res["itineraries"]]
+
+
+def _oneway_combos(a, src, dst, top=12) -> list[dict]:
+    """Round trip as two separate one-way tickets (out + back). Kiwi's RETURN search does not
+    build these for full-service carriers (e.g. CA VIE-PEK-KIX + CZ HND-CAN-BUD = EUR 870 with
+    a bag on 2026-10-04, while the return search's best was EUR 927); the Kiwi MCP does."""
+    d1, d2 = parse_date_range(a.dates)
+    r1, r2 = parse_date_range(a.return_dates)
+    out = _search_raw(a, src, dst, {"source": {"ids": src}, "destination": {"ids": dst},
+                                    "outboundDepartureDate": _range(d1, d2)}, False)
+    back = _search_raw(a, dst, src, {"source": {"ids": dst}, "destination": {"ids": src},
+                                     "outboundDepartureDate": _range(r1, r2)}, False)
+    combos = []
+    for o in out[:top]:
+        for b in back[:top]:
+            if b["dep_local"] <= o["arr_local"]:
+                continue
+            flags = ",".join(x for x in ("2-tickets(OW+OW)", o["flags"], b["flags"]) if x)
+            combos.append({"price": round(o["price"] + b["price"], 2), "eur": round(o["eur"] + b["eur"], 2),
+                           "fare_eur": round(o["fare_eur"] + b["fare_eur"], 2),
+                           "kiwi_bag_eur": round(o["kiwi_bag_eur"] + b["kiwi_bag_eur"], 2),
+                           "route": f"{o['route']} | {b['route']}", "times": f"{o['times']} | {b['times']}",
+                           "airlines": f"{o['airlines']} | {b['airlines']}",
+                           "tickets": (o["tickets"] or 1) + (b["tickets"] or 1),
+                           "checked_bags": min(o["checked_bags"], b["checked_bags"]), "flags": flags,
+                           "dep_local": o["dep_local"], "arr_local": b["arr_local"],
+                           "book": f"{o['book']} + {b['book']}"})
+    return combos
+
+
+# ----------------------------------------------------------------- commands
+def run_search(a, src=None, quiet=False) -> list[dict]:
+    src = src or ids(a.origins)
+    dst = ids(a.dests)
+    it, ret = _itin(a, src, dst)
+    if a.limit_api > 50 and not quiet:
+        print("[kiwi] note: the API returns at most 50 itineraries per query (--limit-api > 50 is ignored)",
+              file=sys.stderr)
+    rows = _search_raw(a, src, dst, it, ret)
+    if ret and getattr(a, "combine_oneways", False) and getattr(a, "return_dates", None):
+        seen = {(r["route"], r["times"]) for r in rows}
+        rows += [c for c in _oneway_combos(a, src, dst) if (c["route"], c["times"]) not in seen]
+    fsc = set(split_codes(getattr(a, "fsc_bags_included", None) or ""))
+    for r in rows:
+        r["rank_eur"] = _rank_eur(r, fsc)
+    rows.sort(key=lambda r: (r["rank_eur"], r["eur"]))
     if not quiet:
         print(f"[kiwi] {len(rows)} itineraries; sources={src[:6]}{'...' if len(src) > 6 else ''} "
               f"dest={dst}", file=sys.stderr)
-        print_table(rows, [("eur", "EUR"), ("price", f"PRICE({a.currency.upper()})"), ("route", "ROUTE"),
-                           ("times", "TIMES"), ("airlines", "AIRLINES"), ("tickets", "PNRs"),
-                           ("checked_bags", "BAGS"), ("flags", "FLAGS")],
+        cols = [("eur", "EUR"), ("price", f"PRICE({a.currency.upper()})")]
+        if a.checked_bags:
+            cols += [("fare_eur", "FARE€"), ("kiwi_bag_eur", "KIWI-BAG€")]
+        if fsc:
+            cols += [("rank_eur", "RANK€")]
+        print_table(rows, cols + [("route", "ROUTE"), ("times", "TIMES"), ("airlines", "AIRLINES"),
+                                  ("tickets", "PNRs"), ("checked_bags", "BAGS"), ("flags", "FLAGS")],
                     limit=a.limit, maxw=90)
+        heavy = sorted({c for r in rows[: a.limit or len(rows)] if r.get("kiwi_bag_eur", 0) >= 150
+                        for c in _carriers(r)} - fsc)
+        if heavy:
+            print(f"[kiwi] WARNING: Kiwi added >= EUR 150 of bag fees on itineraries with {','.join(heavy)}. "
+                  "Kiwi's bag data is unreliable for full-service carriers (MU said 0 bags; OTAs/GDS say 2x23 kg). "
+                  "Compare FARE€ with OTAs' bag-inclusive prices, or pass --fsc-bags-included MU,CA,CZ,...",
+                  file=sys.stderr)
     return rows
 
 
@@ -282,7 +397,7 @@ def cmd_origin_scan(a) -> list[dict]:
         print(f"[kiwi] {o}: {best['eur'] if best else '-'} EUR {best['route'] if best else ''}",
               file=sys.stderr)
         if best:
-            no_st = next((r for r in rows if "self-transfer" not in r["flags"]), None)
+            no_st = next((r for r in rows if (r.get("tickets") or 1) == 1), None)
             out.append({"origin": o, **best,
                         "best_single_ticket_eur": no_st["eur"] if no_st else None,
                         "single_ticket_route": no_st["route"] if no_st else None})
@@ -340,8 +455,14 @@ def main():
                        help="exclude Kiwi self-transfer (virtual interlining) combos")
         p.add_argument("--hacks", action="store_true",
                        help="also allow hidden-city / throwaway results (risky; off by default)")
+        p.add_argument("--combine-oneways", action="store_true",
+                       help="round trip: also price out + back as two one-way tickets (2 extra queries); "
+                            "Kiwi's return search omits these for full-service carriers")
+        p.add_argument("--fsc-bags-included", metavar="CARRIERS",
+                       help="with --checked-bags: rank itineraries flown only by these carriers WITHOUT "
+                            "Kiwi's bag add-on (their fares include bags), e.g. MU,CA,CZ")
         p.add_argument("--limit", type=int, default=30, help="rows to print")
-        p.add_argument("--limit-api", type=int, default=50, help="itineraries requested")
+        p.add_argument("--limit-api", type=int, default=50, help="itineraries requested (API max 50)")
         p.add_argument("--json")
 
     common(sub.add_parser("search", help="itinerary search (multi-origin/region/radius)"))

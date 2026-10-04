@@ -65,6 +65,9 @@ def rates_eur():
 def convert(amount, frm, to="EUR", card_fee_pct=0.0):
     r = rates_eur()
     frm, to = frm.upper(), to.upper()
+    for c in (frm, to):
+        if c not in r:
+            raise KeyError(f"{c} (no FX rate; known: {len(r)} currencies, see fx.py --rates)")
     eur = amount / r[frm]
     out = eur * r[to]
     return out * (1 + card_fee_pct / 100.0)
@@ -88,7 +91,10 @@ def main():
         return
     if a.amount is None or not a.currency:
         p.error("give AMOUNT CURRENCY")
-    v = convert(a.amount, a.currency, a.to, a.card_fee)
+    try:
+        v = convert(a.amount, a.currency, a.to, a.card_fee)
+    except KeyError as e:
+        p.error(f"unknown currency {e.args[0]}")
     print(f"{a.amount:,.2f} {a.currency.upper()} = {v:,.2f} {a.to.upper()}"
           + (f" (incl. {a.card_fee}% card fee)" if a.card_fee else ""))
 

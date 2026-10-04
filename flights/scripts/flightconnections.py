@@ -66,8 +66,10 @@ def parse_destinations(html: str, section: str = "popular-destinations") -> list
         freq = span.get_text(strip=True) if span else ""
         fm = re.search(r"(\d+)\s+flights", freq)
         flag = a.select_one("img")
+        cc = re.search(r"/flags/\d+/([A-Z]{2})\.png", (flag.get("src") or "") if flag else "")
         rows.append({"iata": m.group(1) if m else None, "name": name,
                      "country": flag.get("alt") if flag else None,
+                     "cc": cc.group(1) if cc else None,  # ISO2 from the flag URL, e.g. .../flags/24/JP.png
                      "flights_per_month": int(fm.group(1)) if fm else None,
                      "href": a.get("href")})
     return rows
@@ -120,7 +122,7 @@ def main():
                 if a.filter_country:
                     want = {x.strip().lower() for x in a.filter_country.split(",")}
                     rows = [r for r in rows if (r["country"] or "").lower() in want or
-                            (r.get("href") or "").lower().endswith(tuple(f"-{w}" for w in want))]
+                            (r.get("cc") or "").lower() in want]
                 als = airlines_for(page, info["id"]) if a.mode == "from" else []
                 out[c] = {"name": info["name"], "url": url, "routes": rows, "airlines": als}
                 print(f"\n== {info['name']} - nonstop {'destinations' if a.mode == 'from' else 'origins'}: "

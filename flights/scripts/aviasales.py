@@ -91,6 +91,10 @@ def parse_chunks(chunks: list[dict], url: str) -> list[dict]:
             if not t.get("proposals"):
                 continue
             p = min(t["proposals"], key=lambda x: x["price"]["value"])
+            # same ticket, cheapest seller that includes >= 1 checked bag (e.g. Kiwi.com 0 bags EUR 735
+            # vs Gotogate/Trip.com 2x23 kg for a few euros more): the cheapest offer alone hid that
+            pb = [x for x in t["proposals"] if ((x.get("minimum_fare") or {}).get("baggage") or {}).get("count", 0) >= 1]
+            pb = min(pb, key=lambda x: x["price"]["value"]) if pb else None
             segs_txt, carriers = [], []
             for sg in t["segments"]:
                 fl = [legs[i] for i in sg["flights"] if i < len(legs)]
@@ -113,6 +117,7 @@ def parse_chunks(chunks: list[dict], url: str) -> list[dict]:
                 "itinerary": " | ".join(segs_txt), "airlines": " | ".join(carriers),
                 "agent": (ag.get("label", {}).get("en", {}) or {}).get("default") or ag.get("gate_name"),
                 "checked_bags": (mf.get("baggage") or {}).get("count"),
+                "eur_with_bag": to_eur(pb["price"]["value"], pb["price"]["currency_code"]) if pb else None,
                 "self_transfer": vi or any("recheck_baggage" in json.dumps(sg.get("transfers")) and
                                            any(tr.get("recheck_baggage") for tr in sg.get("transfers") or [])
                                            for sg in t["segments"]),
@@ -143,7 +148,7 @@ def main():
             rows = run(o, d, a.depart, a.ret, a.adults, a.currency, a.timeout)
             print(f"\n== Aviasales {o}->{d} {a.depart}{' / ' + a.ret if a.ret else ''}: "
                   f"{len(rows)} tickets  {search_url(o, d, a.depart, a.ret, a.adults, a.currency)}")
-            print_table(rows, [("eur", "EUR"), ("agent", "SELLER"), ("checked_bags", "BAGS"),
+            print_table(rows, [("eur", "EUR"), ("agent", "SELLER"), ("checked_bags", "BAGS"), ("eur_with_bag", "EUR+BAG"),
                                ("self_transfer", "SELF-TR"), ("airlines", "AIRLINES"),
                                ("itinerary", "ITINERARY")], limit=a.limit, maxw=110)
             allrows += rows
