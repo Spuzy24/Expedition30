@@ -1,0 +1,26 @@
+{
+ "kiwi graphql VIE/BUD RT 1 bag single-ticket": {
+  "runs": [
+   {
+    "ts": "2026-10-04T18:52:15+00:00",
+    "price": 853.0,
+    "err": "",
+    "desc": "BUD-DOH-HND | HND-DOH-BUD | QR | QR | 2027-05-11 16:05->05-12 23:55 | 2027-05-25 01:25->05-25 13:50"
+   }
+  ],
+  "best": 853.0,
+  "best_ts": "2026-10-04T18:52:15+00:00"
+ },
+ "kiwi graphql VIE RT single-ticket (Air India)": {
+  "runs": [
+   {
+    "ts": "2026-10-04T18:54:19+00:00",
+    "price": 708.0,
+    "err": "",
+    "desc": "VIE-DEL-HND | HND-DEL-VIE | AI | AI | 2027-05-11 20:30->05-13 07:55 | 2027-05-25 11:50->05-26 19:00"
+   }
+  ],
+  "best": 708.0,
+  "best_ts": "2026-10-04T18:54:19+00:00"
+ }
+}

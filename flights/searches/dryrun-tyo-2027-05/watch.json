@@ -1,0 +1,15 @@
+{
+  "trip": "dryrun-tyo-2027-05",
+  "threshold_eur": 600,
+  "sleep": 8,
+  "checks": [
+    {"name": "momondo BUD RT 12-26 May (MU/CZ single ticket)", "json": "file:--json",
+     "cmd": "kayak.py --site www.momondo.de --from BUD --to TYO,OSA --depart 2027-05-12 --return 2027-05-26"},
+    {"name": "kiwi graphql BUD RT single-ticket (no bag flag: Kiwi misprices MU bags)", "json": "file:--json",
+     "cmd": "kiwi_graphql.py search --from BUD --to TYO,OSA --dates 2027-05-10..2027-05-14 --return-dates 2027-05-24..2027-05-28 --no-self-transfer"},
+    {"name": "kiwi graphql VIE RT single-ticket (Air India)", "json": "file:--json",
+     "cmd": "kiwi_graphql.py search --from VIE --to TYO,OSA --dates 2027-05-10..2027-05-14 --return-dates 2027-05-24..2027-05-28 --no-self-transfer"},
+    {"name": "Matrix MU forced BUD RT", "json": "file:--out",
+     "cmd": "matrix.py search --from BUD --to TYO,OSA --date 2027-05-12 --return 2027-05-26 --route MU+ --route-ret MU+"}
+  ]
+}
