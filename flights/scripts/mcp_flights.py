@@ -297,8 +297,9 @@ def _sk_rows(res, a):
     sc = res.get("structuredContent") or {}
     cards = sc.get("flights") or []
     txt = "\n".join(c.get("text", "") for c in res.get("content", []))
+    # table rows = lines with a booking link (the price cell can be "—" when the server has no price)
     md_segs = [_md_segments(line) for line in txt.splitlines()
-               if re.match(r"\|\s*[€£$¥]?\s*[\d,]+", line)]
+               if line.startswith("|") and "](http" in line]
     rows = []
     for idx, f in enumerate(cards):
         segs_o, segs_r = md_segs[idx] if idx < len(md_segs) else ([], [])
@@ -311,6 +312,8 @@ def _sk_rows(res, a):
         route_ret = (_route(segs_r) if segs_r else f"{dep_r}-{arr_r}") if rf else ""
         attrs = list(dict.fromkeys((f.get("attributes") or []) + (rf.get("attributes") or [])))
         amount = (f.get("price") or {}).get("amount")
+        if not amount:  # server sends 0 / "—" when it has no price (seen for round trips 2026-10-04)
+            amount = None
         cur = (f.get("price") or {}).get("currency", "?")
         rows.append({
             "source": "skiplagged", "price": amount, "cur": cur, "eur": eur(amount, cur),
@@ -397,11 +400,16 @@ def print_sk(rows, a=None):
             print(json.dumps(r["raw"])[:300])
             continue
         e = f"{r['eur']:.0f}" if r.get("eur") is not None else "?"
-        print(f"{(r['price'] or 0):>7.0f} {r['cur']:<3} {e:>6}  {r['type'][:18]:<18} {r['stops'][:8]:<8} {r['duration'][:17]:<17} "
+        pr = f"{r['price']:.0f}" if r.get("price") is not None else "n/a"
+        print(f"{pr:>7} {r['cur']:<3} {e:>6}  {r['type'][:18]:<18} {r['stops'][:8]:<8} {r['duration'][:17]:<17} "
               f"{r['route'][:32]:<32} {r['carriers']}\n{'':>13}{' | '.join(r['segments'])}\n{'':>13}{r['link']}")
     if a is not None and a.adults > 1:
         print(f"Prices are PARTY TOTALS for {a.adults} adults (verified 2026-10-04).")
     print("EUR = USD converted at the mid-market rate (fx.py). No bag data: check the allowance at checkout.")
+    missing = sum(1 for r in rows if "raw" not in r and r.get("price") is None)
+    if missing:
+        print(f"WARNING: Skiplagged returned NO PRICE for {missing}/{len(rows)} rows (server-side; seen for round trips "
+              "on 2026-10-04). Use one-way `sk` searches per direction, or other sources, for prices.")
 
 
 def log_rows(rows, a, source):

@@ -71,7 +71,7 @@ python3 $S/kiwi_graphql.py search --from ZAG,VIE,BUD --to TYO,OSA --dates D1..D2
 python3 $S/mcp_flights.py kiwi ZAG,VIE,BUD TYO,OSA D --flex 3 --ret R --ret-flex 3 --adults N   # also builds OW+OW pairs (tkt column)
 python3 $S/aviasales.py --from BUD --to TYO --depart D --return R --adults N     # read cheapest_with_baggage; repeat per origin
 python3 $S/booking_flights.py --from BUD --to TYO --depart D --return R --adults N
-python3 $S/mcp_flights.py sk BUD TYO D --ret R --adults N                        # hidden-city OFF by default; EUR column
+python3 $S/mcp_flights.py sk BUD TYO D --ret R --adults N                        # hidden-city OFF by default; EUR column; RT prices 'n/a'? → one-way per direction
 python3 $S/gflights.py search --from ZAG,LJU,GRZ,VIE,BUD,BEG,VCE --to TYO,OSA --date D --return R --bags 1 --adults N   # airline baseline; NO Chinese carriers
 python3 $S/matrix.py search --from BUD --to TYO --date D --return R --carriers MU,CA,QR --adults N   # + carriers seen elsewhere; ~40 s each
 ```

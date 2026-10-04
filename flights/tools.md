@@ -191,6 +191,7 @@ python3 mcp_flights.py tools sk                                       # raw tool
 - **Prices** come in USD, with an added **EUR** column (an `eur` key in JSON, so `monitor.py` can track `sk` checks).
 - **Round trips** print as `out | back`, with all carriers, and the logged destination is correct. Every RT deep link contains `#trip=OUT,RET`, but that does NOT mean two separate one-way tickets.
 - **Passengers:** `--adults N` gives party totals.
+- **Round trips can come back unpriced.** In the final check on 2026-10-04 the server returned no price ("—") for every RT row; earlier the same day RT prices worked. The script shows `n/a` and warns. Then search each direction as a one-way `sk` (those still priced).
 
 ## 6. momondo / Kayak: `kayak.py` (no browser; poll API)
 ```bash
