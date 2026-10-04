@@ -385,10 +385,18 @@ def parse_calendar(inner: Any) -> list[dict]:
 
 
 def parse_ds1_html(html: str) -> Any:
-    m = re.search(r"AF_initDataCallback\(\{key: 'ds:1'.*?data:(.*?), sideChannel: \{\}\}\);</script>", html, re.S)
-    if not m:
+    """Extract the `ds:1` AF_initDataCallback payload (search results) from a results page."""
+    i = html.find("key: 'ds:1'")
+    if i < 0:
         return None
-    return json.loads(m.group(1))
+    j = html.find("data:", i)
+    if j < 0:
+        return None
+    try:
+        obj, _ = json.JSONDecoder().raw_decode(html[j + 5:])
+        return obj
+    except ValueError:
+        return None
 
 
 # --------------------------------------------------------------------------------------

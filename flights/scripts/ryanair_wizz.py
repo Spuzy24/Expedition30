@@ -151,8 +151,14 @@ def wizz_api() -> str:
 
 
 def _wizz_headers():
-    return {"origin": "https://www.wizzair.com", "referer": "https://www.wizzair.com/",
-            "content-type": "application/json", "user-agent": UA}
+    h = {"origin": "https://www.wizzair.com", "referer": "https://www.wizzair.com/",
+         "content-type": "application/json", "user-agent": UA}
+    # After the first call Wizz sets a RequestVerificationToken cookie and then rejects
+    # requests ("InvalidProtocol") unless the same value is echoed in this header.
+    tok = next((c.value for c in S.cookies if c.name == "RequestVerificationToken"), None)
+    if tok:
+        h["x-requestverificationtoken"] = tok
+    return h
 
 
 def wizz_map() -> dict[str, list[str]]:
@@ -256,6 +262,14 @@ def cmd_anywhere(a) -> list[dict]:
                     rows.append(best_o)
     if a.max_price:
         rows = [x for x in rows if x["price_eur"] is not None and x["price_eur"] <= a.max_price]
+    # Wizz answers some city-group queries with the sibling airport (e.g. DXB -> AUH): dedupe
+    seen, uniq = set(), []
+    for x in rows:
+        k = (x["airline"], x["from"], x["to"], x["date"], x.get("ret_date"), x["price"])
+        if k not in seen:
+            seen.add(k)
+            uniq.append(x)
+    rows = uniq
     rows.sort(key=lambda x: (x["price_eur"] is None, x["price_eur"] or 0))
     cols = [("airline", "AL"), ("from", "FROM"), ("to", "TO"), ("to_city", "CITY"),
             ("date", "DEPART"), ("arr", "ARR"), ("flight", "FLIGHT")]

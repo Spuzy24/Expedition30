@@ -149,15 +149,15 @@ def split_codes(values: Sequence[str] | str | None) -> list[str]:
 
 # ----------------------------------------------------------------------- output
 def print_table(rows: list[dict], cols: list[tuple[str, str]] | None = None,
-                limit: int | None = None, file=sys.stdout) -> None:
-    """cols = [(key, header), ...]. Values are str()'d and truncated to 60 chars."""
+                limit: int | None = None, file=sys.stdout, maxw: int = 60) -> None:
+    """cols = [(key, header), ...]. Values are str()'d and truncated to `maxw` chars."""
     if not rows:
         print("(no results)", file=file)
         return
     if cols is None:
         cols = [(k, k) for k in rows[0].keys()]
     rows = rows[:limit] if limit else rows
-    cells = [[("" if r.get(k) is None else str(r.get(k)))[:60] for k, _ in cols] for r in rows]
+    cells = [[("" if r.get(k) is None else str(r.get(k)))[:maxw] for k, _ in cols] for r in rows]
     widths = [max(len(h), *(len(c[i]) for c in cells)) for i, (_, h) in enumerate(cols)]
     print("  ".join(h.ljust(w) for (_, h), w in zip(cols, widths)), file=file)
     print("  ".join("-" * w for w in widths), file=file)

@@ -58,3 +58,22 @@ Air China gives free transit hotels on long PEK connections.
 carrier (KE RT is far below 2×OW; MU RT = 2×OW) → always price both, plus open-jaw / mixed
 carriers. (3) Engines disagree, so use several (Kiwi didn't show Air China's new ZAG route
 on that date; Skiplagged found OU+HO via BRU).
+
+## 2026-10-04: Air China (CA) direct-site test, the new ZAG route
+- `www.airchina.com` / `.hr`: connection dropped right after TLS hello (bot/IP block) → unusable from the cloud.
+- `www.airchina.at` (and .de) load in headless Chromium. The search form (`/CAPortal/dyn/portal/doEnc`,
+  fields B_LOCATION_1/E_LOCATION_1/B_DATE_1 dd/MM/yyyy/IS_FLEXIBLE=TRUE (±3 days)/TRIP_TYPE R) hands off
+  to the Amadeus engine at `https://digital.airchina.com/booking`. The origin widget refuses programmatic
+  input, the anti-bot layer 403s rapid navigation, and after ~6 attempts I got no results page. **Verdict:
+  not reliably automatable. Ask the user to run the airchina.com search in their own browser** (1–2 min),
+  or use the proxies below.
+- Air China EU sites advertise **"Limited-time ticket discounts Friday–Sunday: up to 6% direct discount"**
+  (Europe → worldwide) → if booking CA direct, do it Fri–Sun. Other promo pages seen: JPYZ, EU_OTPG2026
+  (Bucharest launch?), baggageEU2026, duorenEU2026 (2-person deal?), xsthEU2026, DiscountsforDestinations.
+- **Kiwi DOES carry the ZAG–(OTP)–PEK flight**, but only shows it when filtered (`--only-airlines CA`):
+  - OW ZAG→HND Wed 20 Jan 2027: **€625** incl. 1 checked bag (dep 10:45, ~20–22 h).
+  - RT ZAG↔TYO Jan/Feb: **€1,524–1,879**. Implausible next to the €625 OW, so Kiwi is probably stitching
+    separate one-ways / high buckets. **Don't trust Kiwi for CA return pricing; check GF / Trip.com / direct.**
+  - ZAG→PEK OW €686–850.
+- Lesson: an engine's default "cheapest 15" can hide a carrier entirely → always run per-carrier
+  filtered queries for the key carriers (CA, MU, CZ, HU, KE, TK, QR, EY, LO).
