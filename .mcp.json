@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "kiwi": {
+      "type": "http",
+      "url": "https://mcp.kiwi.com"
+    },
+    "skiplagged": {
+      "type": "http",
+      "url": "https://mcp.skiplagged.com/mcp"
+    }
+  }
+}
