@@ -1,0 +1,9637 @@
+{
+ "query": {
+  "cmd": "search",
+  "origins": "ZAG,VIE,BUD",
+  "to": "TYO,OSA",
+  "route": null,
+  "ext": null,
+  "route_ret": null,
+  "ext_ret": null,
+  "sales_city": null,
+  "curr": "EUR",
+  "adults": 1,
+  "cabin": "economy",
+  "max_stops": null,
+  "extra_stops": 1,
+  "no_avail": false,
+  "no_airport_change": false,
+  "backend": "http",
+  "top": 15,
+  "out": "flights/searches/dryrun-tyo-2027-05/matrix_carriers.json",
+  "json_only": false,
+  "sleep": 5.0,
+  "date": "2027-05-12",
+  "ret": "2027-05-26",
+  "slice": null,
+  "minus": 0,
+  "plus": 0,
+  "page_size": 50,
+  "carriers": "MU,CA,CZ,TK,QR"
+ },
+ "per_carrier": [
+  {
+   "carrier": "MU",
+   "min": 678.76,
+   "n": 200,
+   "matrix_url": "https://matrix.itasoftware.com/flights?search=eyJ0eXBlIjoicm91bmQtdHJpcCIsInNsaWNlcyI6W3sib3JpZ2luIjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJkZXN0IjpbIlRZTyIsIk9TQSJdLCJyb3V0aW5nIjoiTVUrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTEyIiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19LHsib3JpZ2luIjpbIlRZTyIsIk9TQSJdLCJkZXN0IjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJyb3V0aW5nIjoiTVUrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTI2IiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19XSwib3B0aW9ucyI6eyJjYWJpbiI6IkNPQUNIIiwic3RvcHMiOiItMSIsImV4dHJhU3RvcHMiOiIxIiwiYWxsb3dBaXJwb3J0Q2hhbmdlcyI6InRydWUiLCJzaG93T25seUF2YWlsYWJsZSI6InRydWUiLCJjdXJyZW5jeSI6eyJkaXNwbGF5TmFtZSI6IkVVUiIsImNvZGUiOiJFVVIifX0sInBheCI6eyJhZHVsdHMiOiIxIn19"
+  },
+  {
+   "carrier": "CA",
+   "min": 1143.97,
+   "n": 144,
+   "matrix_url": "https://matrix.itasoftware.com/flights?search=eyJ0eXBlIjoicm91bmQtdHJpcCIsInNsaWNlcyI6W3sib3JpZ2luIjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJkZXN0IjpbIlRZTyIsIk9TQSJdLCJyb3V0aW5nIjoiQ0ErIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTEyIiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19LHsib3JpZ2luIjpbIlRZTyIsIk9TQSJdLCJkZXN0IjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJyb3V0aW5nIjoiQ0ErIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTI2IiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19XSwib3B0aW9ucyI6eyJjYWJpbiI6IkNPQUNIIiwic3RvcHMiOiItMSIsImV4dHJhU3RvcHMiOiIxIiwiYWxsb3dBaXJwb3J0Q2hhbmdlcyI6InRydWUiLCJzaG93T25seUF2YWlsYWJsZSI6InRydWUiLCJjdXJyZW5jeSI6eyJkaXNwbGF5TmFtZSI6IkVVUiIsImNvZGUiOiJFVVIifX0sInBheCI6eyJhZHVsdHMiOiIxIn19"
+  },
+  {
+   "carrier": "CZ",
+   "min": null,
+   "n": 0,
+   "matrix_url": "https://matrix.itasoftware.com/flights?search=eyJ0eXBlIjoicm91bmQtdHJpcCIsInNsaWNlcyI6W3sib3JpZ2luIjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJkZXN0IjpbIlRZTyIsIk9TQSJdLCJyb3V0aW5nIjoiQ1orIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTEyIiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19LHsib3JpZ2luIjpbIlRZTyIsIk9TQSJdLCJkZXN0IjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJyb3V0aW5nIjoiQ1orIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTI2IiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19XSwib3B0aW9ucyI6eyJjYWJpbiI6IkNPQUNIIiwic3RvcHMiOiItMSIsImV4dHJhU3RvcHMiOiIxIiwiYWxsb3dBaXJwb3J0Q2hhbmdlcyI6InRydWUiLCJzaG93T25seUF2YWlsYWJsZSI6InRydWUiLCJjdXJyZW5jeSI6eyJkaXNwbGF5TmFtZSI6IkVVUiIsImNvZGUiOiJFVVIifX0sInBheCI6eyJhZHVsdHMiOiIxIn19"
+  },
+  {
+   "carrier": "TK",
+   "min": 1632.35,
+   "n": 210,
+   "matrix_url": "https://matrix.itasoftware.com/flights?search=eyJ0eXBlIjoicm91bmQtdHJpcCIsInNsaWNlcyI6W3sib3JpZ2luIjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJkZXN0IjpbIlRZTyIsIk9TQSJdLCJyb3V0aW5nIjoiVEsrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTEyIiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19LHsib3JpZ2luIjpbIlRZTyIsIk9TQSJdLCJkZXN0IjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJyb3V0aW5nIjoiVEsrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTI2IiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19XSwib3B0aW9ucyI6eyJjYWJpbiI6IkNPQUNIIiwic3RvcHMiOiItMSIsImV4dHJhU3RvcHMiOiIxIiwiYWxsb3dBaXJwb3J0Q2hhbmdlcyI6InRydWUiLCJzaG93T25seUF2YWlsYWJsZSI6InRydWUiLCJjdXJyZW5jeSI6eyJkaXNwbGF5TmFtZSI6IkVVUiIsImNvZGUiOiJFVVIifX0sInBheCI6eyJhZHVsdHMiOiIxIn19"
+  },
+  {
+   "carrier": "QR",
+   "min": 819.18,
+   "n": 216,
+   "matrix_url": "https://matrix.itasoftware.com/flights?search=eyJ0eXBlIjoicm91bmQtdHJpcCIsInNsaWNlcyI6W3sib3JpZ2luIjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJkZXN0IjpbIlRZTyIsIk9TQSJdLCJyb3V0aW5nIjoiUVIrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTEyIiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19LHsib3JpZ2luIjpbIlRZTyIsIk9TQSJdLCJkZXN0IjpbIlpBRyIsIlZJRSIsIkJVRCJdLCJyb3V0aW5nIjoiUVIrIiwiZGF0ZXMiOnsic2VhcmNoRGF0ZVR5cGUiOiJzcGVjaWZpYyIsImRlcGFydHVyZURhdGUiOiIyMDI3LTA1LTI2IiwiZGVwYXJ0dXJlRGF0ZVR5cGUiOiJkZXBhcnQiLCJkZXBhcnR1cmVEYXRlTW9kaWZpZXIiOiIwIiwiZGVwYXJ0dXJlRGF0ZVByZWZlcnJlZFRpbWVzIjpbXSwicmV0dXJuRGF0ZVR5cGUiOiJkZXBhcnQiLCJyZXR1cm5EYXRlTW9kaWZpZXIiOiIwIiwicmV0dXJuRGF0ZVByZWZlcnJlZFRpbWVzIjpbXX19XSwib3B0aW9ucyI6eyJjYWJpbiI6IkNPQUNIIiwic3RvcHMiOiItMSIsImV4dHJhU3RvcHMiOiIxIiwiYWxsb3dBaXJwb3J0Q2hhbmdlcyI6InRydWUiLCJzaG93T25seUF2YWlsYWJsZSI6InRydWUiLCJjdXJyZW5jeSI6eyJkaXNwbGF5TmFtZSI6IkVVUiIsImNvZGUiOiJFVVIifX0sInBheCI6eyJhZHVsdHMiOiIxIn19"
+  }
+ ],
+ "solutions": [
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU523"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1410,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32005",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU521"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1595,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32009",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU539"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1750,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200B",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU271"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1895,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200C",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU523"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1410,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32002",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU521"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1595,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32006",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU539"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1750,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32008",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU271"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1895,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200A",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU523"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1410,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32001",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU521"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1595,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32003",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU539"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1750,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32004",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.76,
+   "display_total": "EUR678.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU271"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1895,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH32007",
+   "price_per_mile": "EUR0.0491281384",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.87,
+   "display_total": "EUR678.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU523"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1410,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200D",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.87,
+   "display_total": "EUR678.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU521"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1595,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200E",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.87,
+   "display_total": "EUR678.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU539"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1750,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200F",
+   "price_per_mile": "EUR0.0493854099",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 678.87,
+   "display_total": "EUR678.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU271"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1895,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200G",
+   "price_per_mile": "EUR0.0492564382",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU602",
+      "MU521"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG006",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU602",
+      "MU539"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1380,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG008",
+   "price_per_mile": "EUR0.0569066921",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU602",
+      "MU271"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1525,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG009",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU602",
+      "MU521"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG003",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU602",
+      "MU539"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1380,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG005",
+   "price_per_mile": "EUR0.0569066921",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU602",
+      "MU271"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1525,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG007",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU602",
+      "MU521"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG001",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU602",
+      "MU539"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1380,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG002",
+   "price_per_mile": "EUR0.0569066921",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.27,
+   "display_total": "EUR715.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU602",
+      "MU271"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1525,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG004",
+   "price_per_mile": "EUR0.0567443335",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.38,
+   "display_total": "EUR715.38",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU602",
+      "MU521"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00A",
+   "price_per_mile": "EUR0.0569066921",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.38,
+   "display_total": "EUR715.38",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU602",
+      "MU539"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1380,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00B",
+   "price_per_mile": "EUR0.0570699825",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 715.38,
+   "display_total": "EUR715.38",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU602",
+      "MU271"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1525,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00C",
+   "price_per_mile": "EUR0.0569066921",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU225"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1370,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200L",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU515"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200M",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T21:00+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU729"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1900,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200P",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU225"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1370,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200J",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU515"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200K",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T21:00+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU729"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1900,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200O",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU225"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1370,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200H",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU515"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200I",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.76,
+   "display_total": "EUR733.76",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T21:00+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU729"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1900,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T16:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU522",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200N",
+   "price_per_mile": "EUR0.0543019901",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.87,
+   "display_total": "EUR733.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU225"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1370,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200Q",
+   "price_per_mile": "EUR0.0544469995",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.87,
+   "display_total": "EUR733.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU515"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200S",
+   "price_per_mile": "EUR0.0544469995",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 733.87,
+   "display_total": "EUR733.87",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T06:20+02:00",
+     "arrival": "2027-05-13T21:00+09:00",
+     "flights": [
+      "MU1912",
+      "MU554",
+      "MU729"
+     ],
+     "stops": [
+      "CDG",
+      "PVG"
+     ],
+     "duration_min": 1900,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU540",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1145,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "WEjVpfmFjp7M1PmTOzLH3200W",
+   "price_per_mile": "EUR0.0544469995",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 734.73,
+   "display_total": "EUR734.73",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T15:55+09:00",
+     "flights": [
+      "MU602",
+      "MU521"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T11:20+02:00",
+     "flights": [
+      "MU540",
+      "MU553",
+      "MU1909"
+     ],
+     "stops": [
+      "PVG",
+      "CDG"
+     ],
+     "duration_min": 1340,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00D",
+   "price_per_mile": "EUR0.0533188249",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 734.73,
+   "display_total": "EUR734.73",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T18:30+09:00",
+     "flights": [
+      "MU602",
+      "MU539"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1380,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T11:20+02:00",
+     "flights": [
+      "MU540",
+      "MU553",
+      "MU1909"
+     ],
+     "stops": [
+      "PVG",
+      "CDG"
+     ],
+     "duration_min": 1340,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00E",
+   "price_per_mile": "EUR0.0534584334",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 734.73,
+   "display_total": "EUR734.73",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T20:55+09:00",
+     "flights": [
+      "MU602",
+      "MU271"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1525,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T20:00+09:00",
+     "arrival": "2027-05-27T11:20+02:00",
+     "flights": [
+      "MU540",
+      "MU553",
+      "MU1909"
+     ],
+     "stops": [
+      "PVG",
+      "CDG"
+     ],
+     "duration_min": 1340,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00F",
+   "price_per_mile": "EUR0.0533188249",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU602",
+      "MU225"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00M",
+   "price_per_mile": "EUR0.0605002437",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU602",
+      "MU523"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1040,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00N",
+   "price_per_mile": "EUR0.0590426376",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU602",
+      "MU515"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00O",
+   "price_per_mile": "EUR0.0605002437",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T21:00+09:00",
+     "flights": [
+      "MU602",
+      "MU729"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T10:55+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU272",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1690,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00r",
+   "price_per_mile": "EUR0.0605002437",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T12:10+09:00",
+     "flights": [
+      "MU602",
+      "MU225"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00J",
+   "price_per_mile": "EUR0.0605002437",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T12:50+09:00",
+     "flights": [
+      "MU602",
+      "MU523"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1040,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00K",
+   "price_per_mile": "EUR0.0590426376",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 744.27,
+   "display_total": "EUR744.27",
+   "carriers": [
+    "MU"
+   ],
+   "dominant_carrier": "MU",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:30+02:00",
+     "arrival": "2027-05-13T13:20+09:00",
+     "flights": [
+      "MU602",
+      "MU515"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T13:50+09:00",
+     "arrival": "2027-05-27T08:05+02:00",
+     "flights": [
+      "MU524",
+      "MU601"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "OaGWlFWssyCNnFOhInimKG00L",
+   "price_per_mile": "EUR0.0605002437",
+   "forced_carrier": "MU"
+  },
+  {
+   "price": 819.18,
+   "display_total": "EUR819.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF001",
+   "price_per_mile": "EUR0.0548751924",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 819.18,
+   "display_total": "EUR819.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF002",
+   "price_per_mile": "EUR0.0547762192",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 867.18,
+   "display_total": "EUR867.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF003",
+   "price_per_mile": "EUR0.0580873988",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 867.18,
+   "display_total": "EUR867.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF004",
+   "price_per_mile": "EUR0.057982632",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 901.02,
+   "display_total": "EUR901.02",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF005",
+   "price_per_mile": "EUR0.0601573963",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 949.02,
+   "display_total": "EUR949.02",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF006",
+   "price_per_mile": "EUR0.0633586769",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 972.0,
+   "display_total": "EUR972.00",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF007",
+   "price_per_mile": "EUR0.0645890093",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 972.0,
+   "display_total": "EUR972.00",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF008",
+   "price_per_mile": "EUR0.0644733352",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 973.18,
+   "display_total": "EUR973.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00A",
+   "price_per_mile": "EUR0.0646059963",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 973.18,
+   "display_total": "EUR973.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00C",
+   "price_per_mile": "EUR0.0644904986",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 973.18,
+   "display_total": "EUR973.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF009",
+   "price_per_mile": "EUR0.0646059963",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 973.18,
+   "display_total": "EUR973.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00B",
+   "price_per_mile": "EUR0.0644904986",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1045.35,
+   "display_total": "EUR1045.35",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR184",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1490,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH001",
+   "price_per_mile": "EUR0.0688973785",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1046.53,
+   "display_total": "EUR1046.53",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR184",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1490,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH003",
+   "price_per_mile": "EUR0.068840818",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1046.53,
+   "display_total": "EUR1046.53",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR184",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1490,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH002",
+   "price_per_mile": "EUR0.068840818",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1047.66,
+   "display_total": "EUR1047.66",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T09:55+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR190",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1860,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH004",
+   "price_per_mile": "EUR0.0690291135",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1048.84,
+   "display_total": "EUR1048.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T09:55+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR190",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1860,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH006",
+   "price_per_mile": "EUR0.0689723191",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1048.84,
+   "display_total": "EUR1048.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T09:55+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR190",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1860,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH005",
+   "price_per_mile": "EUR0.0689723191",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1051.0,
+   "display_total": "EUR1051.00",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:00+02:00",
+     "flights": [
+      "QR813",
+      "QR217"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00D",
+   "price_per_mile": "EUR0.0700666667",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1051.0,
+   "display_total": "EUR1051.00",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:00+02:00",
+     "flights": [
+      "QR813",
+      "QR217"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00E",
+   "price_per_mile": "EUR0.0699407733",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1051.53,
+   "display_total": "EUR1051.53",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR184",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1490,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH008",
+   "price_per_mile": "EUR0.0697797825",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1051.53,
+   "display_total": "EUR1051.53",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR184",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1490,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH007",
+   "price_per_mile": "EUR0.0697797825",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1053.84,
+   "display_total": "EUR1053.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T09:55+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR190",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1860,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH00A",
+   "price_per_mile": "EUR0.0699124437",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1053.84,
+   "display_total": "EUR1053.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T09:55+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR190",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1860,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH009",
+   "price_per_mile": "EUR0.0699124437",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1053.84,
+   "display_total": "EUR1053.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00F",
+   "price_per_mile": "EUR0.0698013246",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1055.02,
+   "display_total": "EUR1055.02",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00H",
+   "price_per_mile": "EUR0.0698089509",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1055.02,
+   "display_total": "EUR1055.02",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00G",
+   "price_per_mile": "EUR0.0698089509",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1065.18,
+   "display_total": "EUR1065.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "QR809",
+      "QR189"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1235,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00I",
+   "price_per_mile": "EUR0.0707084108",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1065.18,
+   "display_total": "EUR1065.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "QR809",
+      "QR189"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1235,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00J",
+   "price_per_mile": "EUR0.0705820036",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1067.87,
+   "display_total": "EUR1067.87",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1195,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00K",
+   "price_per_mile": "EUR0.0713426854",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1067.87,
+   "display_total": "EUR1067.87",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "QR202",
+      "QR806"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1570,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00L",
+   "price_per_mile": "EUR0.0713426854",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1074.64,
+   "display_total": "EUR1074.64",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "HND",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR218",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ002",
+   "price_per_mile": "EUR0.0715378985",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1074.64,
+   "display_total": "EUR1074.64",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "HND",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR218",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ001",
+   "price_per_mile": "EUR0.0715378985",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1076.95,
+   "display_total": "EUR1076.95",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "NRT",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR218",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2295,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ004",
+   "price_per_mile": "EUR0.0715424472",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1076.95,
+   "display_total": "EUR1076.95",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "NRT",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR218",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2295,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ003",
+   "price_per_mile": "EUR0.0715424472",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1092.88,
+   "display_total": "EUR1092.88",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T21:35+09:00",
+     "flights": [
+      "QR202",
+      "QR818",
+      "QR5842"
+     ],
+     "stops": [
+      "DOH",
+      "HKG"
+     ],
+     "duration_min": 1715,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00M",
+   "price_per_mile": "EUR0.070398042",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1093.18,
+   "display_total": "EUR1093.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR202",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1855,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "ZAG",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T06:55+02:00",
+     "flights": [
+      "QR809",
+      "QR215"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1230,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00N",
+   "price_per_mile": "EUR0.0728022893",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1093.18,
+   "display_total": "EUR1093.18",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2635,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "ZAG",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T06:55+02:00",
+     "flights": [
+      "QR809",
+      "QR215"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1230,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00O",
+   "price_per_mile": "EUR0.0726717152",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1115.87,
+   "display_total": "EUR1115.87",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T12:55+09:00",
+     "flights": [
+      "QR202",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1195,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00P",
+   "price_per_mile": "EUR0.0745490982",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1115.87,
+   "display_total": "EUR1115.87",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "QR202",
+      "QR806"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1570,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR809",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1645,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00Q",
+   "price_per_mile": "EUR0.0745490982",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1121.87,
+   "display_total": "EUR1121.87",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T17:25+09:00",
+     "flights": [
+      "QR202",
+      "QR802"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1465,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "BUD",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T13:50+02:00",
+     "flights": [
+      "QR807",
+      "QR199"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1345,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00U",
+   "price_per_mile": "EUR0.0761917697",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1130.46,
+   "display_total": "EUR1130.46",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "HND",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR218",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ005",
+   "price_per_mile": "EUR0.0747373291",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1131.5,
+   "display_total": "EUR1131.50",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR184",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1405,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH00B",
+   "price_per_mile": "EUR0.0743123482",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1131.64,
+   "display_total": "EUR1131.64",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "HND",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR218",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ007",
+   "price_per_mile": "EUR0.0746701847",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1131.64,
+   "display_total": "EUR1131.64",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "HND",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-13T23:55+09:00",
+     "flights": [
+      "QR218",
+      "QR812"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1515,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ006",
+   "price_per_mile": "EUR0.0746701847",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1132.68,
+   "display_total": "EUR1132.68",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR184",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1405,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH00D",
+   "price_per_mile": "EUR0.0742463959",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1132.68,
+   "display_total": "EUR1132.68",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:05+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR184",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1405,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T22:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR807",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1360,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6nBw8rMJEkQLxDV097HuRH00C",
+   "price_per_mile": "EUR0.0742463959",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1132.77,
+   "display_total": "EUR1132.77",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "NRT",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR218",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2295,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:05+02:00",
+     "flights": [
+      "QR813",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1180,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ008",
+   "price_per_mile": "EUR0.0747361478",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1132.84,
+   "display_total": "EUR1132.84",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T10:00+02:00",
+     "arrival": "2027-05-13T22:30+09:00",
+     "flights": [
+      "QR202",
+      "QR802",
+      "QR6843"
+     ],
+     "stops": [
+      "DOH",
+      "KIX"
+     ],
+     "duration_min": 1770,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T01:25+09:00",
+     "arrival": "2027-05-26T14:00+02:00",
+     "flights": [
+      "QR813",
+      "QR217"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "B4qt0aVKNl6NlVRPpVn3XF00X",
+   "price_per_mile": "EUR0.0752773903",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1133.95,
+   "display_total": "EUR1133.95",
+   "carriers": [
+    "QR"
+   ],
+   "dominant_carrier": "QR",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "NRT",
+     "departure": "2027-05-12T15:40+02:00",
+     "arrival": "2027-05-14T12:55+09:00",
+     "flights": [
+      "QR218",
+      "QR808"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 2295,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T17:25+09:00",
+     "arrival": "2027-05-27T14:05+02:00",
+     "flights": [
+      "QR809",
+      "QR183"
+     ],
+     "stops": [
+      "DOH"
+     ],
+     "duration_min": 1660,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "SmP5MvBfIEKRt7riQRXHjQ00A",
+   "price_per_mile": "EUR0.074669125",
+   "forced_carrier": "QR"
+  },
+  {
+   "price": 1143.97,
+   "display_total": "EUR1143.97",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T14:30+09:00",
+     "flights": [
+      "CA842",
+      "CA133"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1080,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9001",
+   "price_per_mile": "EUR0.0982058546",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1162.97,
+   "display_total": "EUR1162.97",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:25+09:00",
+     "flights": [
+      "CA842",
+      "CA181"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 955,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9002",
+   "price_per_mile": "EUR0.0998368959",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1191.44,
+   "display_total": "EUR1191.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T14:30+09:00",
+     "flights": [
+      "CA842",
+      "CA133"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1080,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9003",
+   "price_per_mile": "EUR0.1005567741",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1210.44,
+   "display_total": "EUR1210.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T14:30+09:00",
+     "flights": [
+      "CA842",
+      "CA133"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1080,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9005",
+   "price_per_mile": "EUR0.1021596086",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1210.44,
+   "display_total": "EUR1210.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:25+09:00",
+     "flights": [
+      "CA842",
+      "CA181"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 955,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9004",
+   "price_per_mile": "EUR0.1021596086",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1229.44,
+   "display_total": "EUR1229.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:25+09:00",
+     "flights": [
+      "CA842",
+      "CA181"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 955,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9007",
+   "price_per_mile": "EUR0.1037624431",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1229.44,
+   "display_total": "EUR1229.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T14:30+09:00",
+     "flights": [
+      "CA842",
+      "CA133"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1080,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9006",
+   "price_per_mile": "EUR0.1037624431",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1248.44,
+   "display_total": "EUR1248.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:25+09:00",
+     "flights": [
+      "CA842",
+      "CA181"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 955,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9008",
+   "price_per_mile": "EUR0.1053652776",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1508.21,
+   "display_total": "EUR1508.21",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T15:25+09:00",
+     "flights": [
+      "CA7004",
+      "CA857"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1150,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz9009",
+   "price_per_mile": "EUR0.1277730737",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1591.68,
+   "display_total": "EUR1591.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T14:00+09:00",
+     "flights": [
+      "CA7004",
+      "CA929"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1065,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900C",
+   "price_per_mile": "EUR0.1292312688",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1591.68,
+   "display_total": "EUR1591.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T14:00+09:00",
+     "flights": [
+      "CA7004",
+      "CA929"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1065,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900B",
+   "price_per_mile": "EUR0.1292312688",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1591.68,
+   "display_total": "EUR1591.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T14:00+09:00",
+     "flights": [
+      "CA7004",
+      "CA929"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1065,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900A",
+   "price_per_mile": "EUR0.1292312688",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1632.35,
+   "display_total": "EUR1632.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1898",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1170,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M001",
+   "price_per_mile": "EUR0.130462571",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1637.35,
+   "display_total": "EUR1637.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1888",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 975,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M002",
+   "price_per_mile": "EUR0.1308620277",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1647.78,
+   "display_total": "EUR1647.78",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL001",
+   "price_per_mile": "EUR0.1332794178",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1657.19,
+   "display_total": "EUR1657.19",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "BUD",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA928",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL002",
+   "price_per_mile": "EUR0.1349283855",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1698.21,
+   "display_total": "EUR1698.21",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T14:00+09:00",
+     "flights": [
+      "CA7004",
+      "CA929"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1065,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900D",
+   "price_per_mile": "EUR0.1402509494",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1728.25,
+   "display_total": "EUR1728.25",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL003",
+   "price_per_mile": "EUR0.1375497216",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1744.19,
+   "display_total": "EUR1744.19",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "BUD",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA928",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL004",
+   "price_per_mile": "EUR0.1422283805",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1744.19,
+   "display_total": "EUR1744.19",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "BUD",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA928",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL005",
+   "price_per_mile": "EUR0.1422283805",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1746.25,
+   "display_total": "EUR1746.25",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL006",
+   "price_per_mile": "EUR0.1389817025",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1765.25,
+   "display_total": "EUR1765.25",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL007",
+   "price_per_mile": "EUR0.1404932379",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1768.68,
+   "display_total": "EUR1768.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T15:25+09:00",
+     "flights": [
+      "CA7004",
+      "CA857"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1150,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900G",
+   "price_per_mile": "EUR0.1472326259",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1768.68,
+   "display_total": "EUR1768.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T15:25+09:00",
+     "flights": [
+      "CA7004",
+      "CA857"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1150,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900F",
+   "price_per_mile": "EUR0.1472326259",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1768.68,
+   "display_total": "EUR1768.68",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T15:25+09:00",
+     "flights": [
+      "CA7004",
+      "CA857"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1150,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900E",
+   "price_per_mile": "EUR0.1472326259",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1770.35,
+   "display_total": "EUR1770.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T08:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1890",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M004",
+   "price_per_mile": "EUR0.1398452306",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1770.35,
+   "display_total": "EUR1770.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T10:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1884",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 950,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M003",
+   "price_per_mile": "EUR0.1398452306",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1838.97,
+   "display_total": "EUR1838.97",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:40+09:00",
+     "flights": [
+      "CA842",
+      "CA927"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 970,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900H",
+   "price_per_mile": "EUR0.160695561",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1838.97,
+   "display_total": "EUR1838.97",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA842",
+      "CA167"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1260,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900I",
+   "price_per_mile": "EUR0.1578676282",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1884.56,
+   "display_total": "EUR1884.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T15:25+09:00",
+     "flights": [
+      "CA7004",
+      "CA857"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1150,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "BUD",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA928",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900J",
+   "price_per_mile": "EUR0.1606579733",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1886.44,
+   "display_total": "EUR1886.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:40+09:00",
+     "flights": [
+      "CA842",
+      "CA927"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 970,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900K",
+   "price_per_mile": "EUR0.1619881535",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1886.44,
+   "display_total": "EUR1886.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA842",
+      "CA167"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1260,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900L",
+   "price_per_mile": "EUR0.1591867724",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1901.69,
+   "display_total": "EUR1901.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T09:00+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1036",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1625,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6002",
+   "price_per_mile": "EUR0.1535356797",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1901.69,
+   "display_total": "EUR1901.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T20:30+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1038",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 935,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6001",
+   "price_per_mile": "EUR0.1535356797",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1906.44,
+   "display_total": "EUR1906.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:40+09:00",
+     "flights": [
+      "CA842",
+      "CA927"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 970,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900M",
+   "price_per_mile": "EUR0.1637050391",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1906.44,
+   "display_total": "EUR1906.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA842",
+      "CA167"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1260,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900N",
+   "price_per_mile": "EUR0.1608739666",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1914.56,
+   "display_total": "EUR1914.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T13:15+02:00",
+     "arrival": "2027-05-13T14:00+09:00",
+     "flights": [
+      "CA7004",
+      "CA929"
+     ],
+     "stops": [
+      "PVG"
+     ],
+     "duration_min": 1065,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "BUD",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA928",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1440,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900O",
+   "price_per_mile": "EUR0.1590927973",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1925.44,
+   "display_total": "EUR1925.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T12:40+09:00",
+     "flights": [
+      "CA842",
+      "CA927"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 970,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900P",
+   "price_per_mile": "EUR0.1653360804",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1925.44,
+   "display_total": "EUR1925.44",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T13:30+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA842",
+      "CA167"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1260,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "1t5TM3A6ki5LRwJVJbSGz900Q",
+   "price_per_mile": "EUR0.1624768011",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1943.53,
+   "display_total": "EUR1943.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1898",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1170,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M005",
+   "price_per_mile": "EUR0.1551352646",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1948.53,
+   "display_total": "EUR1948.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1888",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 975,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M006",
+   "price_per_mile": "EUR0.155534275",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1951.46,
+   "display_total": "EUR1951.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T09:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1054",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1590,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N003",
+   "price_per_mile": "EUR0.1566487441",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1951.46,
+   "display_total": "EUR1951.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T13:55+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1058",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N002",
+   "price_per_mile": "EUR0.1566487441",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1951.46,
+   "display_total": "EUR1951.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T20:25+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1056",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 940,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N001",
+   "price_per_mile": "EUR0.1566487441",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1959.35,
+   "display_total": "EUR1959.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1898",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1170,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M007",
+   "price_per_mile": "EUR0.1572907472",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1964.35,
+   "display_total": "EUR1964.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1888",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 975,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M008",
+   "price_per_mile": "EUR0.1576919991",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1967.43,
+   "display_total": "EUR1967.43",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL008",
+   "price_per_mile": "EUR0.1594038555",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1967.43,
+   "display_total": "EUR1967.43",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL009",
+   "price_per_mile": "EUR0.1594038555",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 1996.35,
+   "display_total": "EUR1996.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1898",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M009",
+   "price_per_mile": "EUR0.1576910929",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 1996.35,
+   "display_total": "EUR1996.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1898",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1185,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00A",
+   "price_per_mile": "EUR0.1578656127",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2001.35,
+   "display_total": "EUR2001.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1888",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 980,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00B",
+   "price_per_mile": "EUR0.1580859129",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2001.35,
+   "display_total": "EUR2001.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1888",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 990,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00C",
+   "price_per_mile": "EUR0.1582608696",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2011.35,
+   "display_total": "EUR2011.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1898",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1170,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00D",
+   "price_per_mile": "EUR0.1624152406",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2016.35,
+   "display_total": "EUR2016.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1888",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 975,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00E",
+   "price_per_mile": "EUR0.162818857",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00E",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00F",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00C",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00D",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00A",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2030.9,
+   "display_total": "EUR2030.90",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA161"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1530,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00B",
+   "price_per_mile": "EUR0.1618197754",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2081.53,
+   "display_total": "EUR2081.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T08:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1890",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00G",
+   "price_per_mile": "EUR0.1642214861",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2081.53,
+   "display_total": "EUR2081.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T10:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1884",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 950,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00F",
+   "price_per_mile": "EUR0.1642214861",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2097.35,
+   "display_total": "EUR2097.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T08:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1890",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00I",
+   "price_per_mile": "EUR0.1664022843",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2097.35,
+   "display_total": "EUR2097.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T10:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1884",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 950,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00H",
+   "price_per_mile": "EUR0.1664022843",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2148.46,
+   "display_total": "EUR2148.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "NRT",
+     "departure": "2027-05-12T09:35+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1054",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 980,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N004",
+   "price_per_mile": "EUR0.1704473351",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2149.35,
+   "display_total": "EUR2149.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T08:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1890",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1070,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00K",
+   "price_per_mile": "EUR0.1715197448",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2149.35,
+   "display_total": "EUR2149.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T10:05+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1884",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 950,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00J",
+   "price_per_mile": "EUR0.1715197448",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2186.69,
+   "display_total": "EUR2186.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T09:00+02:00",
+     "arrival": "2027-05-13T08:55+09:00",
+     "flights": [
+      "TK1036",
+      "TK50"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1015,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK8364",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1225,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6003",
+   "price_per_mile": "EUR0.1744714799",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2203.09,
+   "display_total": "EUR2203.09",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA167"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1350,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00G",
+   "price_per_mile": "EUR0.1756035376",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2203.09,
+   "display_total": "EUR2203.09",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:00+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA421"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1500,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "KIX",
+     "to": "VIE",
+     "departure": "2027-05-26T14:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA928",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1430,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00H",
+   "price_per_mile": "EUR0.1756035376",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2209.87,
+   "display_total": "EUR2209.87",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T09:00+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1036",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1625,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6005",
+   "price_per_mile": "EUR0.178197065",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2209.87,
+   "display_total": "EUR2209.87",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T20:30+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1038",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 935,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6004",
+   "price_per_mile": "EUR0.178197065",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2224.69,
+   "display_total": "EUR2224.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T09:00+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1036",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1625,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6007",
+   "price_per_mile": "EUR0.1804249109",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2224.69,
+   "display_total": "EUR2224.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T20:30+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1038",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 935,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6006",
+   "price_per_mile": "EUR0.1804249109",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2262.64,
+   "display_total": "EUR2262.64",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T09:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1054",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1590,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N007",
+   "price_per_mile": "EUR0.1814028057",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2262.64,
+   "display_total": "EUR2262.64",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T13:55+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1058",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N006",
+   "price_per_mile": "EUR0.1814028057",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2262.64,
+   "display_total": "EUR2262.64",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T20:25+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1056",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 940,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N005",
+   "price_per_mile": "EUR0.1814028057",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2266.66,
+   "display_total": "EUR2266.66",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "NRT",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T18:45+09:00",
+     "flights": [
+      "CA436",
+      "CA4575",
+      "CA919"
+     ],
+     "stops": [
+      "CKG",
+      "PVG"
+     ],
+     "duration_min": 1425,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T07:00+02:00",
+     "flights": [
+      "CA422",
+      "CA719"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1010,
+     "cabins": [
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00I",
+   "price_per_mile": "EUR0.1814616186",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA167"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1350,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00N",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:00+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA421"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1500,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T16:00+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA134",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1310,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00O",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA167"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1350,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00K",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:00+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA421"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1500,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T19:15+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA168",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1115,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00M",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T17:30+09:00",
+     "flights": [
+      "CA436",
+      "CA4131",
+      "CA167"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1350,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00J",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2267.56,
+   "display_total": "EUR2267.56",
+   "carriers": [
+    "CA"
+   ],
+   "dominant_carrier": "CA",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "HND",
+     "departure": "2027-05-12T12:00+02:00",
+     "arrival": "2027-05-13T20:00+09:00",
+     "flights": [
+      "CA436",
+      "CA4137",
+      "CA421"
+     ],
+     "stops": [
+      "CKG",
+      "PEK"
+     ],
+     "duration_min": 1500,
+     "cabins": [
+      "BUSINESS",
+      "PREMIUM-COACH",
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:10+09:00",
+     "arrival": "2027-05-27T06:50+02:00",
+     "flights": [
+      "CA422",
+      "CA841"
+     ],
+     "stops": [
+      "PEK"
+     ],
+     "duration_min": 1000,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "0mc1CMQtx48VvFQkHeuXaL00L",
+   "price_per_mile": "EUR0.177798683",
+   "forced_carrier": "CA"
+  },
+  {
+   "price": 2276.69,
+   "display_total": "EUR2276.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T09:00+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1036",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1625,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6009",
+   "price_per_mile": "EUR0.1857410882",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2276.69,
+   "display_total": "EUR2276.69",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "BUD",
+     "to": "KIX",
+     "departure": "2027-05-12T20:30+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1038",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 935,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "CuR0Ex9QqQ3PDRTNStEAk6008",
+   "price_per_mile": "EUR0.1857410882",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2278.46,
+   "display_total": "EUR2278.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T09:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1054",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1590,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N00A",
+   "price_per_mile": "EUR0.1837162435",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2278.46,
+   "display_total": "EUR2278.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T13:55+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1058",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1330,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N009",
+   "price_per_mile": "EUR0.1837162435",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2278.46,
+   "display_total": "EUR2278.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T20:25+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1056",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 940,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N008",
+   "price_per_mile": "EUR0.1837162435",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2307.53,
+   "display_total": "EUR2307.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1898",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00L",
+   "price_per_mile": "EUR0.1820476416",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2307.53,
+   "display_total": "EUR2307.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1898",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1185,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00M",
+   "price_per_mile": "EUR0.1822488946",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2308.35,
+   "display_total": "EUR2308.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1898",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1170,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:35+09:00",
+     "arrival": "2027-05-27T09:05+02:00",
+     "flights": [
+      "TK199",
+      "TK1883"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1110,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00N",
+   "price_per_mile": "EUR0.184469122",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2312.53,
+   "display_total": "EUR2312.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1888",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 980,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00O",
+   "price_per_mile": "EUR0.1824420256",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2312.53,
+   "display_total": "EUR2312.53",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1888",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 990,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "NRT",
+     "to": "VIE",
+     "departure": "2027-05-26T10:25+09:00",
+     "arrival": "2027-05-26T21:50+02:00",
+     "flights": [
+      "TK51",
+      "TK1889"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1105,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00P",
+   "price_per_mile": "EUR0.1826437145",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2313.35,
+   "display_total": "EUR2313.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "KIX",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1888",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 975,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "VIE",
+     "departure": "2027-05-26T21:35+09:00",
+     "arrival": "2027-05-27T09:05+02:00",
+     "flights": [
+      "TK199",
+      "TK1883"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1110,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00Q",
+   "price_per_mile": "EUR0.1848685788",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2323.35,
+   "display_total": "EUR2323.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1898",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1175,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00U",
+   "price_per_mile": "EUR0.1843274112",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2323.35,
+   "display_total": "EUR2323.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T16:35+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1898",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1185,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00Y",
+   "price_per_mile": "EUR0.184532317",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2328.35,
+   "display_total": "EUR2328.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "NRT",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:10+09:00",
+     "flights": [
+      "TK1888",
+      "TK300"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 980,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00S",
+   "price_per_mile": "EUR0.1847239848",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2328.35,
+   "display_total": "EUR2328.35",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "VIE",
+     "to": "HND",
+     "departure": "2027-05-12T19:50+02:00",
+     "arrival": "2027-05-13T19:20+09:00",
+     "flights": [
+      "TK1888",
+      "TK198"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 990,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "ZAG",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:30+02:00",
+     "flights": [
+      "TK8364",
+      "TK1055"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1085,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "NIRgAhS5d56Tv2ejOywt9M00V",
+   "price_per_mile": "EUR0.1849293315",
+   "forced_carrier": "TK"
+  },
+  {
+   "price": 2330.46,
+   "display_total": "EUR2330.46",
+   "carriers": [
+    "TK"
+   ],
+   "dominant_carrier": "TK",
+   "slices": [
+    {
+     "from": "ZAG",
+     "to": "KIX",
+     "departure": "2027-05-12T09:35+02:00",
+     "arrival": "2027-05-13T19:05+09:00",
+     "flights": [
+      "TK1054",
+      "TK86"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1590,
+     "cabins": [
+      "COACH"
+     ]
+    },
+    {
+     "from": "HND",
+     "to": "BUD",
+     "departure": "2027-05-26T08:25+09:00",
+     "arrival": "2027-05-26T19:35+02:00",
+     "flights": [
+      "TK8364",
+      "TK1037"
+     ],
+     "stops": [
+      "IST"
+     ],
+     "duration_min": 1090,
+     "cabins": [
+      "COACH"
+     ]
+    }
+   ],
+   "id": "6ukizeaEPwBO5VTVcUDA8N00D",
+   "price_per_mile": "EUR0.1890204347",
+   "forced_carrier": "TK"
+  }
+ ]
+}
