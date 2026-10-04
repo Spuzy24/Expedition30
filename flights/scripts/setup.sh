@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 # One-shot environment setup for the flight-hunt toolkit in a fresh (cloud) container.
-# Idempotent: safe to re-run. Exits non-zero if a required step failed. Usage:  bash flights/scripts/setup.sh
+# Idempotent: safe to re-run. Exits non-zero if a required step failed.
+#
+# Usage:  bash flights/scripts/setup.sh           # deps, Playwright pin, Chromium proxy CA, quick smoke tests (~5 s cached)
+#         bash flights/scripts/setup.sh --full    # + one tiny LIVE request per core scraper (~1-2 min):
+#                                                 #   kiwi_graphql places, ryanair_wizz routes, kayak (momondo) one-way,
+#                                                 #   gflights one-way, flixbus_ground city lookup. Each runs under a
+#                                                 #   timeout and prints OK/FAIL; a scraper failure is reported but does
+#                                                 #   NOT change the exit code (the site may just be down/throttling).
 set -uo pipefail
 cd "$(dirname "$0")"
+START=$(date +%s)
+FULL=0
+for arg in "$@"; do
+  case "$arg" in
+    --full) FULL=1 ;;
+    -h|--help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown option: $arg (use --full or --help)"; exit 2 ;;
+  esac
+done
 FAIL=0
 fail() { echo "  ! $*"; FAIL=1; }
 
@@ -89,5 +105,37 @@ with browser_page() as (page, _):
     r = page.goto("https://www.example.com/", wait_until="domcontentloaded", timeout=45000)
     print(f"  chromium: HTTP {r.status if r else '?'} via {'proxy' if __import__('os').environ.get('HTTPS_PROXY') else 'direct'}")
 EOF
-if [ "$FAIL" -ne 0 ]; then echo "== done WITH ERRORS"; else echo "== done"; fi
+
+if [ "$FULL" -eq 1 ]; then
+  echo "== Live smoke tests (--full): one tiny request per core scraper"
+  D30=$(date -d '+30 days' +%F 2>/dev/null || python3 -c "import datetime as d; print(d.date.today() + d.timedelta(30))")
+  LIVE_OK=0; LIVE_FAILED=()
+  live() {  # live NAME TIMEOUT_S CMD...
+    local name=$1 to=$2; shift 2
+    local t0 out rc
+    t0=$(date +%s)
+    out=$(timeout "$to" "$@" 2>&1); rc=$?
+    local secs=$(( $(date +%s) - t0 ))
+    if [ "$rc" -eq 0 ] && [ -n "$out" ]; then
+      echo "  OK   $name (${secs}s)"; LIVE_OK=$((LIVE_OK + 1))
+    else
+      [ "$rc" -eq 124 ] && out="timeout after ${to}s"
+      echo "  FAIL $name (${secs}s, exit $rc): $(echo "$out" | grep -v '^\s*$' | tail -1 | cut -c1-160)"
+      LIVE_FAILED+=("$name")
+    fi
+  }
+  live "kiwi_graphql places" 60 python3 kiwi_graphql.py places --near ZAG --radius 50
+  live "ryanair_wizz routes" 60 python3 ryanair_wizz.py routes --from ZAG
+  live "kayak (momondo) one-way" 120 python3 kayak.py --from ZAG --to FRA --depart "$D30" --limit 3
+  live "gflights search one-way" 90 python3 gflights.py search --from ZAG --to FRA --date "$D30" --top 3
+  live "flixbus_ground cities" 60 python3 flixbus_ground.py --cities Zagreb
+  if [ "${#LIVE_FAILED[@]}" -eq 0 ]; then
+    echo "  live: $LIVE_OK/5 OK"
+  else
+    echo "  live: $LIVE_OK/5 OK; FAILED: ${LIVE_FAILED[*]} (setup itself is fine; use the other sources and see tools.md 'When things break')"
+  fi
+fi
+
+ELAPSED=$(( $(date +%s) - START ))
+if [ "$FAIL" -ne 0 ]; then echo "== done WITH ERRORS (${ELAPSED}s)"; else echo "== done (${ELAPSED}s)"; fi
 exit "$FAIL"

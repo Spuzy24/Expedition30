@@ -6,16 +6,30 @@ Designed to be run by a scheduled Routine (or manually) after a hunt, so the age
 to read the summary. Each check is a normal toolkit command; the monitor adds the right
 JSON flag, extracts the minimum EUR price from the JSON, and keeps history.
 
+WHAT THE NUMBER IS: the cheapest row of each check's output, FARE ONLY: no ground, no bags,
+no extras, in the tool's party convention (Kiwi MCP/Skiplagged with --adults N = party total).
+It is NOT a quotes.py total, so set threshold_eur on the fare and re-verify the full total
+(quotes.py) before telling the user. Build every check like-for-like, or a "new low" is just a
+worse construction:
+  - no Kiwi bag flags (--bags / --checked-bags): they add Kiwi's bag add-on and hide MU/CA/CZ;
+  - --no-self-transfer (kiwi, kiwi_graphql, gflights) / --single-ticket (positioning) if the user
+    wants single tickets;
+  - one origin per check where possible (a multi-origin min can jump between airports with very
+    different ground costs);
+  - never ITA Matrix --no-avail (fare levels without seats are leads, not prices);
+  - the real --adults; no hidden-city (mcp_flights sk excludes it by default).
+
 Watch file (flights/searches/<trip>/watch.json):
 {
   "trip": "tyo-2027-05",
-  "threshold_eur": 650,                      # alert if any check's min is <= this
+  "threshold_eur": 650,                      # alert when a check's min first goes <= this
   "sleep": 8,                                # seconds between checks (politeness)
   "checks": [
-    {"name": "momondo ZAG/VIE/BUD RT", "json": "file:--json",
-     "cmd": "kayak.py --site www.momondo.de --from ZAG,VIE,BUD --to TYO,OSA --depart 2027-05-12 --return 2027-05-26"},
-    {"name": "kiwi mcp RT flex", "json": "stdout:--json",
-     "cmd": "mcp_flights.py kiwi ZAG,VIE,BUD TYO,OSA 2027-05-12 --ret 2027-05-26 --flex 2 --ret-flex 2"},
+    {"name": "momondo BUD RT", "json": "file:--json",
+     "note": "MU/CZ single ticket via OTA; 2x23 included",           # optional, echoed in output
+     "cmd": "kayak.py --site www.momondo.de --from BUD --to TYO,OSA --depart 2027-05-12 --return 2027-05-26"},
+    {"name": "kiwi mcp BUD RT 1-ticket", "json": "stdout:--json", "threshold_eur": 700,  # per-check override
+     "cmd": "mcp_flights.py kiwi BUD TYO,OSA 2027-05-12 --ret 2027-05-26 --flex 2 --ret-flex 2 --no-self-transfer"},
     {"name": "GF BUD RT", "json": "file:--out",
      "cmd": "gflights.py search --from BUD --to TYO,OSA --date 2027-05-12 --return 2027-05-26"},
     {"name": "Matrix MU", "json": "file:--out",
@@ -23,15 +37,22 @@ Watch file (flights/searches/<trip>/watch.json):
   ]
 }
 json modes: "file:<flag>" appends `<flag> <tmpfile>` and reads it; "stdout:<flag>" appends <flag>
-and parses stdout. Commands are relative to flights/scripts/.
+and parses stdout. Commands are relative to flights/scripts/. Optional per check: "note"
+(free text, printed under the check's line and in --history) and "threshold_eur" (overrides
+the file-level one).
 
 Usage:
   python3 monitor.py flights/searches/tyo-2027-05/watch.json            # run all checks
   python3 monitor.py flights/searches/tyo-2027-05/watch.json --only GF  # checks whose name contains GF
   python3 monitor.py flights/searches/tyo-2027-05/watch.json --history  # show stored history
 
-State: watch_state.json next to the watch file (history per check). A line starting with
-"ALERT" is printed for a new all-time low or a price <= threshold. The Routine just greps it.
+State: watch_state.json next to the watch file (history, best, last_alert_price per check).
+Lines starting with "ALERT" (the Routine just greps them):
+  - "ALERT new low"         : a new all-time low for the check;
+  - "ALERT under threshold" : only when the check FIRST goes <= threshold, or drops below the
+                              last alerted price. While it stays at/above that price it prints
+                              "(under threshold, alerted at EUR X)" without ALERT; going back
+                              above the threshold re-arms the alert.
 """
 import argparse
 import datetime as dt
@@ -128,6 +149,27 @@ def run_check(chk, timeout):
     return price, row, "", secs
 
 
+def threshold_alert(h, price, thr, name, now):
+    """Under-threshold alert lines; updates h['last_alert_price'].
+
+    Fires when the check first goes <= thr, or when it drops below the last alerted price.
+    A price back above thr clears last_alert_price, so the next crossing alerts again."""
+    if thr is None:
+        return []
+    last_alert = h.get("last_alert_price")
+    if price > thr:
+        if last_alert is not None:
+            h.pop("last_alert_price", None)
+            h.pop("last_alert_ts", None)
+            return [f"    (back above threshold €{thr}; under-threshold alert re-armed)"]
+        return []
+    if last_alert is None or price < last_alert:
+        h["last_alert_price"], h["last_alert_ts"] = price, now
+        was = f", last alert €{last_alert:.0f}" if last_alert is not None else ""
+        return [f"ALERT under threshold: '{name}' €{price:.0f} <= €{thr}{was}"]
+    return [f"    (under threshold, alerted at €{last_alert:.0f} on {h.get('last_alert_ts', '')[:10]})"]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("watch")
@@ -145,9 +187,13 @@ def main():
     except FileNotFoundError:
         state = {}
 
+    notes = {c["name"]: c.get("note") for c in w.get("checks", [])}
     if a.history:
         for name, h in state.items():
-            print(f"== {name}  best €{h.get('best')} ({h.get('best_ts', '')[:16]})")
+            la = f"  last alert €{h['last_alert_price']:.0f}" if h.get("last_alert_price") is not None else ""
+            print(f"== {name}  best €{h.get('best')} ({h.get('best_ts', '')[:16]}){la}")
+            if notes.get(name):
+                print(f"   note: {notes[name]}")
             for e in h.get("runs", [])[-15:]:
                 print(f"   {e['ts'][:16]}  €{e.get('price')}  {e.get('err', '') or e.get('desc', '')}")
         return
@@ -170,15 +216,19 @@ def main():
         h["runs"] = h["runs"][-200:]
         if price is None:
             print(f"- {chk['name']}: FAILED ({err}) [{secs:.0f}s]")
+            if chk.get("note"):
+                print(f"    note: {chk['note']}")
             continue
         delta = f" ({price - last:+.0f} vs last)" if last else ""
         print(f"- {chk['name']}: €{price:.0f}{delta}  {entry['desc']} [{secs:.0f}s]")
+        if chk.get("note"):
+            print(f"    note: {chk['note']}")
         if prev_best is None or price < prev_best:
             h["best"], h["best_ts"] = price, now
             if prev_best is not None:
                 print(f"ALERT new low for '{chk['name']}': €{price:.0f} (was €{prev_best:.0f})")
-        if thr is not None and price <= thr:
-            print(f"ALERT under threshold: '{chk['name']}' €{price:.0f} <= €{thr}")
+        for line in threshold_alert(h, price, chk.get("threshold_eur", thr), chk["name"], now):
+            print(line)
         overall = price if overall is None else min(overall, price)
     with open(state_path, "w") as f:
         json.dump(state, f, indent=1)

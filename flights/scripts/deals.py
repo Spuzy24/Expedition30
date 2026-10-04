@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Scan flight-deal / error-fare feeds for Japan deals (optionally from our region).
+"""Scan flight-deal / error-fare feeds for deals to a destination (default Japan), optionally
+from the home region (default Zagreb/Central Europe).
 
 Deal sites catch flash sales and mistake fares that normal searching misses
 (they disappear in hours). Run this at the start of every hunt and whenever
@@ -10,7 +11,16 @@ Usage:
   python3 deals.py                 # Japan deals, last 120 days, all feeds
   python3 deals.py --days 30 --region   # only items that also mention a region origin
   python3 deals.py --any-asia      # widen to Asia hubs (Seoul, Taipei, Beijing...) for self-transfer ideas
+  python3 deals.py --keywords "korea,korei,seoul,szöul,séoul,incheon,ICN"     # another destination
+  python3 deals.py --region --region-words "lisbon,lisboa,lissabon,porto,LIS,OPO"   # another home base
   python3 deals.py --json
+
+--keywords / --region-words take a comma list that REPLACES the built-in Japan / Zagreb-region
+list. Words match case-insensitively anywhere in the title + description (so "korea" also
+matches "Südkorea"); a 3-letter UPPERCASE word is treated as an IATA code and matched as a whole
+word only (ICN, LIS); a word starting with \\b is used as a regex. Add the local-language
+spellings the feeds use (pl/de/hu/it: e.g. Japan = japonia, japonii, japán, giappone).
+--any-asia adds the Asian-hub list on top of whatever destination list is active.
 
 Benchmarks: the fly4free.pl "japonia" tag feed is a long history of Japan
 fares from Poland in PLN. Useful to judge what "cheap" means. Convert with fx.py.
@@ -87,6 +97,20 @@ def rx(words):
     return re.compile("|".join(w if w.startswith("\\b") else re.escape(w) for w in words), re.I)
 
 
+def word_list(csv):
+    """Comma list from the CLI -> rx() words. 'ICN' (3 uppercase letters) -> whole-word IATA match."""
+    out = []
+    for w in (x.strip() for x in csv.split(",")):
+        if not w:
+            continue
+        if re.fullmatch(r"[A-Z]{3}", w):
+            w = rf"\b{w.lower()}\b"
+        out.append(w)
+    if not out:
+        sys.exit("empty keyword list")
+    return out
+
+
 def fetch(url, timeout=25):
     url = urllib.parse.quote(url, safe=":/?&=%#")
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/rss+xml,application/xml,*/*"})
@@ -137,14 +161,20 @@ def main():
     p.add_argument("--days", type=int, default=120)
     p.add_argument("--region", action="store_true", help="require a home-region origin mention")
     p.add_argument("--any-asia", action="store_true", help="also match Asian hubs")
+    p.add_argument("--keywords", metavar="W1,W2,...",
+                   help="destination words that REPLACE the built-in Japan list (3-letter UPPERCASE = IATA code)")
+    p.add_argument("--region-words", metavar="W1,W2,...",
+                   help="home-region words that REPLACE the built-in Zagreb-region list (used by --region and the "
+                        "REGION star)")
     p.add_argument("--include-noise", action="store_true", help="keep hotel/cruise/package posts")
     p.add_argument("--keep-undated", action="store_true",
                    help="keep items whose date can't be parsed (default: drop them; they bypassed --days)")
     p.add_argument("--json", action="store_true")
     a = p.parse_args()
 
-    dest_rx = rx(JAPAN + (ASIA_HUBS if a.any_asia else []))
-    reg_rx = rx(REGION)
+    dest_words = word_list(a.keywords) if a.keywords else JAPAN
+    dest_rx = rx(dest_words + (ASIA_HUBS if a.any_asia else []))
+    reg_rx = rx(word_list(a.region_words) if a.region_words else REGION)
     noise_rx = rx(NOISE)
     seen, hits, status = set(), [], []
     for name, url, _lang in FEEDS:
@@ -181,7 +211,8 @@ def main():
         return
     for name, st in status:
         print(f"  [{st}] {name}", file=sys.stderr)
-    print(f"\n{len(hits)} matching deals (≤{a.days} days old)\n")
+    what = "custom keywords" if a.keywords else "Japan"
+    print(f"\n{len(hits)} matching deals for {what}{' + Asia hubs' if a.any_asia else ''} (≤{a.days} days old)\n")
     for h in hits:
         flag = "★REGION " if h["region_match"] else ""
         print(f"{h['age_days'] if h['age_days'] is not None else '?':>4}d  {flag}{h['title']}\n       {h['feed']} | {h['link']}")
