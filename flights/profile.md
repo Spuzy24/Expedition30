@@ -9,7 +9,7 @@
 |---|---|---|
 | Home base | Zagreb, Croatia | ASSUMED. The earlier Expedition 33 trip in this repo flew Zagreb→Basel. Confirm. |
 | Travelers | TBD (count, adults/children). The earlier trip in this repo was 2 adults (Sebastijan & Mia) | TBD |
-| Ages | TBD: any traveler under 26? (youth fares) Student with ISIC? | TBD |
+| Ages / student status | TBD: any student? Turkish student fare = ages 12–34 (10–15% off + 40 kg); Qatar Student Club = 18–30 | TBD |
 | Passports | TBD: assumed Croatian/EU (visa-free Japan 90 days, visa-free China/Korea transit rules apply) | ASSUMED |
 | Payment card | TBD: no-FX-fee card (Revolut/Wise)? Determines whether foreign-currency points of sale are worth it | TBD |
 | Loyalty / miles balances | TBD (Miles&Smiles, Flying Blue, Miles & More, Avios...) | TBD |
