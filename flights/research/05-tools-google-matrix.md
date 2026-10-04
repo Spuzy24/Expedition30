@@ -14,21 +14,23 @@ pre-installed Chromium 141 build 1194, egress through the agent proxy). Egress I
 
 | Method | Works (Oct 2026)? | Notes |
 |---|---|---|
-| **GF internal RPC** `FlightsFrontendService/GetShoppingResults` (own client in `gflights.py`) | **YES – best** | plain `requests`, 0.5–4 s/query, up to ~300 itineraries, multi-airport origins *and* destinations in one call, gl/curr/hl params, self-transfer flag, layovers |
+| **GF internal RPC** `FlightsFrontendService/GetShoppingResults` (own client in `gflights.py`) | **YES – best** | plain `requests`, 0.5–4 s/query, up to ~300 itineraries, multi-airport origins *and* destinations in one call, gl/curr/hl params, layovers, self-transfer flag (never `true` in any test) |
 | GF RPC `GetCalendarGraph` (cheapest per day) | **YES** | 61 days per call, one-way or round-trip with **one fixed** stay length per call |
 | GF RPC `GetCalendarGrid` (dep × ret matrix) | **YES** | ≤200 cells per call |
 | GF results page HTML (`/travel/flights/search?tfs=…`) parsed for `ds:1` | YES (fallback) | only ~10–15 "top" itineraries; `tfs` protobuf hand-encoded, multi-airport OK |
-| GF in headless Chromium (Playwright) | PARTIAL | server-rendered results parse fine (fallback backend works); the app's JS bundles fail with `ERR_BLOCKED_BY_ORB` through this proxy, so interactive widgets (Cheapest tab, date grid, price graph, Explore) do not work here |
+| GF in headless Chromium (Playwright) | YES (with a workaround) | server-rendered results (`ds:1`) parse fine; the app's JS bundles fail with `ERR_BLOCKED_BY_ORB` through this proxy unless served via `requests` from a `context.route` handler – then date grid, price graph and Explore all work |
+| GF RPC `GetExploreDestinations` (Explore, region = Japan) | **YES** (`gflights.py explore`) | cheapest RT per Japanese city + dates for a month / trip length, ~20 s |
 | `flights` (punitarani/**fli**) 0.9.0 | YES | good library + CLI (`fli flights`, `fli dates`); defaults are too aggressive (10 req/s, parallel threads) |
 | `fast-flights` 3.1.0 (AWeirdDev) | **NO (parser bug)** | fetch works (primp, 0.7 s) but `get_flights()` crashes with `IndexError` on rows without price |
 | `gflights` 0.3.1 (Rust, nas-/google-flights-rs) | YES (bursty) | search/price_graph/date_grid/cheapest_dates/explore/offer; one `cheapest_dates`+`explore` burst earned an HTTP 429 |
 | **ITA Matrix v5 JSON API** (`content-alkalimatrix-pa.googleapis.com/v1/search`) | **YES** (`matrix.py`) | direct HTTP works **without** the BotGuard token today; 15–60 s per query; specific dates, calendar, routing & extension codes, sales city, currency |
-| Matrix via Playwright | YES (fallback) | deep links don't auto-run in headless; fallback drives the form and swaps the request body (keeps BotGuard token) |
+| Matrix via Playwright | FLAKY (fallback) | deep links don't auto-run in headless; fallback drives the form and swaps the request body (keeps the BotGuard token) – worked once, then the swapped search never answered within 3–5 min |
 
 **Point of sale:** changing `gl` (HR, AT, DE, HU, US, GB, JP, IN, TR, SE) **did not change a single
 GF price** – all 82 itineraries of a ZAG–TYO round trip were identical in EUR; other currencies
-differed only by FX conversion (+0.07 … +0.44 %). No POS arbitrage is visible through Google Flights.
-Matrix sales-city results: see §5.3.
+differed only by FX conversion (+0.07 … +0.44 %). ITA Matrix gave the identical €1123 for VIE⇄TYO
+with sales city VIE, ZAG, BUD, LON, TYO, DEL, IST and NYC (§5.4). **No POS arbitrage was observable
+through either engine.**
 
 **Coverage warning:** a default Matrix v5 query returns only a *small, pruned, run-to-run varying*
 solution set (6–17 solutions, 4–5 carriers) – e.g. VIE–NRT 10 Mar 2027 one-way: Matrix min **€1034**
@@ -143,7 +145,7 @@ body: f.req=<urlencoded JSON: [null, "<JSON string of the request>"]>
 Request ("flat" format, field map from fli + own tests):
 
 ```
-segment = [[[[ "VIE",0],["ZAG",0]]],          # 0 origins   (type 0 = airport, 5 = city MID e.g. "/m/07dfk" Tokyo)
+segment = [[[[ "VIE",0],["ZAG",0]]],          # 0 origins   (type 0 = airport, 4 = city MID e.g. "/m/07dfk" Tokyo, 6 = region e.g. "/m/03_3d" Japan)
            [[[ "NRT",0],["HND",0]]],          # 1 destinations
            null, stops(0 any|1 nonstop|2 ≤1|3 ≤2), airlines_incl, airlines_excl,
            "2027-02-09", [max_minutes]|null, selected_flights|null, via_airports|null,
@@ -172,10 +174,19 @@ Verified behaviour:
   outbound; the return list needs one extra call per outbound (`--expand N`), filled via
   `segment[8] = [[from, date, to, null, carrier, number], …]`.
 * Calendar Graph honours **one** stay length per call (a range `[12,16]` returns nothing) – the
-  script loops lengths. Including **UKB** (Kobe, domestic only) in the destination list makes the
-  calendar return a single date – removed from the `OSA` group; the script warns on such results.
-  Calendar values are Google's cached lowest prices: some dates are missing (e.g. ARN only 36/59
-  days) and must be re-checked with a specific search.
+  script loops lengths.
+* Calendar values are Google's **cached** lowest prices: some dates are missing (ARN 36/59 days)
+  and sparsely cached pairs collapse to a single date (ZAG→KIX: 1 date; ZAG→NRT,HND: 59). Mixing
+  destination cities in one calendar call (NRT,HND,KIX) inherits the collapse, and adding **UKB**
+  (Kobe, domestic only) always did – so `calendar`/`sweep` query each destination city separately
+  and merge, UKB is not in `OSA`, and the script warns when a calendar returns ≤1 date. Always
+  re-check calendar minima with `search` (specific dates are priced live).
+* `GetExploreDestinations` (Explore): `[[], null, null, options, null, 1, null, 0, null, 1, [1100,719], 2]`
+  with `options = [null,null,cabin,null,[month, 1 weekend|2 week|3 two weeks] or [],1,[adults,0,0,0],
+  price_limit,null,null,null,null,null,[[orig, dest, null, 0],[dest, orig, null, 0]],null,null,null,0]`,
+  `orig = [[["ZAG",0]]]`, `dest = [[["/m/03_3d",6]]]` (Japan). Streams several `wrb.fr` chunks:
+  `[3][0]` places (`[0]` id, `[2]` name, `[11]/[12]` dates, `[15]` airport), `[4][0]` prices
+  (`[1][0][1]` price, `[6]` = [airline, _, stops, minutes, _, airport]).
 * `q=` natural-language URLs do **not** accept comma lists ("Flights to NRT,HND from ZAG,VIE…" → 0
   results); the `tfs=` protobuf URL does.
 * No self-transfer itinerary was returned in any test (fli notes the self-transfer toggle only
@@ -199,12 +210,22 @@ Verified behaviour:
   `browser` backend of `gflights.py` simply renders the page and parses `ds:1` (works, ~6 s).
 * The app's lazily loaded JS modules (`www.gstatic.com/_/mss/boq-travel/...`, URLs 2.7–4 KB long)
   fail in Chromium with **`net::ERR_BLOCKED_BY_ORB`** through this proxy, although `curl` fetches
-  the same URLs fine (200, `text/javascript`). Consequence: the "Cheapest" tab spinner never
-  resolves, and "Date grid"/"Price graph" buttons and `/travel/explore` don't work in this
-  environment. Disabling ORB features didn't help; routing those JS URLs through `requests` loaded
-  the page but at that moment Google served the captcha (rate-limit episode) – not pursued since the
-  RPC endpoints deliver the same data (calendar = price graph, grid = date grid).
-{{PW_EXTRA}}
+  the same URLs fine (200, `text/javascript`). Without a fix the "Cheapest" tab spinner never
+  resolves and "Date grid"/"Price graph"/`/travel/explore` do nothing. Disabling Chromium's ORB
+  features (`--disable-features=OpaqueResponseBlocking…`) and the full Chromium channel didn't help.
+  A first attempt at routing the JS through `requests` happened to coincide with the captcha
+  episode (§3.1); the second attempt worked (next bullet).
+* **Workaround found (works):** intercept `https://www.gstatic.com/_/mss/boq-travel/*` in Playwright
+  (`context.route`) and fulfil those requests with the body fetched by Python `requests`. With that,
+  the full app runs headless: the page fired `GetShoppingResults`, clicking **Date grid** fired
+  `GetCalendarGrid` (7×7 grid rendered, VIE→Tokyo cheapest €842 Mar 9→24), **Price graph** fired
+  `GetCalendarGraph`, and `/travel/explore?q=Flights%20from%20Zagreb%20to%20Japan` rendered
+  "Tokyo Jan 21–27 2027 1 stop €775, Osaka Dec 7–14 €1,017, …" via `GetExploreDestinations`.
+  The browser's own request bodies matched the formats in §3 (cities are sent as MID type **4**,
+  e.g. Tokyo `/m/07dfk`, Zagreb `/m/0fhzy`, region Japan `/m/03_3d` type 6). `gflights.py`'s
+  browser backend includes this workaround.
+* "Cheapest" tab: its price arrives via a separate streaming call; with the RPC sorted by price
+  (`sort=2`) you get the same list without the UI.
 
 ---
 
@@ -233,7 +254,10 @@ python gflights.py calendar --from zagreb --to TYO --start 2027-02-01 --end 2027
 # RT departure × return grid
 python gflights.py grid --from VIE --to NRT --depart 2027-03-01..2027-03-07 --return 2027-03-15..2027-03-21
 
-# Europe-wide origin sweep (resumable): 1 calendar call per origin, then itinerary details for best N
+# Explore: cheapest RT per city inside a region (default region japan)
+python gflights.py explore --from ZAG --region japan --month 2 --duration 2weeks
+
+# Europe-wide origin sweep (resumable): 1 calendar call per origin and destination city, then details for best N
 python gflights.py sweep --origins europe --to TYO,OSA --start 2027-02-01 --end 2027-03-31 --stay 14 \
        --cache sweep_cache.json --details 5 --out sweep.json
 python gflights.py sweep --origins europe --to TYO --date 2027-02-09 --return 2027-02-23   # specific-date mode
@@ -292,7 +316,110 @@ cheapest: 907 EUR  2027-03-02 -> 2027-03-17
 ```
 
 ### 4.4 Europe-wide sweep (TYO+OSA, RT 14 nights, departures 1 Feb–31 Mar 2027)
-{{SWEEP}}
+Command (two runs; the second resumed from the cache after a code fix):
+```
+python gflights.py sweep --origins europe --to TYO,OSA --start 2027-02-01 --end 2027-03-31 --stay 14 \
+       --cache sweep_cache.json --details 6 --out sweep.json
+```
+* **Run 1:** 60 origins, 65 requests (60 calendar calls + 5 detail searches), **892 s (14.9 min)**,
+  6–7.5 s pacing, **0 × HTTP 429**. 20 origins came back with a single calendar date (ZAG, LJU, BLQ,
+  SOF, OTP, …): querying TYO+OSA airports in one calendar call collapses when one city pair is
+  sparsely cached (ZAG→KIX has only 1 cached date; ZAG→NRT,HND alone has 59).
+* Fix: calendar/sweep now query each destination **city** separately and merge. **Run 2** (same
+  command, resumed – only the 20 bad origins redone, 2 calls each, + 1 new detail): 41 requests,
+  **694 s**, 0 × 429. So a full fresh 60-origin, 2-city sweep ≈ 125 requests ≈ **20–25 min**.
+* Throughput ≈ 1 request per 10–12 s (6 s pacing + 2–8 s server time for a 59-day RT calendar).
+* Output: `flights/searches/2026-10-04_gflights_sweep_europe60_TYO-OSA_RT14_Feb-Mar2027.json`
+  (per origin: cheapest, 5 best date pairs, full date→price calendar, detail itineraries).
+
+Result (RT 14 nights, 1 adult, economy, no bags, prices as cached by Google on 2026-10-04 –
+**calendar minima, re-verify with `search` before acting**; the "detail" column is a live specific search):
+
+| # | origin | cheapest RT € | best dates | dates priced | itinerary detail (specific search) |
+|---|---|---|---|---|---|
+| 1 | ATH | 555 | 2027-02-17 → 2027-03-03  | 38 | €555 Ethiopian via ADD,ICN (ET765 ET672 ET672) |
+| 2 | FCO | 640 | 2027-02-23 → 2027-03-09  | 59 | €640 KLM via AMS (KL1600 KL859) |
+| 3 | MAN | 642 | 2027-03-09 → 2027-03-23  | 59 | €642 Hainan via PEK (HU754 HU439) |
+| 4 | CPH | 654 | 2027-02-23 → 2027-03-09  | 59 | €654 KLM via AMS (KL1266 KL859) |
+| 5 | BUD | 658 | 2027-02-02 → 2027-02-16  | 59 | €658 Korean Air via ICN (KE964 KE2105) |
+| 6 | MXP | 659 | 2027-02-24 → 2027-03-10  | 59 | €659 Korean Air via ICN (KE928 KE2105) |
+| 7 | LHR | 664 | 2027-02-14 → 2027-02-28  | 59 |  |
+| 8 | WAW | 666 | 2027-02-25 → 2027-03-11  | 59 |  |
+| 9 | BRU | 672 | 2027-02-23 → 2027-03-09  | 59 |  |
+| 10 | IST | 673 | 2027-02-03 → 2027-02-17  | 59 |  |
+| 11 | KRK | 674 | 2027-02-01 → 2027-02-15  | 37 |  |
+| 12 | PRG | 678 | 2027-02-03 → 2027-02-17  | 37 |  |
+| 13 | VIE | 688 | 2027-02-10 → 2027-02-24  | 59 |  |
+| 14 | LGW | 688 | 2027-02-20 → 2027-03-06  | 59 |  |
+| 15 | MAD | 691 | 2027-02-18 → 2027-03-04  | 59 |  |
+| 16 | LIS | 736 | 2027-02-22 → 2027-03-08  | 59 |  |
+| 17 | CDG | 742 | 2027-02-03 → 2027-02-17  | 59 |  |
+| 18 | BCN | 744 | 2027-02-23 → 2027-03-09  | 59 |  |
+| 19 | ARN | 746 | 2027-02-02 → 2027-02-16  | 36 |  |
+| 20 | FRA | 748 | 2027-02-24 → 2027-03-10  | 59 |  |
+| 21 | AMS | 762 | 2027-02-18 → 2027-03-04  | 59 |  |
+| 22 | AGP | 765 | 2027-02-23 → 2027-03-09 (NRT,HND) | 59 |  |
+| 23 | PMI | 774 | 2027-02-05 → 2027-02-19 (NRT,HND) | 59 |  |
+| 24 | GOT | 783 | 2027-02-02 → 2027-02-16 (NRT,HND) | 59 |  |
+| 25 | DUB | 807 | 2027-02-01 → 2027-02-15  | 59 |  |
+| 26 | MUC | 810 | 2027-02-01 → 2027-02-15  | 59 |  |
+| 27 | HAM | 810 | 2027-02-08 → 2027-02-22  | 59 |  |
+| 28 | BLL | 811 | 2027-02-23 → 2027-03-09 (NRT,HND) | 39 |  |
+| 29 | SAW | 813 | 2027-02-07 → 2027-02-21  | 59 |  |
+| 30 | BER | 814 | 2027-02-02 → 2027-02-16  | 59 |  |
+| 31 | GVA | 815 | 2027-02-01 → 2027-02-15  | 59 |  |
+| 32 | KTW | 816 | 2027-02-23 → 2027-03-09 (NRT,HND) | 59 |  |
+| 33 | VNO | 818 | 2027-02-16 → 2027-03-02 (NRT,HND) | 59 |  |
+| 34 | BLQ | 824 | 2027-02-10 → 2027-02-24 (NRT,HND) | 59 |  |
+| 35 | DUS | 826 | 2027-02-02 → 2027-02-16  | 59 |  |
+| 36 | OSL | 831 | 2027-02-09 → 2027-02-23  | 39 |  |
+| 37 | TLL | 840 | 2027-02-08 → 2027-02-22 (NRT,HND) | 59 |  |
+| 38 | VCE | 843 | 2027-02-23 → 2027-03-09  | 39 |  |
+| 39 | OTP | 844 | 2027-02-01 → 2027-02-15 (NRT,HND) | 59 |  |
+| 40 | STR | 846 | 2027-02-23 → 2027-03-09 (NRT,HND) | 59 |  |
+| 41 | CGN | 853 | 2027-02-08 → 2027-02-22 (NRT,HND) | 59 |  |
+| 42 | NAP | 867 | 2027-02-02 → 2027-02-16 (NRT,HND) | 39 |  |
+| 43 | SOF | 877 | 2027-02-01 → 2027-02-15 (NRT,HND) | 59 |  |
+| 44 | BSL | 882 | 2027-02-01 → 2027-02-15 (NRT,HND) | 59 |  |
+| 45 | ZRH | 885 | 2027-02-01 → 2027-02-15  | 59 |  |
+| 46 | HEL | 894 | 2027-02-01 → 2027-02-15  | 59 |  |
+| 47 | RIX | 894 | 2027-02-02 → 2027-02-16 (NRT,HND) | 59 |  |
+| 48 | LCA | 908 | 2027-02-02 → 2027-02-16 (NRT,HND) | 59 |  |
+| 49 | MLA | 919 | 2027-02-01 → 2027-02-15 (NRT,HND) | 39 |  |
+| 50 | OPO | 946 | 2027-02-13 → 2027-02-27  | 59 |  |
+| 51 | LYS | 953 | 2027-02-01 → 2027-02-15  | 39 |  |
+| 52 | ZAG | 955 | 2027-02-07 → 2027-02-21 (NRT,HND) | 59 |  |
+| 53 | BEG | 964 | 2027-02-22 → 2027-03-08  | 27 |  |
+| 54 | LJU | 967 | 2027-02-01 → 2027-02-15 (NRT,HND) | 59 |  |
+| 55 | TLS | 994 | 2027-02-09 → 2027-02-23  | 59 |  |
+| 56 | BHX | 995 | 2027-02-09 → 2027-02-23  | 59 |  |
+| 57 | NCE | 996 | 2027-02-03 → 2027-02-17  | 39 |  |
+| 58 | MRS | 998 | 2027-02-02 → 2027-02-16  | 59 |  |
+| 59 | SKG | 1000 | 2027-02-08 → 2027-02-22 (NRT,HND) | 33 |  |
+| 60 | EDI | 1001 | 2027-03-15 → 2027-03-29  | 59 |  |
+
+Zagreb-region view: BUD €658, MXP €659, PRG €678, VIE €688, MUC €810, BLQ €824, VCE €843,
+ZAG €955, BEG €964, LJU €967 (best dates mostly early/mid February). GF does not build
+Ryanair/Wizz positioning + long-haul combinations, so e.g. "ZAG→ATH (low-cost) + ATH→TYO €555" must
+be assembled by hand (separate tickets, self-transfer risk).
+
+
+### 4.5 Explore (Google Flights Explore with a destination region)
+```
+$ python gflights.py explore --from ZAG --region japan --month 2 --duration 2weeks --top 8     (1 request, 21 s)
+  price cur destination              country      apt  dates                   airline/stops
+    955 EUR Tokyo                    Japan        NRT  2027-02-06>2027-02-22  LO 1
+   1036 EUR Yokohama                 Japan        HND  2027-02-08>2027-02-22  multi 1
+   1141 EUR Hiroshima                Japan        HIJ  2027-02-01>2027-02-14  multi 2
+   1202 EUR Nagoya                   Japan        NGO  2027-02-01>2027-02-14  multi 2
+   1377 EUR Furano                   Japan        CTS  2027-02-01>2027-02-14  multi 2
+   2119 EUR Fukuoka                  Japan        FUK  2027-02-01>2027-02-14  multi 2
+```
+47 places (many share an airport); Osaka/Kyoto came back **without a price** (same sparse cache as
+ZAG→KIX). `--month` omitted = "next ~6 months" (the browser showed Tokyo Jan 21–27 2027 €775 for
+1-week trips). `--region` takes `japan`, `asia`, any `/m/` MID, or an airport code. Request format
+taken from nas-/google-flights-rs and confirmed against the browser (§3.2). Explore without a
+region (the `gflights` lib default) returns ~67 "popular" destinations from ZAG and **no Japan**.
 
 ---
 
@@ -333,7 +460,8 @@ Captured with Playwright (UI search VIE→NRT, 10 Mar 2027, sales city ZAG, EUR)
   origin/dest/routing/ext/dates, options cabin/stops/extraStops/currency/salesCity, pax). In headless
   Chromium such deep links render but **do not start the search** (console `{error: Object}`), so
   the browser fallback drives the form and swaps the request body instead.
-* Timing: **15–60 s per query** (server-side). Never saw a rate limit in ~25 queries at ≥5 s spacing.
+* Timing: **15–60 s per query** (server-side). Never saw a rate limit in ~45 queries at ≥5 s spacing
+  (sometimes 2 concurrent).
 
 ### 5.2 Results & coverage
 | Query | Matrix | Google Flights |
@@ -345,11 +473,11 @@ Captured with Playwright (UI search VIE→NRT, 10 Mar 2027, sales city ZAG, EUR)
 | ARN→TYO OW calendar Feb–Mar, `--route "CA+" --no-avail` | **€486** every day | – |
 | VIE⇄TYO RT calendar Feb, stay 12–14, sales ZAG | min €896 (KE, 10 Feb, 13 n) | €688 (14 n) |
 
-Take-aways: Matrix sees a **subset of carriers** (no LO, QR, EY, AY, TR, KL-direct… in these
-tests), and with `checkAvailability=false` it exposes **published fares without confirmed seats**
-(e.g. Air China €655 RT ex-ARN) – that's a lead to check on airchina.com / OTAs, not a bookable
-price. Identical queries can return different (pruned) solution sets; vary routing codes
-(`CA+`, `X:IST`, `MAXSTOPS 1`) to surface alternatives.
+Take-aways: a default Matrix query returns a **small pruned subset** (4–5 carriers); carriers
+such as QR, EK, AY, LO, TK only show up when forced with routing codes (see the determinism
+table in §5.3 – `--carriers` automates this). Low-cost carriers (Scoot etc.) never appear. With
+`checkAvailability=false` Matrix exposes **published fares without confirmed seats** (e.g. Air
+China €655 RT ex-ARN, €574 OW ex-VIE) – a lead to check on airchina.com / OTAs, not a bookable price.
 
 ### 5.3 Routing / extension codes (tested on VIE→TYO 10 Mar OW)
 Baseline (no codes) varied between runs: 6 solutions, min €1033 KE/OZ – or 7 incl. CA €770.
@@ -372,7 +500,23 @@ Baseline (no codes) varied between runs: 6 solutions, min €1033 KE/OZ – or 7
 | `--ext "-REDEYES"` | **completely different set: EK €789 (VIE–DXB–HND), QR €878, JL €1086** | works – and shows how pruned the default set is |
 | `--ext "-OVERNIGHTS"` | CA €770, KE, AF €1167, TK | accepted |
 | `--minus 1 --plus 1` (date ±1) | 10 solutions incl. 9 Mar OS/NH nonstop VIE–HND €1313/€1389 | works |
-{{MATRIX_DET}}
+
+Determinism & pruning check (VIE→TYO 10 Mar OW, all within 25 min):
+
+| query | solutions | min | carriers returned |
+|---|---|---|---|
+| default (run at 16:49) | 6 | €1033 KE | KE, TK, NH, AC |
+| default (17:45, twice) | 7 | €770 CA | CA, KE, TK, OS, AC |
+| `--extra-stops 2` | 7 | €770 CA | same |
+| `--route "QR+"` | 10 | **€878 QR** | QR only |
+| `--route "EK+"` | 4 | **€789 EK** | EK only |
+| `--carriers LO,AY,TK` | 3 runs | TK €845, AY €1018, LO €1052 | – (none of these in the default set) |
+| `--no-avail` | 8 | **€574 CA**, TK €817 | availability check hides the cheap buckets |
+
+→ The default Matrix answer is a tiny pruned subset. `matrix.py --carriers QR,EK,TK,CA,LO,AY,…`
+loops `XX+` routing per carrier and merges (≈40 s per carrier). GF often shows *lower* prices than
+Matrix for the same carrier (VIE→TYO 10 Mar OW: AY €942 on GF vs €1018 on Matrix) because GF also prices
+airline-direct/NDC and OTA fares that Matrix (ATPCO published fares only) cannot see.
 
 ### 5.4 Sales city / currency experiment (VIE⇄TYO RT 10–24 Mar 2027, currency EUR)
 `matrix.py search --from VIE --to TYO --date 2027-03-10 --return 2027-03-24 --curr EUR --sales-city X`
@@ -402,6 +546,7 @@ python matrix.py search --from VIE --to TYO --date 2027-03-10 [--return 2027-03-
      [--backend http|browser|auto] [--out m.json]
 python matrix.py search --slice ZAG:NRT:2027-03-10 --slice KIX:ZAG:2027-03-24        # open jaw
 python matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-31 [--stay 12-14]
+python matrix.py search --from VIE --to TYO --date 2027-03-10 --carriers QR,EK,TK,CA,LO,AY,KE   # one query per carrier, merged
 ```
 Values starting with "-" are accepted (`--ext -CODESHARE`). Output: sorted table, carrier minimums,
 and a `matrix.itasoftware.com/flights?search=…` URL to open the same search in a normal browser
@@ -468,12 +613,13 @@ sales-city option, §5.4). Caveat: the egress IP is US; `gl` was the only POS si
 ## 7. Recommendations for the future agent
 
 1. **Broad search:** `gflights.py sweep --origins europe` (or `zagreb`) `--to TYO,OSA` with
-   `--start/--end` and `--stay`, then `--details N`. ~10–12 s/origin, no 429 at 6 s pacing.
+   `--start/--end` and `--stay`, then `--details N`. ~10–12 s per call, 2 calls per origin for
+   TYO+OSA, no 429 at 6 s pacing; `explore --region japan` for a one-call overview per origin.
 2. **Specific dates / many origins:** `gflights.py search --from zagreb --to TYO,OSA --date … [--return …]`
    (7 origins per call). Add `--per-origin` when you need every origin's own cheapest.
 3. **Flexible dates:** `calendar` (OW or fixed stay; loop stays with `--stay 12-16`), `grid` for RT
    date pairs. Re-check calendar minima with `search` (calendar = cached prices, some days missing).
-4. **Fare engineering:** `matrix.py` for routing/extension codes, sales city, open-jaw and fares
+4. **Fare engineering:** `matrix.py` (use `--carriers` to defeat pruning) for routing/extension codes, sales city, open-jaw and fares
    without availability (`--no-avail` = leads only). Don't trust Matrix for "cheapest overall".
 5. **Verify before reporting a price:** open `google_flights_url` / Matrix URL in a real browser,
    or book-site check; GF prices exclude bags unless `--bags`.
@@ -486,4 +632,5 @@ sales-city option, §5.4). Caveat: the egress IP is US; `gl` was the only POS si
 * `flights/scripts/gflights_calendar.py` – shortcut for calendar/grid
 * `flights/scripts/matrix.py` – ITA Matrix search/calendar (http/browser backends)
 * `flights/scripts/requirements.txt`
-{{FILES_EXTRA}}
+* `flights/searches/2026-10-04_gflights_sweep_europe60_TYO-OSA_RT14_Feb-Mar2027.json` – sweep output (§4.4)
+* `flights/searches/2026-10-04_gflights_explore_ZAG-Japan_Feb2027_2weeks.json` – Explore output (§4.5)

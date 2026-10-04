@@ -35,6 +35,7 @@ Examples
   python matrix.py search --from ARN --to TYO --date 2027-02-09 --return 2027-02-23 --route "CA+" --route-ret "CA+" --sales-city STO --no-avail
   python matrix.py calendar --from VIE --to TYO --start 2027-02-01 --end 2027-03-31 --stay 14
   python matrix.py search --slice ZAG:NRT:2027-03-10 --slice KIX:ZAG:2027-03-24
+  python matrix.py search --from VIE --to TYO --date 2027-03-10 --carriers QR,EK,TK,CA,LO,AY,KE   # beat pruning
 
 Notes
   * A Matrix query takes 20-60 s server-side. Be patient; default pacing is 5 s between calls.
@@ -246,7 +247,7 @@ def parse_calendar(d: dict) -> list[dict]:
 # --------------------------------------------------------------------------------------
 # Browser backend (Playwright) - drives the real web app, captures the API JSON
 # --------------------------------------------------------------------------------------
-def browser_search(body: dict, timeout_s=180) -> dict:
+def browser_search(body: dict, timeout_s=300) -> dict:
     """Run `body` through the real Matrix web app (headless Chromium).
 
     Deep links (/flights?search=...) do not trigger a search in headless mode, so we
@@ -360,6 +361,48 @@ def run(a, body: dict, url: str) -> dict:
 
 
 def cmd_search(a):
+    if getattr(a, "carriers", None):
+        return cmd_search_carriers(a)
+    return _cmd_search(a)
+
+
+def cmd_search_carriers(a):
+    """Matrix prunes its default answer to a handful of solutions; forcing one carrier at a time
+    ("QR+" on every slice) surfaces fares that a plain query hides (verified: QR, EK on VIE-TYO)."""
+    allsol, per = [], []
+    base_route, base_route_ret = a.route, a.route_ret
+    for i, cx in enumerate(codes(a.carriers)):
+        if i:
+            time.sleep(a.sleep + random.uniform(0, 2))
+        a.route = f"{cx}+" if not base_route else base_route
+        a.route_ret = f"{cx}+" if not base_route_ret else base_route_ret
+        log(f"[{i + 1}] carrier {cx}")
+        try:
+            out = _cmd_search(a, quiet=True)
+        except MatrixError as e:
+            log(f"  ! {cx}: {e}")
+            per.append({"carrier": cx, "error": str(e)})
+            continue
+        best = out["solutions"][0] if out["solutions"] else None
+        per.append({"carrier": cx, "min": best["price"] if best else None, "n": out["solution_count"],
+                    "matrix_url": out["matrix_url"]})
+        for sol in out["solutions"]:
+            sol["forced_carrier"] = cx
+        allsol.extend(out["solutions"])
+    a.route, a.route_ret = base_route, base_route_ret
+    allsol.sort(key=lambda x: (x["price"] is None, x["price"]))
+    if not a.json_only:
+        print("per carrier: " + ", ".join(f"{p['carrier']} {p.get('min') or p.get('error', '-')}" for p in per))
+        for i, sol in enumerate(allsol[: a.top], 1):
+            segs = " || ".join(f"{x['from']}-{'-'.join(x['stops'])+'-' if x['stops'] else ''}{x['to']} "
+                               f"{(x['departure'] or '')[:16]} {' '.join(x['flights'])}" for x in sol["slices"])
+            print(f"{i:>3} {sol['display_total']:>13}  {','.join(sol['carriers']):10} {segs}")
+    if a.out or a.json_only:
+        dump({"query": {k: v for k, v in vars(a).items() if k != "func"}, "per_carrier": per,
+              "solutions": allsol}, a.out or "-")
+
+
+def _cmd_search(a, quiet=False):
     slices = []
     if a.slice:
         for sp in a.slice:
@@ -399,6 +442,8 @@ def cmd_search(a):
            "elapsed_s": round(time.time() - t0, 1), "solution_count": d.get("solutionCount"),
            "min_price": d.get("solutionList", {}).get("minPrice"), "carrier_min_prices": carriers,
            "currency_notice": d.get("currencyNotice"), "solutions": sols}
+    if quiet:
+        return out
     if not a.json_only:
         print(f"solutions: {d.get('solutionCount')}  min: {out['min_price']}  ({out['elapsed_s']} s)")
         print("carriers: " + ", ".join(f"{c} {p}" for c, p in carriers))
@@ -520,6 +565,7 @@ def main(argv=None):
     p.add_argument("--minus", type=int, default=0, help="date flexibility: days before")
     p.add_argument("--plus", type=int, default=0, help="date flexibility: days after")
     p.add_argument("--page-size", type=int, default=50)
+    p.add_argument("--carriers", help="run one query per carrier with routing 'XX+' and merge, e.g. QR,EK,TK,CA,LO,AY")
     p.set_defaults(func=cmd_search)
 
     p = sub.add_parser("calendar", help="calendar of lowest fares")

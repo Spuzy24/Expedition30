@@ -6,7 +6,7 @@
 
 ## 0. Golden rules (learned the hard way, not folklore)
 
-1. **No single engine finds the cheapest fare.** Same query on 2026-10-04: Google Flights €571, Kiwi €418, Kiwi ±3 d €373, Skiplagged $566, momondo `--nearby --flex 3` €356. Always triangulate ≥ 4 independent inventories.
+1. **No single engine finds the cheapest fare.** Benchmark B1 (`benchmarks.md`), same RT query: momondo **€686** (MU+CZ, 2 bags), Aviasales €706, Booking €741, Kiwi €748, Skiplagged ≈€762, Google Flights €811, ITA Matrix €1,083. **Google Flights and ITA Matrix did not show China Eastern / Air China at all**, and those are the cheapest carriers to Japan. Always triangulate ≥ 4 independent inventories, and **never rely on Google/Matrix alone**.
 2. **Where you start matters more than any hack.** VIE/BUD/IST/BRU long-haul fares were €230–650 below ZAG for the same trip. Price the ground or positioning leg and compare totals.
 3. **The cheapest hub changes with the dates:** BRU in March 2027, IST in May 2027. Re-run the origin scan for each date window.
 4. **Engines hide carriers.** Kiwi only showed Air China ZAG→PEK→HND when filtered by carrier. Air China web promos are often absent from GF/ITA. Run per-carrier queries for the key carriers.
@@ -47,13 +47,14 @@ what was searched, when, results), and use `--trip <trip-id>` / `--log <trip-id>
 
 ## 3. Sweep A: home catchment, single tickets (≈15 min)
 Origins: `origins.md` set 1–7 (ZAG, VIE, BUD, BEG, LJU, GRZ, MUC, VCE, TRS) → all wanted Japan airports.
-Run **all** of these (each sees different inventory):
-- `gflights.py search --from ZAG,LJU,GRZ,VIE,BUD,BEG,VCE --to TYO,OSA --date D [--return R]` (up to 7 origins per call)
+Run **all** of these (each sees different inventory). Most productive first (per benchmark B1):
+- `kayak.py --site www.momondo.de --from ZAG,VIE,BUD --to TYO,OSA --depart D [--return R]` (then `--flex 3`, `--nearby`; also `--site www.kayak.de`). **Found the cheapest RT in B1** incl. mixed-carrier tickets.
+- `gflights.py search --from ZAG,LJU,GRZ,VIE,BUD,BEG,VCE --to TYO,OSA --date D [--return R]` (airline-direct baseline for TK/QR/EY/LO/LH/AF/KL/KE/AY; misses Chinese carriers)
 - `mcp_flights.py kiwi ZAG,LJU,GRZ,VIE,BUD,BEG,VCE,TRS,MUC TYO,OSA D --flex 3 [--ret R --ret-flex 3] [--bags 1]`
 - `kiwi_graphql.py search --from ZAG@400 --to Country:JP --dates D1..D2 [--return-dates …] [--checked-bags 1]`
-- `kayak.py --site www.momondo.de --from ZAG,VIE,BUD --to TYO,OSA --depart D [--return R] --flex 3` (+ `--nearby`)
+- `aviasales.py --from BUD --to TYO --depart D [--return R]` and `booking_flights.py …` (browser, ~30–45 s each; per origin)
 - `mcp_flights.py sk ZAG TYO D [--ret R]`, then repeat for VIE and BUD
-- `matrix.py search --from ZAG --to TYO --date D [--return R]`, then VIE and BUD. Use `--route "X? X?" --ext "-CHANGE"` to drop airport changes.
+- `matrix.py search --from ZAG --to TYO --date D [--return R]`, then VIE and BUD: fare rules/booking classes for non-Chinese carriers; it misses MU/CA/QR (B1).
 
 Then **per-carrier passes** (each engine's top-15 hides carriers):
 - `mcp_flights.py kiwi ZAG,VIE,BUD TYO,OSA D --flex 3 --only-airlines CA`, then repeat with `MU,FM`, `CZ`, `HU`, `KE,OZ`, `TK`, `QR`, `EY`, `LO`, `AY`, `NH`
