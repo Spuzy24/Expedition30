@@ -40,6 +40,8 @@ FEEDS = [
     ("urlaubspiraten.at", "https://www.urlaubspiraten.at/feed", "de"),
     ("travel-dealz.de search japan", "https://travel-dealz.de/?s=japan&feed=rss2", "de"),
     ("travel-dealz.de", "https://travel-dealz.de/feed/", "de"),
+    ("travel-dealz.com Japan destination", "https://travel-dealz.com/destination/japan/feed/", "en"),
+    ("thriftytraveler.com", "https://thriftytraveler.com/feed/", "en"),
     ("travel-dealz.com search tokyo", "https://travel-dealz.com/?s=Tokyo&feed=rss2", "en"),
     ("travel-dealz.com search osaka", "https://travel-dealz.com/?s=Osaka&feed=rss2", "en"),
     ("utazomajom.hu search Tokió", "https://www.utazomajom.hu/?s=Tokió&feed=rss2", "hu"),
