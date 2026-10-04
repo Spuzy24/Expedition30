@@ -394,13 +394,46 @@ def parse_ds1_html(html: str) -> Any:
 # --------------------------------------------------------------------------------------
 # High level operations
 # --------------------------------------------------------------------------------------
-def gf_url(origins, dests, date, ret=None, c: Client | None = None) -> str:
-    q = f"Flights to {','.join(dests)} from {','.join(origins)} on {date}"
-    q += f" through {ret}" if ret else " oneway"
-    qs = {"q": q}
+def _pb_varint(n: int) -> bytes:
+    out = bytearray()
+    while True:
+        b, n = n & 0x7F, n >> 7
+        out.append(b | 0x80 if n else b)
+        if not n:
+            return bytes(out)
+
+
+def _pb_ld(field: int, payload: bytes) -> bytes:
+    return _pb_varint(field << 3 | 2) + _pb_varint(len(payload)) + payload
+
+
+def tfs_param(origins, dests, date, ret=None, adults=1, cabin=1) -> str:
+    """Encode the `tfs=` protobuf used by google.com/travel/flights/search URLs.
+
+    Info{3: FlightData[], 8: passengers(packed), 9: seat, 19: trip}
+    FlightData{2: date, 13: Airport[] (from), 14: Airport[] (to)}, Airport{2: code}
+    Repeated 13/14 entries = multi-airport search (verified Oct 2026)."""
+    def fd(o, d, day):
+        b = _pb_ld(2, day.encode())
+        for x in o:
+            b += _pb_ld(13, _pb_ld(2, x.encode()))
+        for x in d:
+            b += _pb_ld(14, _pb_ld(2, x.encode()))
+        return b
+    out = _pb_ld(3, fd(origins, dests, date))
+    if ret:
+        out += _pb_ld(3, fd(dests, origins, ret))
+    out += _pb_ld(8, bytes([1] * adults)) + _pb_varint(9 << 3) + _pb_varint(cabin)
+    out += _pb_varint(19 << 3) + _pb_varint(1 if ret else 2)
+    return base64.urlsafe_b64encode(out).decode().rstrip("=")
+
+
+def gf_url(origins, dests, date, ret=None, c: Client | None = None, adults=1) -> str:
+    """Shareable Google Flights results URL (works in a normal browser)."""
+    qs = {"tfs": tfs_param(origins, dests, date, ret, adults)}
     if c:
         qs.update({"hl": c.hl, "gl": c.gl, "curr": c.curr})
-    return "https://www.google.com/travel/flights?" + urllib.parse.urlencode(qs)
+    return "https://www.google.com/travel/flights/search?" + urllib.parse.urlencode(qs)
 
 
 def search_rpc(c: Client, origins, dests, date, ret=None, a=None) -> tuple[list[dict], dict]:
@@ -436,7 +469,7 @@ def expand_return(c: Client, it: dict, origins, dests, date, ret, a) -> dict | N
 
 
 def search_html(c: Client, origins, dests, date, ret=None, a=None) -> tuple[list[dict], dict]:
-    r = c._request("GET", gf_url(origins, dests, date, ret, c))
+    r = c._request("GET", gf_url(origins, dests, date, ret, c, getattr(a, "adults", 1)))
     p = parse_ds1_html(r.text)
     if p is None:
         raise RuntimeError("html backend: ds:1 block not found (consent page or layout change)")
@@ -444,7 +477,9 @@ def search_html(c: Client, origins, dests, date, ret=None, a=None) -> tuple[list
 
 
 def search_browser(c: Client, origins, dests, date, ret=None, a=None) -> tuple[list[dict], dict]:
-    html = browser_fetch(gf_url(origins, dests, date, ret, c), verbose=c.verbose)
+    c._pace()
+    c.n_requests += 1
+    html = browser_fetch(gf_url(origins, dests, date, ret, c, getattr(a, "adults", 1)), verbose=c.verbose)
     p = parse_ds1_html(html)
     if p is None:
         raise RuntimeError("browser backend: ds:1 block not found")
