@@ -30,7 +30,7 @@ python3 $S/mcp_flights.py skcal BUD TYO D --ret R
 Benchmarks in `flights/japan.md` §1 (great < €500 RT with bag, normal €650–950). Note Google's "typical" range. Pick the 1–3 cheapest date pairs that fit the user's window.
 
 ## 3. Sweep A: home catchment (ZAG, LJU, GRZ, VIE, BUD, BEG, VCE, TRS, MUC)
-Run ALL of these; each sees different inventory (benchmark B1: momondo €686 vs Google €811 vs Matrix €1,083):
+Run ALL of these; each sees different inventory (benchmark B1: momondo €686, Matrix-forced-MU €715, Kiwi €748, Google €811 with NO Chinese carriers):
 ```bash
 python3 $S/kayak.py --site www.momondo.de --from ZAG,VIE,BUD --to TYO,OSA --depart D --return R   # + --flex 3, --nearby, --site www.kayak.de
 python3 $S/mcp_flights.py kiwi ZAG,LJU,GRZ,VIE,BUD,BEG,VCE,TRS,MUC TYO,OSA D --flex 3 --ret R --ret-flex 3
@@ -39,7 +39,7 @@ python3 $S/mcp_flights.py sk BUD TYO D --ret R          # repeat for ZAG, VIE
 python3 $S/aviasales.py --from BUD --to TYO --depart D --return R      # per origin, ~45 s
 python3 $S/booking_flights.py --from BUD --to TYO --depart D --return R
 python3 $S/gflights.py search --from ZAG,LJU,GRZ,VIE,BUD,BEG,VCE --to TYO,OSA --date D --return R   # airline baseline; MISSES Chinese carriers
-python3 $S/matrix.py search --from VIE --to TYO --date D --return R    # fare rules; misses MU/CA/QR
+python3 $S/matrix.py search --from BUD --to TYO --date D --return R --carriers MU,CA,CZ,KE,TK,QR,EK,LO   # default answer is PRUNED; force carriers (~40 s each)
 ```
 Per-carrier passes (top-N lists hide carriers): `mcp_flights.py kiwi ... --only-airlines CA` then MU,FM / CZ / HU / KE,OZ / TK / QR / EY / LO / AY / NH.
 

@@ -29,7 +29,7 @@ search engine, OTA, airline and trick, ranked by **true total cost** (fare + bag
 | `flights/searches/` | `quotes.jsonl` (price log), `ground.json` (ground costs), one folder per trip |
 
 ## Facts that change how to search (verified 2026-10-04)
-1. **Google Flights and ITA Matrix miss the Chinese carriers** (China Eastern, Air China, China Southern) on Europe→Japan, and those are usually the cheapest. In benchmark B1: momondo €686 with bags vs Google €811 vs Matrix €1,083. Never rely on them alone.
+1. **Google Flights doesn't carry the Chinese carriers** (China Eastern, Air China, China Southern) on Europe→Japan, and those are usually the cheapest. **ITA Matrix has them but prunes its default answer**, so force carriers (`matrix.py --carriers MU,CA,CZ,…` or `--route "MU+"`). Benchmark B1: momondo €686 / Matrix-forced-MU €715 vs Google €811 vs Matrix-default €1,083.
 2. **momondo/Kayak (`kayak.py`), Kiwi (MCP + GraphQL), Aviasales, Booking.com and Skiplagged** each see different inventory. Use them all. momondo found a mixed MU+CZ ticket nobody else showed.
 3. **Origin beats tricks:** BUD/VIE/IST/BRU long-haul fares run €200–650 below ZAG. The cheapest European hub changes with dates (BRU in Mar 2027, IST in May 2027). Price ground or positioning legs and compare totals.
 4. **Engines hide carriers:** Kiwi showed Air China's new ZAG→OTP→PEK flight (since Sep 2026) only with `--only-airlines CA`. Run per-carrier passes.

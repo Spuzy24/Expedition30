@@ -9,8 +9,8 @@
 
 | Source | Status | How we query it | Unique strength | Watch out |
 |---|---|---|---|---|
-| **Google Flights** | Auto | `scripts/gflights.py` (see tools.md) | Airline-direct baseline; date grid, price history ("typical" range + 60-day history), Explore; "Cheapest" tab incl. self-transfer | Default list misses many Chinese-carrier & self-transfer combos; some airline web fares (Air China promos) absent; POS/currency switching changes nothing |
-| **ITA Matrix** | Auto (partial) / Manual | `scripts/matrix.py` (see tools.md) | Routing & extension codes, fare rules/basis, month calendar with length-of-stay, sales city | No LCCs, no self-transfer, misses some web-only fares; can't book on it |
+| **Google Flights** | Auto | `scripts/gflights.py` (see tools.md) | Airline-direct + NDC/OTA fares for TK/QR/EK/EY/LO/AY/LH/AF/KL/KE/Scoot; date grid, calendar, price history ("typical" range), Explore, Europe-wide `sweep` | **Does not carry China Eastern/Air China/China Southern on Europe→Japan** (B1: `--via PVG` → 0 results); no self-transfer combos returned in tests; POS/currency switching changes nothing |
+| **ITA Matrix** | Auto | `scripts/matrix.py` (see tools.md) | Has Chinese carriers' published fares (MU €715 in B1 when forced); routing & extension codes, fare rules/basis, calendar with length-of-stay, open-jaw, `--no-avail` fare levels | **Default answer is pruned** to 4–5 carriers and varies run-to-run, so use `--carriers` / `--route "XX+"`; 15–60 s/query; no LCCs, no self-transfer, no NDC/web-only fares (prices often above GF for the same airline); can't book on it |
 | **Kiwi.com: MCP** | Auto | `scripts/mcp_flights.py kiwi` (or native MCP tool `kiwi` via .mcp.json) | Multi-origin/destination, ±10 d flex, ranges, nights, bag filter, carrier filters | ~15 results/call; hides carriers unless filtered; RT pricing of some carriers (CA) is implausible |
 | **Kiwi.com: web GraphQL** | Auto | `scripts/kiwi_graphql.py` | Radius (`ZAG@300`), `Country:`/`Continent:` origins, **per-city** cheapest, **origin-scan**, price calendar, bags priced in | Many results are self-transfer (flag shown); `Continent:europe` plain search is thin, so use per-city/origin-scan |
 | **Skiplagged: MCP** | Auto | `scripts/mcp_flights.py sk / skcal / sksweep` | Independent inventory (found OU+Juneyao single tickets); hidden-city flag; 100 results/page; calendars | USD prices; rounds down; hidden-city = ToS risk |
@@ -47,6 +47,6 @@ price higher than the metasearch showed.
   - Kiwi: €418 self-transfer / €373 ±3 days.
   - Skiplagged: $566 single ticket.
   - Kayak `--nearby --flex 3`: €356 FR+HO via CRL.
-- **Carrier blind spots:** Kiwi showed Air China ZAG only with `--only-airlines CA`. Air China promos are often missing from GF/ITA.
+- **Carrier blind spots:** Kiwi showed Air China ZAG only with `--only-airlines CA`. Google Flights has no MU/CA/CZ on Europe→Japan at all. ITA Matrix hides them unless forced. Air China web promos may be missing everywhere except airchina.com.
 - **Independent tests:** momondo ranked #1 for lowest fares in Frommer's 2025 and 2026; Skyscanner top-rated by Which? (Oct 2025); Google Flights mid-pack on price but best for discovery.
 - **Cached vs live:** Skyscanner month/Everywhere, Kayak/momondo calendars, Aviasales ribbon, AZair and Google Explore are indicative only. Always re-run an exact-date live search.

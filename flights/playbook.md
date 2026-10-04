@@ -6,7 +6,7 @@
 
 ## 0. Golden rules (learned the hard way, not folklore)
 
-1. **No single engine finds the cheapest fare.** Benchmark B1 (`benchmarks.md`), same RT query: momondo **€686** (MU+CZ, 2 bags), Aviasales €706, Booking €741, Kiwi €748, Skiplagged ≈€762, Google Flights €811, ITA Matrix €1,083. **Google Flights and ITA Matrix did not show China Eastern / Air China at all**, and those are the cheapest carriers to Japan. Always triangulate ≥ 4 independent inventories, and **never rely on Google/Matrix alone**.
+1. **No single engine finds the cheapest fare.** Benchmark B1 (`benchmarks.md`), same RT query: momondo **€686** (MU+CZ, 2 bags), Aviasales €706, Booking €741, Kiwi €748, Skiplagged ≈€762, Google Flights €811, ITA Matrix €1,083. **Google Flights did not show China Eastern / Air China at all**, and those are the cheapest carriers to Japan. **ITA Matrix's default answer is pruned**; forced with `--route "MU+"` it found €715 (B1). Always triangulate ≥ 4 independent inventories, and never rely on Google alone.
 2. **Where you start matters more than any hack.** VIE/BUD/IST/BRU long-haul fares were €230–650 below ZAG for the same trip. Price the ground or positioning leg and compare totals.
 3. **The cheapest hub changes with the dates:** BRU in March 2027, IST in May 2027. Re-run the origin scan for each date window.
 4. **Engines hide carriers.** Kiwi only showed Air China ZAG→PEK→HND when filtered by carrier. Air China web promos are often absent from GF/ITA. Run per-carrier queries for the key carriers.
@@ -54,7 +54,7 @@ Run **all** of these (each sees different inventory). Most productive first (per
 - `kiwi_graphql.py search --from ZAG@400 --to Country:JP --dates D1..D2 [--return-dates …] [--checked-bags 1]`
 - `aviasales.py --from BUD --to TYO --depart D [--return R]` and `booking_flights.py …` (browser, ~30–45 s each; per origin)
 - `mcp_flights.py sk ZAG TYO D [--ret R]`, then repeat for VIE and BUD
-- `matrix.py search --from ZAG --to TYO --date D [--return R]`, then VIE and BUD: fare rules/booking classes for non-Chinese carriers; it misses MU/CA/QR (B1).
+- `matrix.py search --from BUD --to TYO --date D [--return R] --carriers MU,CA,CZ,HU,KE,TK,QR,EK,EY,LO,AY` (~40 s per carrier; the default answer is pruned). Add `--no-avail` to see fare levels without confirmed seats (leads only).
 
 Then **per-carrier passes** (each engine's top-15 hides carriers):
 - `mcp_flights.py kiwi ZAG,VIE,BUD TYO,OSA D --flex 3 --only-airlines CA`, then repeat with `MU,FM`, `CZ`, `HU`, `KE,OZ`, `TK`, `QR`, `EY`, `LO`, `AY`, `NH`

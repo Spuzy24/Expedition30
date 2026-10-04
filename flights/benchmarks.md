@@ -13,12 +13,13 @@
 | Kiwi MCP (`mcp_flights.py kiwi`) | €748 | **reported 0 checked** (wrong: MU fare includes bags) | MU BUD–PVG–NRT RT | With `--bags 1` it jumped to €1,083 MU / €925 CA VIE–PEK–HND. **Kiwi's bag data for Chinese carriers is unreliable** |
 | Skiplagged MCP | $855 (≈€762) | ? | MU/FM BUD–PVG–NRT RT | USD |
 | Google Flights (`gflights.py search`) | €811 | (QR incl.) | QR BUD–DOH–HND | **No China Eastern/Air China in its list at all** |
-| ITA Matrix (`matrix.py search`) | €1,083 | — | OZ BUD–ICN–NRT | **No MU, no CA, no QR.** Matrix lacks Chinese-carrier fares on this route |
+| ITA Matrix default (`matrix.py search`) | €1,083 | — | OZ BUD–ICN–NRT | Default answer is a **pruned subset** (4–5 carriers): no MU/CA/QR shown |
+| **ITA Matrix forced `--route "MU+" --route-ret "MU+"`** | **€715** (seats confirmed) / €686 (`--no-avail`) | (MU fare incl. bags) | MU602/MU523 BUD–PVG–NRT RT | **Matrix DOES have MU.** Force carriers (`--carriers MU,CA,CZ,…`) or you miss the cheapest |
 | Kiwi GraphQL `search --checked-bags 1` | €1,135 | 1 | CA/MU out + TR back combos | Bag-pricing path gives odd results. Cross-check with the MCP |
 
 **Conclusions (B1):**
-0. Control check: `gflights.py search --from BUD --to TYO --date 2027-05-12 --return 2027-05-26 --via PVG,PEK,CAN` returned **0 itineraries**. Google Flights does not have these MU/CA/CZ fares at all; this isn't a script limit.
-1. The floor (~€686–741 with bags) came from **Chinese carriers ex-BUD**, visible on momondo, Aviasales, Booking and Kiwi, but **invisible on Google Flights and ITA Matrix**. Never rely on Google/Matrix alone for Europe→Japan.
+0. Control checks: `gflights.py search --from BUD --to TYO … --via PVG,PEK,CAN` (RT) and `--via PVG` (OW) returned **0 itineraries**, while `--via IST` returned TK normally. So **Google Flights does not carry these MU/CA/CZ fares at all**; it's a real gap, not a script limit. ITA Matrix does have them, but only shows them when forced with routing codes (default answers are pruned).
+1. The floor (~€686–741 with bags) came from **Chinese carriers ex-BUD**, visible on momondo, Aviasales, Booking, Kiwi and carrier-forced Matrix, but **invisible on Google Flights** and in Matrix's default answer. Never rely on Google alone; always run Matrix with `--carriers`.
 2. **momondo/Kayak found a cheaper mixed-carrier ticket** (MU out + CZ back) than any single-carrier RT. Always include `kayak.py`.
 3. Bags: OTAs (Booking, Gotogate, Opodo) list 2 bags on MU; Kiwi said 0. **Verify bag allowance on the carrier's fare/OTA checkout**, not on Kiwi.
 4. ZAG and VIE single tickets were never in the top results. BUD is the region's cheap origin for this trip (+€60–80 ground, see `origins.md`).
